@@ -38,6 +38,11 @@ gulp.task('doc', function(){
 	.pipe(jsdoc(require('./config/jsdoc')))
 })
 
+gulp.task('test', function(){
+	require('./node_modules/mocha/bin/mocha');
+})
+
+
 gulp.task('clean', function(){
 	return gulp.src('./public/assets/**/*', {read: false})
 	.pipe(rimraf());

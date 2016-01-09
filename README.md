@@ -24,6 +24,17 @@ Getting Started
 - View at `http://127.0.0.1:8000`
 
 
+Common tasks
+------------
+
+- Generating documentation into `/doc/out`: `gulp doc`
+
+- Static code analysis: `gulp lint`
+
+- Running tests: `gulp test`
+
+
+
 File structure
 --------------
 
