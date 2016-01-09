@@ -1,0 +1,41 @@
+{
+	"name": "chess",
+	"version": "0.0.1",
+	"description": "Chess Game",
+	"author": "Tess Distefano <tess.distefano@gmail.com>, Dennis Shtatnov <densht@gmail.com>, Zach Silverstein <Zacharie.Silverstein@gmail.com> Dan Ziegler <dmziegman@gmail.com>",
+	"main": "./server",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dennisss/chess"
+	},
+	"keywords": [
+		"game",
+		"chess"
+	],
+	"dependencies": {
+		"express": "4.13.3",
+		"body-parser": "1.14.2",
+		"socket.io": "1.4.3",
+		"underscore": "1.8.3",
+		"async": "1.5.2"
+	},
+	"devDependencies": {
+		"browserify": "13.0.0",
+		"gulp": "3.9.0",
+		"gulp-autoprefixer": "3.1.0",
+		"gulp-jsdoc3": "^0.1.0",
+		"gulp-jshint": "2.0.0",
+		"gulp-rename": "1.2.2",
+		"gulp-rimraf": "0.2.0",
+		"gulp-sass": "2.1.1",
+		"gulp-sourcemaps": "1.6.0",
+		"gulp-util": "3.0.7",
+		"istanbul": "0.4.1",
+		"jshint": "2.8.0",
+		"merge-stream": "1.0.0",
+		"mocha": "2.3.4",
+		"vinyl-buffer": "1.0.0",
+		"vinyl-source-stream": "1.1.0"
+	},
+	"private": true
+}
