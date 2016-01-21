@@ -27,12 +27,13 @@ Getting Started
 Common tasks
 ------------
 
-- Generating documentation into `/doc/out`: `gulp doc`
+- Generating documentation into `/public/doc`: `gulp doc`
 
 - Static code analysis: `gulp lint`
 
 - Running tests: `gulp test`
 
+- Generate coverage report into `/public/coverage`: `gulp cover`
 
 
 File structure

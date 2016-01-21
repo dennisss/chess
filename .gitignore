@@ -1,4 +1,8 @@
 ~*
 public/assets
-doc/out
+public/doc
+public/coverage
 node_modules
+*.iml
+/.idea/workspace.xml
+/.idea/libraries

@@ -23,7 +23,6 @@
 		"browserify": "13.0.0",
 		"gulp": "3.9.0",
 		"gulp-autoprefixer": "3.1.0",
-		"gulp-jsdoc3": "^0.1.0",
 		"gulp-jshint": "2.0.0",
 		"gulp-rename": "1.2.2",
 		"gulp-rimraf": "0.2.0",
@@ -31,11 +30,14 @@
 		"gulp-sourcemaps": "1.6.0",
 		"gulp-util": "3.0.7",
 		"istanbul": "0.4.1",
+		"jsdoc": "3.4.0",
+		"minami": "^1.1.1",
 		"jshint": "2.8.0",
 		"merge-stream": "1.0.0",
 		"mocha": "2.3.4",
 		"vinyl-buffer": "1.0.0",
-		"vinyl-source-stream": "1.1.0"
+		"vinyl-source-stream": "1.1.0",
+		"socket.io-client": "1.4.3"
 	},
 	"private": true
 }
