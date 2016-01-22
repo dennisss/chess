@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Friendly Chess</title>
+
+	<!-- Code on this board is based upon http://code2care.org/pages/chessboard-with-pieces-using-pure-html-and-css/ -->
+
+  <!-- Ensure loadability on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Material Design fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Material Design -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/css/bootstrap-material-design.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/css/ripples.min.css" rel="stylesheet">
+  
+  <!-- Dropdown.js -->
+  <link href="https://cdn.rawgit.com/FezVrasta/dropdown.js/master/jquery.dropdown.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  
+  <!-- JavaScript/jQuery Dependencies -->
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/ripples.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/material.min.js"></script>
+
+	<style type="text/css">
+	.chessboard {
+		width: 69.99vmin;
+		height: 69.99vmin;
+		margin: 2vmin;
+		border: 3vmin solid #333;
+	}
+	.dark {
+		float: left;
+		width: 8vmin;
+		height: 8vmin;
+		background-color: #999;
+		font-size: 6.5vmin;
+		text-align:center;
+		display: table-cell;
+		vertical-align:middle;
+	}
+	.light {
+		float: left;
+		width: 8vmin;
+		height: 8vmin;
+		background-color: #fff;
+		font-size: 6.5vmin;
+		text-align:center;
+		display: table-cell;
+		vertical-align:middle;
+	}
+	.dark:hover {
+		background-color: #FF0
+	}
+	.light:hover {
+		background-color: #FF0
+	}
+	</style>
+</head>
+<body>
+<div class="container text-center">
+<div class="chessboard">
+	<!-- 1st -->
+	<div class="light">&#9820;</div>
+	<div class="dark">&#9822;</div>
+	<div class="light">&#9821;</div>
+	<div class="dark">&#9819;</div>
+	<div class="light">&#9818;</div>
+	<div class="dark">&#9821;</div>
+	<div class="light">&#9822;</div>
+	<div class="dark">&#9820;</div>
+	<!-- 2nd -->
+	<div class="dark">&#9823;</div>
+	<div class="light">&#9823;</div>
+	<div class="dark">&#9823;</div>
+	<div class="light">&#9823;</div>
+	<div class="dark">&#9823;</div>
+	<div class="light">&#9823;</div>
+	<div class="dark">&#9823;</div>
+	<div class="light">&#9823;</div>
+	<!-- 3th -->
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<!-- 4st -->
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<!-- 5th -->
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<!-- 6th -->
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<div class="dark"></div>
+	<div class="light"></div>
+	<!-- 7th -->
+	<div class="light">&#9817;</div>
+	<div class="dark">&#9817;</div>
+	<div class="light">&#9817;</div>
+	<div class="dark">&#9817;</div>
+	<div class="light">&#9817;</div>
+	<div class="dark">&#9817;</div>
+	<div class="light">&#9817;</div>
+	<div class="dark">&#9817;</div>
+	<!-- 8th -->
+	<div class="dark">&#9814;</div>
+	<div class="light">&#9816;</div>
+	<div class="dark">&#9815;</div>
+	<div class="light">&#9813;</div>
+	<div class="dark">&#9812;</div>
+	<div class="light">&#9815;</div>
+	<div class="dark">&#9816;</div>
+	<div class="light">&#9814;</div>
+</div>
+</div>
+</body>
+</html>
