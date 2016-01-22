@@ -1,335 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Friendly Chess</title>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	<meta name='mobile-web-app-capable' content='yes'>
+	<meta name='apple-mobile-web-app-capable' content='yes'>
+	<meta name='apple-mobile-web-app-status-bar-style' content='black'>
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui'>
 
-  <!-- Ensure loadability on mobile devices -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Material Design fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<title>Friendly Chess</title>
 
-  <!-- Bootstrap -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Material Design fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  <!-- Bootstrap Material Design -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/css/bootstrap-material-design.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/css/ripples.min.css" rel="stylesheet">
-  
-  <!-- Dropdown.js -->
-  <link href="https://cdn.rawgit.com/FezVrasta/dropdown.js/master/jquery.dropdown.css" rel="stylesheet">
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  
-  <!-- JavaScript/jQuery Dependencies -->
-  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/ripples.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/material.min.js"></script>
-  
-  <style>
-	.vertical-alignment-helper {
-		display:table;
-		height: 100%;
-		width: 100%;
-		pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
-	}
-	.vertical-align-center {
-		/* To center vertically */
-		display: table-cell;
-		vertical-align: middle;
-		pointer-events:none;
-	}
-	.modal-content {
-		/* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
-		width:inherit;
-		height:inherit;
-		/* To center horizontally */
-		margin: 0 auto;
-		pointer-events: all;
-	}
-  </style>
+	<!-- Bootstrap -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Bootstrap Material Design -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/css/bootstrap-material-design.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/css/ripples.min.css" rel="stylesheet">
+
+	<!-- Dropdown.js -->
+	<link href="https://cdn.rawgit.com/FezVrasta/dropdown.js/master/jquery.dropdown.css" rel="stylesheet">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+
+	<link rel="stylesheet" href="/assets/styles/app.css" type="text/css">
+
+
+	<!-- JavaScript/jQuery Dependencies -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/ripples.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/material.min.js"></script>
+
+	<script src="/assets/scripts/app.js"></script>
+
 </head>
 <body>
 
 <div id="first-load-dialog" class="modal fade" data-backdrop="false">
 	<div class="vertical-alignment-helper">
-	  <div class="modal-dialog vertical-align-center">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#10060;</button>-->
-			<h1 class="modal-title text-center">&#9812; Welcome to Friendly Chess! &#9813;</h1>
-		  </div>
-		  <div class="modal-body text-center">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#10060;</button>-->
+					<h1 class="modal-title text-center">&#9812; Welcome to Friendly Chess! &#9813;</h1>
+				</div>
+				<div class="modal-body text-center">
 			<span data-placement="left" title="Create a private space to play with friends!" data-toggle="tooltip">
 				<button class="btn btn-raised btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#room-creation">Create a Room</button> 
 			</span>
 			<span data-placement="right" title="Join a game with other Friendly Chess members!" data-toggle="tooltip">
 				<button class="btn btn-raised btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#player-creation">Join a Game!</button>
 			</span>
-		  </div>
-		  <!--
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-primary">Save changes</button>
-		  </div>
-		  -->
+				</div>
+				<!--
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				  <button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+				-->
+			</div>
 		</div>
-	  </div>
-  </div>
+	</div>
 </div>
 
 <div id="room-creation" class="modal fade" data-backdrop="false">
-<div class="vertical-alignment-helper">
-  <div class="modal-dialog modal-lg vertical-align-center">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title text-center">&#9812; Create a Room! &#9813;</h2>
-      </div>
-      <div class="modal-body">
-        Creating a room allows you to...
-		<ul>
-			<li>Restrict the players that you can battle within Friendly chess</li>
-			<li>Prevent you from playing with strangers</li>
-			<li>Make playing chess more friendly</li>
-		</ul>
-		<form class="form-horizontal">
-			<div class="form-group">
-				<label for="roomName" class="col-md-2 control-label">Room Name:</label>
-				<div class="col-md-7">
-					<input type="text" class="form-control" id="roomName" placeholder="Example:  Ziggy's Realm">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog modal-lg vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title text-center">&#9812; Create a Room! &#9813;</h2>
 				</div>
-				<div class="col-md-3">
-					&nbsp;
+				<div class="modal-body">
+					Creating a room allows you to...
+					<ul>
+						<li>Restrict the players that you can battle within Friendly chess</li>
+						<li>Prevent you from playing with strangers</li>
+						<li>Make playing chess more friendly</li>
+					</ul>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label for="roomName" class="col-md-2 control-label">Room Name:</label>
+							<div class="col-md-7">
+								<input type="text" class="form-control" id="roomName" placeholder="Example:  Ziggy's Realm">
+							</div>
+							<div class="col-md-3">
+								&nbsp;
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="groupURL" class="col-md-2 control-label">Group URL</label>
+							<div class="col-md-7">
+								<input type="text" disabled class="form-control" id="groupURL" placeholder="Room URL will be generated here...">
+							</div>
+							<div class="col-md-2">
+								<button type="button" id="copyRoomUrl" class="btn btn-info" data-toggle="popover" data-placement="top" title="Copied successfully!" data-content="Now send this URL to whoever you want to play chess with!">Copy</button>
+							</div>
+						</div>
+					</form>
+
+					<div id="shareIcons" class="text-center">
+						Share your link on social media!<br><br>
+						<a id="fbShareLink" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=friendlychess.com"><img src="fb-art.jpg" height="32px"></a>&nbsp;&nbsp;
+						<a id="gPlusShare" target="_blank" href="https://plus.google.com/share?url=https://friendlychess.com" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img src="https://www.gstatic.com/images/icons/gplus-32.png" alt="Share on Google+"></a>&nbsp;&nbsp;
+						<a id="twitterShare" target="_blank" href="https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20friendlychess.com"><img src="twitter_logo_blue.png" height="32px"></a>&nbsp;&nbsp;
+						<a id="emailShare" target="_blank" href="mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to https://friendlychess.com to get started!" ><i class="fa fa-envelope fa-3x" color="green" style=" vertical-align: middle;"></i></a>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#first-load-dialog" onclick="document.getElementById('roomName').value = '';  document.getElementById('groupURL').value = ''; $('#shareIcons').hide();">Back</button>
+					<button type="button" id="goRoom" class="btn btn-primary disabled" data-dismiss="modal" data-toggle="modal" data-target="#player-creation">Go to Room</button>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="groupURL" class="col-md-2 control-label">Group URL</label>
-				<div class="col-md-7">
-					<input type="text" disabled class="form-control" id="groupURL" placeholder="Room URL will be generated here...">
-				</div>
-				<div class="col-md-2">
-					<button type="button" id="copyRoomUrl" class="btn btn-info" data-toggle="popover" data-placement="top" title="Copied successfully!" data-content="Now send this URL to whoever you want to play chess with!">Copy</button>
-				</div>
-			</div>
-		</form>
-		
-		<div id="shareIcons" class="text-center">
-			Share your link on social media!<br><br>
-			<a id="fbShareLink" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=friendlychess.com"><img src="fb-art.jpg" height="32px"></a>&nbsp;&nbsp;
-			<a id="gPlusShare" target="_blank" href="https://plus.google.com/share?url=https://friendlychess.com" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img src="https://www.gstatic.com/images/icons/gplus-32.png" alt="Share on Google+"></a>&nbsp;&nbsp;
-			<a id="twitterShare" target="_blank" href="https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20friendlychess.com"><img src="twitter_logo_blue.png" height="32px"></a>&nbsp;&nbsp;
-			<a id="emailShare" target="_blank" href="mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to https://friendlychess.com to get started!" ><i class="fa fa-envelope fa-3x" color="green" style=" vertical-align: middle;"></i></a>
 		</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#first-load-dialog" onclick="document.getElementById('roomName').value = '';  document.getElementById('groupURL').value = ''; $('#shareIcons').hide();">Back</button>
-        <button type="button" id="goRoom" class="btn btn-primary disabled" data-dismiss="modal" data-toggle="modal" data-target="#player-creation">Go to Room</button>
-      </div>
-    </div>
-  </div>
-  </div>
+	</div>
 </div>
 
 <div id="player-creation" class="modal fade" data-backdrop="false">
-<div class="vertical-alignment-helper">
-  <div class="modal-dialog modal-lg vertical-align-center">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title text-center">&#9812; Join a Game! &#9813;</h2>
-      </div>
-      <div class="modal-body">
-		<h3 class="text-center">Welcome to <span class="roomName">the Lobby</span>!</h3>
-		<form class="form-horizontal">
-			<div class="form-group">
-				<label for="playerName" class="col-md-2 control-label">Player Name:</label>
-				<div class="col-md-9">
-					<input type="text" class="form-control" id="playerName">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog modal-lg vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title text-center">&#9812; Join a Game! &#9813;</h2>
 				</div>
-				<div class="col-md-1">
-					&nbsp;
+				<div class="modal-body">
+					<h3 class="text-center">Welcome to <span class="roomName">the Lobby</span>!</h3>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label for="playerName" class="col-md-2 control-label">Player Name:</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="playerName">
+							</div>
+							<div class="col-md-1">
+								&nbsp;
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="experience" class="col-md-2 control-label">Experience:</label>
+							<div class="col-md-9">
+								<select id="experience" class="form-control">
+									<option> Chose your experience... </option>
+									<option> Noob </option>
+									<option> Novice </option>
+									<option> Average </option>
+									<option> Jedi </option>
+								</select>
+							</div>
+							<div class="col-md-1">
+
+							</div>
+						</div>
+					</form>
+					<br><br>
+					<div class="text-center">
+						<button class="btn btn-raised btn-primary" data-toggle="collapse" data-target="#playerList" aria-expanded="false" aria-controls="collapseExample">Choose Your Opponent</button>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-raised btn-primary" data-toggle="modal" data-target="#loadingPlayer">Random Opponent</button>
+					</div>
+					<div class="collapse" id="playerList">
+						<br>
+						<br>
+						Players listed below are only those in <span class="roomName">the Lobby</span> will be listed here.  <a href="./index.html">Click here</a> to exit the room.
+						<table id="availPlayerTable" class="table table-striped table-hover">
+							<thead>
+							<tr>
+								<th>Player Name</th>
+								<th>Difficulty</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td>dmziggy94</td>
+								<td>Noob</td>
+							</tr>
+							<tr>
+								<td>zsilverz21</td>
+								<td>Expert</td>
+							</tr>
+							<tr>
+								<td>tdistefi85</td>
+								<td>Novice</td>
+							</tr>
+							<tr>
+								<td>dstat64</td>
+								<td>Average</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#first-load-dialog" onclick="$('#playerName').val(''); $('#experience').prop('selectedIndex',0);">Back</button>
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="experience" class="col-md-2 control-label">Experience:</label>
-				<div class="col-md-9">
-					<select id="experience" class="form-control">
-						<option> Chose your experience... </option>
-						<option> Noob </option>
-						<option> Novice </option>
-						<option> Average </option>
-						<option> Jedi </option>
-					</select>
-				</div>
-				<div class="col-md-1">
-					
-				</div>
-			</div>
-		</form>
-		<br><br>
-		<div class="text-center">
-			<button class="btn btn-raised btn-primary" data-toggle="collapse" data-target="#playerList" aria-expanded="false" aria-controls="collapseExample">Choose Your Opponent</button>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-raised btn-primary" data-toggle="modal" data-target="#loadingPlayer">Random Opponent</button>
 		</div>
-		<div class="collapse" id="playerList">
-			<br>
-			<br>
-			Players listed below are only those in <span class="roomName">the Lobby</span> will be listed here.  <a href="./index.html">Click here</a> to exit the room.
-			<table id="availPlayerTable" class="table table-striped table-hover">
-			  <thead>
-			  <tr>
-				<th>Player Name</th>
-				<th>Difficulty</th>
-			  </tr>
-			  </thead>
-			  <tbody>
-			  <tr>
-				<td>dmziggy94</td>
-				<td>Noob</td>
-			  </tr>
-			  <tr>
-				<td>zsilverz21</td>
-				<td>Expert</td>
-			  </tr>
-			  <tr>
-				<td>tdistefi85</td>
-				<td>Novice</td>
-			  </tr>
-			  <tr>
-				<td>dstat64</td>
-				<td>Average</td>
-			  </tr>
-			  </tbody>
-			 </table>
-		 </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#first-load-dialog" onclick="$('#playerName').val(''); $('#experience').prop('selectedIndex',0);">Back</button>
-      </div>
-    </div>
-  </div>
-  </div>
+	</div>
 </div>
 
 <div id="loadingPlayer" class="modal fade" data-backdrop="false">
 	<div class="vertical-alignment-helper">
-	  <div class="modal-dialog vertical-align-center">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#10060;</button>-->
-			<h1 class="modal-title text-center">&#9812; Waiting for player to accept... &#9813;</h1>
-		  </div>
-		  <div class="modal-body text-center">
-			<img src="ring-alt.svg">
-		  </div>
-		  
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel Request</button>
-			<!--<button type="button" class="btn btn-primary">Save changes</button>-->
-		  </div>
-		  
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#10060;</button>-->
+					<h1 class="modal-title text-center">&#9812; Waiting for player to accept... &#9813;</h1>
+				</div>
+				<div class="modal-body text-center">
+					<img src="ring-alt.svg">
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel Request</button>
+					<!--<button type="button" class="btn btn-primary">Save changes</button>-->
+				</div>
+
+			</div>
 		</div>
-	  </div>
-  </div>
+	</div>
 </div>
-
-<script>
-	var siteURL = "https://friendlychess.com";
-	var emailMessageLink = "mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to ";
-
-	$("#shareIcons").hide();
-	$.material.init();
-	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
-	})
-	$(window).load(function(){
-        $('#first-load-dialog').modal('show');
-    });
-	$("#roomName").keyup(function() {
-		var value = this.value;
-		if(value == "") {
-			$("#groupURL").val("");
-			$("#shareIcons").fadeOut();
-			$("goRoom").addClass("disabled");
-		} else {
-			//value = value.replace(new RegExp(" ", 'g'), "").replace("'", "").replace("/", "").replace("%", "").replace(";", "").replace("<", "").replace(">", "").replace(":", "").replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace("^", "");
-			value = value.replace(/([.%*;.<>+?^=!:${}()|\[\]\/\\])/g, "").replace(new RegExp(" ", 'g'), "");
-			$("#groupURL").val(siteURL + "/r/" + value);
-			$("#fbShareLink").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + siteURL + "/r/" + value);
-			$("#gPlusShare").attr("href", "https://plus.google.com/share?url=" + siteURL + "/r/" + value);
-			$("#twitterShare").attr("href", "https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20" + siteURL + "/r/" + value);
-			$("#emailShare").attr("href", emailMessageLink + siteURL + "/r/" + value + " to get started!");
-			$("#goRoom").removeClass("disabled");
-			$("#shareIcons").fadeIn();
-		}
-		
-	});
-	
-	document.getElementById("copyRoomUrl").addEventListener("click", function() {
-		var success = copyToClipboard(document.getElementById("groupURL"));
-		if (success) {
-			$('#copyRoomUrl').popover( {placement: "top"} );
-		}
-	});
-
-	function copyToClipboard(elem) {
-		// create hidden text element, if it doesn't already exist
-		var targetId = "_hiddenCopyText_";
-		var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
-		var origSelectionStart, origSelectionEnd;
-		if (isInput) {
-			// can just use the original source element for the selection and copy
-			target = elem;
-			origSelectionStart = elem.selectionStart;
-			origSelectionEnd = elem.selectionEnd;
-		} else {
-			// must use a temporary form element for the selection and copy
-			target = document.getElementById(targetId);
-			if (!target) {
-				var target = document.createElement("textarea");
-				target.style.position = "absolute";
-				target.style.left = "-9999px";
-				target.style.top = "0";
-				target.id = targetId;
-				document.body.appendChild(target);
-			}
-			target.textContent = elem.textContent;
-		}
-		// select the content
-		var currentFocus = document.activeElement;
-		target.focus();
-		target.setSelectionRange(0, target.value.length);
-		
-		// copy the selection
-		var succeed;
-		try {
-			  succeed = document.execCommand("copy");
-		} catch(e) {
-			succeed = false;
-		}
-		// restore original focus
-		if (currentFocus && typeof currentFocus.focus === "function") {
-			currentFocus.focus();
-		}
-		
-		if (isInput) {
-			// restore prior selection
-			elem.setSelectionRange(origSelectionStart, origSelectionEnd);
-		} else {
-			// clear temporary content
-			target.textContent = "";
-		}
-		return succeed;
-	}
-
-	$('#availPlayerTable').on("click", "tr", function() {
-		$("#loadingPlayer").modal({ backdrop: 'static' });
-	});
-	
-</script>
 
 </body>
 </html>

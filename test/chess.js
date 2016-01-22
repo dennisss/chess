@@ -7,6 +7,13 @@ describe('Chess', function(){
 
 		describe('isLegalMove()', function(){
 
+			it('cannot move to the same position', function(){
+				var b = Chess.Board.Default();
+				var p = b.grid[0][0];
+
+				assert(!p.isLegalMove(b, new Position(0,0), new Position(0,0)));
+			});
+
 			it('a pawn in default position can move two units forward', function(){
 
 				var b = Chess.Board.Default();

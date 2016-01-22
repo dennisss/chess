@@ -141,7 +141,7 @@ class Piece {
 /**
  * A collection of peices
  *
- * @property {Peice[][]} grid an 8x8 array of peices placed on the board (null indicates no peice)
+ * @property {Piece[][]} grid an 8x8 array of peices placed on the board (null indicates no peice)
  */
 class Board {
 
