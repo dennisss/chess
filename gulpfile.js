@@ -4,7 +4,6 @@ var gulp = require('gulp'),
 	sass = require('gulp-sass'),
 	rename = require('gulp-rename'),
 	jshint = require('gulp-jshint'),
-	jsdoc = require("gulp-jsdoc3"),
 	autoprefixer = require('gulp-autoprefixer'),
 	browserify = require('browserify'),
 	source = require('vinyl-source-stream'),
@@ -14,8 +13,6 @@ var gulp = require('gulp'),
 	merge = require('merge-stream'),
 	child_process = require('child_process'),
 	rimraf = require('gulp-rimraf');
-
-
 
 gulp.task('watch', function(){
 	gulp.watch(['src/app/**/*'], ['server']);
@@ -28,19 +25,24 @@ gulp.task('watch', function(){
 })
 
 gulp.task('lint', function(){
-	gulp.src('./src/**/*.js')
+	return gulp.src('./src/**/*.js')
 	.pipe(jshint())
 	.pipe(jshint.reporter('default'))
 })
 
-gulp.task('doc', function(){
-	return gulp.src(["./src/**/*.js", "README.md"])
-	.pipe(jsdoc(require('./config/jsdoc')))
+gulp.task('doc', function(cb){
+	var child = child_process.spawn('./node_modules/jsdoc/jsdoc.js', ['-c', 'config/jsdoc.json']);
+	child.on('exit', function(){ cb(); });
 })
 
 gulp.task('test', function(){
-	require('./node_modules/mocha/bin/mocha');
+	require('./node_modules/.bin/mocha');
 })
+
+gulp.task('cover', function(cb){
+	var child = child_process.spawn('./node_modules/.bin/istanbul', ['cover', '_mocha', '--dir', './public/coverage']);
+	child.on('exit', function(){ cb(); });
+});
 
 
 gulp.task('clean', function(){

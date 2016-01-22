@@ -1,0 +1,22 @@
+{
+	"tags": {
+		"allowUnknownTags": true
+	},
+	"source": {
+		"include": ["./src", "README.md"]
+	},
+	"plugins": [
+		"plugins/markdown"
+	],
+	"templates": {
+        "cleverLinks": false,
+        "monospaceLinks": true
+    },
+	"opts": {
+		"destination": "./public/doc",
+		"tutorials": "./doc",
+		"recurse": true,
+		"private": true,
+		"template": "./node_modules/minami"
+	}
+}

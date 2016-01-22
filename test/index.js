@@ -1,9 +1,7 @@
 
-describe('Hello', function(){
+global.assert = require('assert');
 
-	it('should pass', function(){
-
-	});
-
-
-})
+describe('Friendly Chess', function() {
+	require('./app');
+	require('./web');
+});

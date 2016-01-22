@@ -1,0 +1,56 @@
+var Chess = require('../src/chess'),
+	Position = require('../src/position');
+
+describe('Chess', function(){
+
+	describe('Piece', function(){
+
+		describe('isLegalMove()', function(){
+
+			it('a pawn in default position can move two units forward', function(){
+
+				var b = Chess.Board.Default();
+
+				// TODO: Check other side pawns going in the other direction as well
+				for(var i = 0; i < 8; i++) {
+					var p = b.grid[1][i];
+					assert(p.isLegalMove(b, new Position(i, 1), new Position(i, 3)));
+				}
+			});
+
+			it.skip('a knight can move from its default position', function(){
+
+
+			});
+
+		});
+
+
+	});
+
+	describe('Board', function(){
+
+		it('should be 8x8', function(){
+
+			var b = new Chess.Board();
+			assert(b.grid.length == 8);
+
+			for(var i = 0; i < b.length; i++)
+				assert(b.grid[i].length == 8);
+
+		});
+
+
+	});
+
+	describe('Game', function(){
+
+
+
+
+
+	});
+
+
+
+});
