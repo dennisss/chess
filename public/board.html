@@ -33,27 +33,28 @@
 
 	<style type="text/css">
 	.chessboard {
-		width: 69.99vmin;
-		height: 69.99vmin;
-		margin: 2vmin;
+		width: 96%;
+		/*height: 90vmin;*/
+		margin: auto;
 		border: 3vmin solid #333;
+		display: table;
 	}
 	.dark {
 		float: left;
-		width: 8vmin;
-		height: 8vmin;
+		width: 12.5%;
+		height: 12.5%;
 		background-color: #999;
-		font-size: 6.5vmin;
-		text-align:center;
+		font-size: 8vmin;
+		text-align: center;
 		display: table-cell;
 		vertical-align:middle;
 	}
 	.light {
 		float: left;
-		width: 8vmin;
-		height: 8vmin;
+		width: 12.5%;
+		height: 12.5%;
 		background-color: #fff;
-		font-size: 6.5vmin;
+		font-size: 8vmin;
 		text-align:center;
 		display: table-cell;
 		vertical-align:middle;
@@ -64,65 +65,86 @@
 	.light:hover {
 		background-color: #FF0
 	}
+	.center-board {
+		margin: auto;
+		width: 100vmin;
+	}
+	.row {
+		display: table-row;
+		width: 100%;
+		margins: auto;
+	}
 	</style>
 </head>
 <body>
-<div class="container text-center">
+<div class="center-board">
 <div class="chessboard">
 	<!-- 1st -->
-	<div class="light">&#9820;</div>
-	<div class="dark">&#9822;</div>
-	<div class="light">&#9821;</div>
-	<div class="dark">&#9819;</div>
-	<div class="light">&#9818;</div>
-	<div class="dark">&#9821;</div>
-	<div class="light">&#9822;</div>
-	<div class="dark">&#9820;</div>
+	<div class="row">
+		<div class="light">&#9820;</div>
+		<div class="dark">&#9822;</div>
+		<div class="light">&#9821;</div>
+		<div class="dark">&#9819;</div>
+		<div class="light">&#9818;</div>
+		<div class="dark">&#9821;</div>
+		<div class="light">&#9822;</div>
+		<div class="dark">&#9820;</div>
+	</div>
 	<!-- 2nd -->
-	<div class="dark">&#9823;</div>
-	<div class="light">&#9823;</div>
-	<div class="dark">&#9823;</div>
-	<div class="light">&#9823;</div>
-	<div class="dark">&#9823;</div>
-	<div class="light">&#9823;</div>
-	<div class="dark">&#9823;</div>
-	<div class="light">&#9823;</div>
+	<div class="row">
+		<div class="dark">&#9823;</div>
+		<div class="light">&#9823;</div>
+		<div class="dark">&#9823;</div>
+		<div class="light">&#9823;</div>
+		<div class="dark">&#9823;</div>
+		<div class="light">&#9823;</div>
+		<div class="dark">&#9823;</div>
+		<div class="light">&#9823;</div>
+	</div>
 	<!-- 3th -->
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
+	<div class="row">
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+	</div>
 	<!-- 4st -->
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
+	<div class="row">
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+	</div>
 	<!-- 5th -->
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
+	<div class="row">
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+	</div>
 	<!-- 6th -->
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
-	<div class="dark"></div>
-	<div class="light"></div>
+	<div class="row">
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+		<div class="dark">&nbsp;</div>
+		<div class="light">&nbsp;</div>
+	</div>
 	<!-- 7th -->
 	<div class="light">&#9817;</div>
 	<div class="dark">&#9817;</div>
