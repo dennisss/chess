@@ -1,6 +1,6 @@
 $(function(){
 
-	var siteURL = "https://friendlychess.com";
+	var siteURL = location.origin;
 	var emailMessageLink = "mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to ";
 
 	$("#shareIcons").hide();
