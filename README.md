@@ -3,7 +3,7 @@ Chess
 
 - CS 451 Project, Drexel University
 
-- By: Tess Distefano, Dennis Shtatnov, Zach Silverstein, Dan Ziegler
+- By: Tess DiStefano, Dennis Shtatnov, Zach Silverstein, Dan Ziegler
 
 
 Included is a full stack application for playing chess.
@@ -21,7 +21,7 @@ Getting Started
 
 - Build and start server using `gulp`
 
-- View at `http://127.0.0.1:8000`
+- View at `http://127.0.0.1:8000` or `http://localhost:8000/`
 
 
 Common tasks

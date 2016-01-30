@@ -39,6 +39,22 @@ $(function(){
 		}
 	});
 
+	$('#btnChooseOp').click(function(){
+		if ($('#playerName').val().length > 0 && $('#experience').selectedIndex !== 0) {
+			$('#playerList').collapse();
+		} else {
+			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is'+$('#experience').index());
+		}
+	});
+
+	$('#btnRandomOp').click(function(){
+		if ($('#playerName').val().length > 0 && $('#experience').selectedIndex !== 0) {
+			$('#loadingPlayer').modal({ backdrop: 'static' });
+		} else {
+			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is'+$('#experience').index());
+		}
+	});
+
 	function copyToClipboard(elem) {
 		// create hidden text element, if it doesn't already exist
 		var targetId = "_hiddenCopyText_";
