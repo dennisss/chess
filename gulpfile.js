@@ -6,6 +6,7 @@ var gulp = require('gulp'),
 	jshint = require('gulp-jshint'),
 	autoprefixer = require('gulp-autoprefixer'),
 	browserify = require('browserify'),
+	es6ify = require('es6ify'),
 	source = require('vinyl-source-stream'),
 	buffer = require('vinyl-buffer'),
 	gutil = require('gulp-util'),
@@ -15,13 +16,10 @@ var gulp = require('gulp'),
 	rimraf = require('gulp-rimraf');
 
 gulp.task('watch', function(){
-	gulp.watch(['src/app/**/*'], ['server']);
-
-	var watcher = gulp.watch(['src/web/**/*'], ['build']);
+	var watcher = gulp.watch(['src/**/*'], ['build', 'server']);
 	watcher.on('change', function(event) {
 		console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
 	});
-
 })
 
 gulp.task('lint', function(){
@@ -52,10 +50,11 @@ gulp.task('clean', function(){
 
 gulp.task('build', ['clean'], function(){
 
-	var b = browserify({
-		entries: './src/web/scripts/index.js',
-		debug: true,
-	});
+	var b = browserify({ debug: true })
+	.add(es6ify.runtime)
+	.transform(es6ify.configure(/^(?!.*node_modules)+.+\.js$/)) // Some packages aren't ES6 compatible
+	.require(require.resolve('./src/web/scripts/index.js'), { entry: true });
+
 
 	var buildJs = b.bundle()
 	.pipe(source('app.js'))
@@ -65,7 +64,6 @@ gulp.task('build', ['clean'], function(){
 	.on('error', gutil.log)
 	.pipe(sourcemaps.write('.'))
 	.pipe(gulp.dest('./public/assets/scripts/'));
-
 
 
 	var buildCss = gulp.src('./src/web/styles/index.scss')
