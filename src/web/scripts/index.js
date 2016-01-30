@@ -91,7 +91,7 @@ $(function(){
 	}
 
 	Client.socket.on('userlist', function(data){
-		$("#playerTableBody").innerHTML("");
+		$("#playerTableBody").html("");
 		data.forEach(printToTable);
 	});
 
@@ -101,6 +101,7 @@ $(function(){
 			//alert( $('#experience').selectedIndex !== 0)
 			$('#playerList').collapse();
 			Client.proc.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
+				$("#playerTableBody").html("");
 				data.forEach(printToTable);
 			});
 		} else {
@@ -114,6 +115,13 @@ $(function(){
 		} else {
 			alert('Please enter your name and choose your difficulty!');
 		}
+	});
+
+	$("#joinGameBack").click(function(){
+		$('#playerName').val('');
+		$('#experience').prop('selectedIndex',0);
+		Client.proc.call('leave', {room: roomName}, function(err){
+		});
 	});
 
 	function copyToClipboard(elem) {
