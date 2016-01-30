@@ -46,13 +46,17 @@ $(function(){
 	var emailMessageLink = "mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to ";
 
 	$("#shareIcons").hide();
+
 	$.material.init();
+
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip();
-	})
+	});
+
 	$(window).load(function(){
 		$('#first-load-dialog').modal('show');
 	});
+
 	$("#roomName").keyup(function() {
 		var value = this.value;
 		if(value == "") {
@@ -83,18 +87,19 @@ $(function(){
 	});
 
 	$('#btnChooseOp').click(function(){
-		if ($('#playerName').val().length > 0 && $('#experience').selectedIndex !== 0) {
+		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
+			//alert( $('#experience').selectedIndex !== 0)
 			$('#playerList').collapse();
 		} else {
-			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is'+$('#experience').index());
+			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is '+$('#experience').val());
 		}
 	});
 
 	$('#btnRandomOp').click(function(){
-		if ($('#playerName').val().length > 0 && $('#experience').selectedIndex !== 0) {
+		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
 			$('#loadingPlayer').modal({ backdrop: 'static' });
 		} else {
-			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is'+$('#experience').index());
+			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is '+$('#experience').val());
 		}
 	});
 
