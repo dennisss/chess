@@ -20,3 +20,71 @@
 	margin: 0 auto;
 	pointer-events: all;
 }
+
+/*
+.chessboard {
+  width: 96%;
+  margin: auto;
+  border: 3vmin solid #333;
+  display: table;
+}*/
+/*
+.chessboard {
+  width: 96vmin;
+  margin: auto;
+  border: 3vmin solid #333;
+  display: table;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+} */
+
+.chessboard {
+  width: 96vmin;
+  margin: auto;
+  border: 3vmin solid #333;
+  display: table;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.dark {
+  float: left;
+  width: 12.5%;
+  height: 12.5%;
+  background-color: #999;
+  font-size: 8vmin;
+  text-align: center;
+  display: table-cell;
+  vertical-align:middle;
+}
+.light {
+  float: left;
+  width: 12.5%;
+  height: 12.5%;
+  background-color: #fff;
+  font-size: 8vmin;
+  text-align:center;
+  display: table-cell;
+  vertical-align:middle;
+}
+.dark:hover {
+  background-color: #FF0
+}
+.light:hover {
+  background-color: #FF0
+}
+.center-board {
+  margin: auto;
+  width: 100vmin;
+}
+.row {
+  display: table-row;
+  width: 100%;
+  margins: auto;
+}
