@@ -48,7 +48,7 @@ $(function(){
 	$("#shareIcons").hide();
 	$.material.init();
 	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
+		$('[data-toggle="tooltip"]').tooltip();
 	})
 	$(window).load(function(){
 		$('#first-load-dialog').modal('show');
@@ -58,7 +58,8 @@ $(function(){
 		if(value == "") {
 			$("#groupURL").val("");
 			$("#shareIcons").fadeOut();
-			$("goRoom").addClass("disabled");
+			$("#goRoom").addClass("disabled");
+			$("#goRoom").prop("disabled", true);
 		} else {
 			//value = value.replace(new RegExp(" ", 'g'), "").replace("'", "").replace("/", "").replace("%", "").replace(";", "").replace("<", "").replace(">", "").replace(":", "").replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace("^", "");
 			value = value.replace(/([.%*;.<>+?^=!:${}()|\[\]\/\\])/g, "").replace(new RegExp(" ", 'g'), "");
@@ -68,6 +69,7 @@ $(function(){
 			$("#twitterShare").attr("href", "https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20" + siteURL + "/r/" + value);
 			$("#emailShare").attr("href", emailMessageLink + siteURL + "/r/" + value + " to get started!");
 			$("#goRoom").removeClass("disabled");
+			$("#goRoom").prop("disabled", false);
 			$("#shareIcons").fadeIn();
 		}
 
