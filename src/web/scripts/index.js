@@ -86,12 +86,25 @@ $(function(){
 		}
 	});
 
+	function printToTable(element, index, array) {
+		$("#playerTableBody").append("<tr><td>" + element.name + "</td><td>"+ element.level +"</td></tr>");
+	}
+
+	Client.socket.on('userlist', function(data){
+		$("#playerTableBody").innerHTML("");
+		data.forEach(printToTable);
+	});
+
+
 	$('#btnChooseOp').click(function(){
 		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
 			//alert( $('#experience').selectedIndex !== 0)
 			$('#playerList').collapse();
+			Client.proc.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
+				data.forEach(printToTable);
+			});
 		} else {
-			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is '+$('#experience').val());
+			alert('Please enter your name and choose your difficulty!');
 		}
 	});
 
@@ -99,7 +112,7 @@ $(function(){
 		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
 			$('#loadingPlayer').modal({ backdrop: 'static' });
 		} else {
-			alert('Please enter your name and choose your difficulty! your name is '+$('#playerName').val()+' and your difficulty index is '+$('#experience').val());
+			alert('Please enter your name and choose your difficulty!');
 		}
 	});
 
@@ -156,6 +169,12 @@ $(function(){
 	$('#availPlayerTable').on("click", "tr", function() {
 		$("#loadingPlayer").modal({ backdrop: 'static' });
 	});
+
+	window.onbeforeunload = function(e) {
+		Client.proc.call('leave', {room: roomName}, function(err){
+
+		});
+	};
 
 });
 
