@@ -1,3 +1,4 @@
+var Client = require('../../client');
 $(function(){
 
 	var siteURL = location.origin;
