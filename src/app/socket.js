@@ -1,5 +1,28 @@
 'use strict';
 
+
+
+/*
+	User Object: { id: 'RandomSocketId', name: '', level: '' }
+
+
+	Methods:
+		Joining a room
+		- join({room: 'roomName', name: 'userName', level: 'Jedi'}, function(err, data){ Data contains a list of users  });
+
+		Leaving a room
+		- leave({room: 'roomName'}, funciton(err){  })
+
+	Events/Notification
+		When in a room, get a notification of the current list of players
+		- userlist : called with array of users
+
+
+*/
+
+
+
+
 var RPC = require('../rpc');
 
 
@@ -44,6 +67,7 @@ module.exports = function(server){
 
 			// Store profile and join the current room
 			socket.profile = {
+				id: socket.id,
 				name: data.name,
 				level: data.level
 			};
@@ -62,8 +86,16 @@ module.exports = function(server){
 		proc.register('leave', function(data, callback){
 			// TODO: There should only be one active room?
 			_.map(socket.rooms, function(r){
-				socket.leave(r);
+				if(r != socket.id){
+					socket.leave(r);
+
+
+					// Let everyone else in the room know that the socket left
+					var list = userlist(io, room);
+					io.to(r).emit('userlist', list);
+				}
 			});
+
 		});
 
 

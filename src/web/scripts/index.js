@@ -1,4 +1,45 @@
 var Client = require('../../client');
+
+var Chess = require('../../chess');
+
+/*
+
+Client.socket.on('userlist', function(data){
+
+
+});
+
+Client.socket.on('gamerequest', function(data){
+
+
+})
+
+Client.proc.call('join', {room: 'Hello', name: 'Dennis', level: 'Jedi'}, function(err, data){
+
+	console.log(err);
+
+	console.log(data);
+
+
+})
+
+Client.proc.call('leave', {room: 'Hello'}, function(err){
+
+
+});
+
+*/
+
+
+// If the user goes to a room url, this will be populated
+var roomName = null;
+var m = /^\/r\/(.*)$/.exec(location.pathname);
+if(m){
+	roomName = m[1];
+}
+
+
+
 $(function(){
 
 	var siteURL = location.origin;
