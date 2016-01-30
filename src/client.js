@@ -11,15 +11,6 @@ var socket = io({
 
 var proc = new RPC(socket);
 
-proc.call('join', {room: 'Hello', name: 'Dennis', level: 'Jedi'}, function(err, data){
-
-	console.log(err);
-
-	console.log(data);
-
-
-})
-
 
 module.exports = {
 
