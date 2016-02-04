@@ -1,7 +1,7 @@
 .vertical-alignment-helper {
 	display: table;
 	height: 100%;
-	width: 100%;
+	width: 98%;
 	pointer-events: none; /* This makes sure that we can still click outside of the modal to close it */
 }
 
@@ -87,4 +87,17 @@
   display: table-row;
   width: 100%;
   margins: auto;
+}
+
+.bottom-right {
+  right: 20px;
+  position: fixed;
+  bottom: 0px;
+  text-align: right;
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 20px 20px;
+  border-bottom: 1px solid #eee;
 }
