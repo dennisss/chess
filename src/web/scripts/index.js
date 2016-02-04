@@ -44,8 +44,15 @@ $(function(){
 
 	var siteURL = location.origin;
 	var emailMessageLink = "mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to ";
+	var roomURLName = "lobby";
+	var roomName = "Lobby";
+	var opName = "";
+	var opLevel = "";
+	var thisPlayer = "";
 
 	$("#shareIcons").hide();
+	$("#thisPlayerInfo").hide();
+	$("#thatPlayerInfo").hide();
 
 	$.material.init();
 
@@ -59,24 +66,33 @@ $(function(){
 
 	$("#roomName").keyup(function() {
 		var value = this.value;
-		if(value == "") {
+		if(value === "") {
 			$("#groupURL").val("");
 			$("#shareIcons").fadeOut();
 			$("#goRoom").addClass("disabled");
 			$("#goRoom").prop("disabled", true);
+			roomURLName = "lobby";
+			roomName = "Lobby";
 		} else {
 			//value = value.replace(new RegExp(" ", 'g'), "").replace("'", "").replace("/", "").replace("%", "").replace(";", "").replace("<", "").replace(">", "").replace(":", "").replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace("^", "");
-			value = value.replace(/([.%*;.<>+?^=!:${}()|\[\]\/\\])/g, "").replace(new RegExp(" ", 'g'), "");
+			roomName = value;
+			value = value.replace(/([.%*;.<>+?^=!:\\'${}()|\[\]\/\\])/g, "").replace(new RegExp(" ", 'g'), "");
+			roomURLName = "/r/" + value;
 			$("#groupURL").val(siteURL + "/r/" + value);
-			$("#fbShareLink").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + siteURL + "/r/" + value);
-			$("#gPlusShare").attr("href", "https://plus.google.com/share?url=" + siteURL + "/r/" + value);
-			$("#twitterShare").attr("href", "https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20" + siteURL + "/r/" + value);
-			$("#emailShare").attr("href", emailMessageLink + siteURL + "/r/" + value + " to get started!");
+			$("#fbShareLink").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + siteURL + roomURLName);
+			$("#gPlusShare").attr("href", "https://plus.google.com/share?url=" + siteURL + roomURLName);
+			$("#twitterShare").attr("href", "https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20" + siteURL + roomURLName);
+			$("#emailShare").attr("href", emailMessageLink + siteURL + roomURLName + " to get started!");
 			$("#goRoom").removeClass("disabled");
 			$("#goRoom").prop("disabled", false);
 			$("#shareIcons").fadeIn();
 		}
 
+	});
+
+	$("#goRoom").click(function() {
+		history.pushState(null, null, siteURL + roomURLName);
+		$(".roomName").html(roomName);
 	});
 
 	document.getElementById("copyRoomUrl").addEventListener("click", function() {
@@ -87,7 +103,9 @@ $(function(){
 	});
 
 	function printToTable(element, index, array) {
-		$("#playerTableBody").append("<tr><td>" + element.name + "</td><td>"+ element.level +"</td></tr>");
+		if (element.name != $('#playerName').val()) {
+			$("#playerTableBody").append("<tr><td class='opName'>" + element.name + "</td><td class='opLevel'>" + element.level + "</td></tr>");
+		}
 	}
 
 	Client.socket.on('userlist', function(data){
@@ -97,8 +115,9 @@ $(function(){
 
 
 	$('#btnChooseOp').click(function(){
-		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
-			//alert( $('#experience').selectedIndex !== 0)
+		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Chose your experience...") {
+			thisPlayer = $('#playerName').val();
+			console.log( $('#experience').val());
 			$('#playerList').collapse();
 			Client.proc.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
 				$("#playerTableBody").html("");
@@ -110,7 +129,7 @@ $(function(){
 	});
 
 	$('#btnRandomOp').click(function(){
-		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
+		if ($('#playerName').val().length > 0& $('#experience').val() !== "Choose your experience...") {
 			$('#loadingPlayer').modal({ backdrop: 'static' });
 		} else {
 			alert('Please enter your name and choose your difficulty!');
@@ -175,7 +194,17 @@ $(function(){
 	}
 
 	$('#availPlayerTable').on("click", "tr", function() {
+		opName = $(this).find(".opName").html();
+		opLevel = $(this).find(".opLevel").html();
 		$("#loadingPlayer").modal({ backdrop: 'static' });
+		setTimeout(function() {
+			$("#loadingPlayer").modal("hide");
+			$("#player-creation").modal("hide");
+			$(".thisPlayerName").html(thisPlayer);
+			$(".otherPlayerName").html(opName);
+			$("#thisPlayerInfo").show();
+			$("#thatPlayerInfo").show();
+		}, 5000);
 	});
 
 	window.onbeforeunload = function(e) {
