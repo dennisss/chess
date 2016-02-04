@@ -1,20 +1,22 @@
 var Client = require('../../client');
 
+var client = new Client();
+
 var Chess = require('../../chess');
 
 /*
 
-Client.socket.on('userlist', function(data){
+client.socket.on('userlist', function(data){
 
 
 });
 
-Client.socket.on('gamerequest', function(data){
+client.socket.on('gamerequest', function(data){
 
 
 })
 
-Client.proc.call('join', {room: 'Hello', name: 'Dennis', level: 'Jedi'}, function(err, data){
+client.proc.call('join', {room: 'Hello', name: 'Dennis', level: 'Jedi'}, function(err, data){
 
 	console.log(err);
 
@@ -23,7 +25,7 @@ Client.proc.call('join', {room: 'Hello', name: 'Dennis', level: 'Jedi'}, functio
 
 })
 
-Client.proc.call('leave', {room: 'Hello'}, function(err){
+client.proc.call('leave', {room: 'Hello'}, function(err){
 
 
 });
@@ -108,7 +110,7 @@ $(function(){
 		}
 	}
 
-	Client.socket.on('userlist', function(data){
+	client.socket.on('userlist', function(data){
 		$("#playerTableBody").html("");
 		data.forEach(printToTable);
 	});
@@ -119,7 +121,7 @@ $(function(){
 			thisPlayer = $('#playerName').val();
 			console.log( $('#experience').val());
 			$('#playerList').collapse();
-			Client.proc.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
+			client.proc.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
 				$("#playerTableBody").html("");
 				data.forEach(printToTable);
 			});
@@ -139,7 +141,7 @@ $(function(){
 	$("#joinGameBack").click(function(){
 		$('#playerName').val('');
 		$('#experience').prop('selectedIndex',0);
-		Client.proc.call('leave', {room: roomName}, function(err){
+		client.proc.call('leave', {room: roomName}, function(err){
 		});
 	});
 
@@ -208,7 +210,7 @@ $(function(){
 	});
 
 	window.onbeforeunload = function(e) {
-		Client.proc.call('leave', {room: roomName}, function(err){
+		client.proc.call('leave', {room: roomName}, function(err){
 
 		});
 	};
