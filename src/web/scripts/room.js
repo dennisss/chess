@@ -13,7 +13,9 @@ function load(router){
 	function printToTable(element, index, array) {
 		if (element.name != $('#playerName').val()) {
 			$("#playerTableBody").append("<tr><td class='opName'>" + element.name + "</td><td class='opLevel'>" + element.level + "</td></tr>");
-		}
+		} else if(array.length == 1) {
+			$("#playerTableBody").append("<tr><td colspan='2' class='text-center'><img src='https://orig11.deviantart.net/dcab/f/2011/158/1/6/nyan_cat_by_valcreon-d3iapfh.gif' style='height: 150px'><br>Sorry!  There are no available players available at this time.  Hang in there!<br></td></tr>");
+		} // https://49.media.tumblr.com/8210fd413c5ce209678ef82d65731443/tumblr_mjphnqLpNy1s5jjtzo1_400.gif
 	}
 
 	client.socket.on('userlist', function(data){
