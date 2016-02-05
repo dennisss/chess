@@ -33,7 +33,7 @@ function Router(options){
 
 			if(pattern[i].charAt(0) == ':'){ // Capture group
 				var name = pattern[i].slice(1);
-				params[name] = path[i];
+				params[name] = decodeURIComponent(path[i]);
 			}
 			else{ // Matching pattern
 				if(pattern[i] != path[i])
@@ -54,7 +54,7 @@ function Router(options){
 
 			if(pattern[i].charAt(0) == ':'){
 				var name = pattern[i].slice(1);
-				parts.push(params[name]);
+				parts.push(encodeURIComponent(params[name]));
 			}
 			else
 				parts.push(pattern[i]);
@@ -136,7 +136,16 @@ function Router(options){
 		var keys = _.keys(states);
 		for(var i = 0; i < keys.length; i++){
 			var s = states[keys[i]];
-			s.controller.load({go: goto_func, back: function(){ window.history.back(); }});
+			s.controller.load({
+				go: goto_func,
+				back: function(){ window.history.back(); },
+				link: function(name, params){ // Makes a link to a state
+					var s = states[name];
+					var path = createpath(params, s.path);
+					return location.origin + path;
+				}
+
+			});
 		}
 
 
