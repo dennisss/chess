@@ -29,7 +29,7 @@ module.exports = serve;
 
 // Start it! (if running as an independent server)
 if(require.main == module){
-	server.listen(8000, function(){ console.log('Server listening') });
+	serve().listen(8000, function(){ console.log('Server listening') });
 }
 
 

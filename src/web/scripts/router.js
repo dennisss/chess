@@ -1,43 +1,3 @@
-
-/*
-
-
-
-var Router = require('./router');
-
-
-Router({
-	states: {
-		home: { // Landing page
-			path: '/home',
-			controller: require('./home')
-		},
-
-		create: { // Create a room page
-			path: '/create',
-			controller: require('./create')
-		},
-
-		room: { // In a room page
-			path: '/r/:room',
-			controller: require('./room')
-		},
-
-		game: { // In a game page
-			path: '/game',
-			controller: require('./game')
-		}
-
-	},
-
-	default: 'home'
-});
-
-
-
-*/
-
-
 var _ = require('underscore');
 
 /**
@@ -115,12 +75,12 @@ function Router(options){
 	// Actually run a state once already n it
 	function runState(name, params){
 		if(current_state){
-			states[current_state.name].controller.unload();
+			states[current_state.name].controller.leave();
 		}
 
 		var s = { name: name, params: params, go: goto_func };
 		current_state = s;
-		states[name].controller.load(s);
+		states[name].controller.enter(s);
 	}
 
 	// Change the state by its name
@@ -148,8 +108,13 @@ function Router(options){
 			var params = parsepath(path, s.path);
 			if(params){
 				goto(keys[i], params);
-				break;
+				return;
 			}
+		}
+
+		// Fallback if no state matched
+		if(options.default){
+			goto(options.default, {});
 		}
 	}
 
@@ -165,10 +130,19 @@ function Router(options){
 		gotoPath(path);
 	}
 
-	window.addEventListener('load', function() {
+	$(window).on('load', function() {
+
+		// Load all states
+		var keys = _.keys(states);
+		for(var i = 0; i < keys.length; i++){
+			var s = states[keys[i]];
+			s.controller.load({go: goto_func, back: function(){ window.history.back(); }});
+		}
+
+
 		popstate();
 		setTimeout(function() {
-			window.addEventListener('popstate', popstate);
+			$(window).on('popstate', popstate);
 		}, 0);
 	});
 

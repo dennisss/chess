@@ -4,7 +4,8 @@
 
 
 var io = require('socket.io-client'),
-	RPC = require('./rpc');
+	RPC = require('./rpc'),
+	_ = require('underscore');
 
 /*
 
