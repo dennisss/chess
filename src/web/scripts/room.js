@@ -52,7 +52,8 @@ function load(router){
 		router.go('home');
 	});
 
-	$('#exitLink').click(function(){
+	$('#exitLink').click(function(e){
+		e.preventDefault();
 		router.go('home');
 	});
 
