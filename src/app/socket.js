@@ -25,11 +25,14 @@
 			-> Callback err is set in the case of a server error
 				-> err is : { reason: 'timeout' } if the other user timed out
 			-> If the challenge was successful, the data will be set
-				-> data is : { ... insert state of initial game and which player is  ... } if the hame has started
+				-> data is : { ... insert state of initial game and which player is which  ... } if the hame has started
 
 		Accepting a challenge after receiving a 'challenged' event
 		- accept({ player_id: 'id of person that challenged you' }) -> callback returns the same thing as challenge()
 
+
+		Moving a peice
+		- move({ from: [0,0], to: [1,1] }) -> callback called with game state
 
 
 	Events/Notification
@@ -45,7 +48,8 @@
 
 
 
-var RPC = require('../rpc');
+var RPC = require('../rpc'),
+	Chess = require('../chess');
 
 
 // Get users in a room
@@ -66,6 +70,11 @@ module.exports = function(server){
 		path: '/socket',
 		serveClient: false
 	});
+
+	// All games currently being played
+	// Keys are player ids
+	// Values are instances of Game
+	var games = {};
 
 
 	// Send a list of users to everyone in the room
@@ -91,9 +100,15 @@ module.exports = function(server){
 
 
 
+
+
 	io.on('connection', function(socket){
 
 		var proc = new RPC(socket, true);
+
+
+		// Initial unready state
+		socket.state = { id: -1, name: 'not ready' };
 
 
 		/////// Room managment stuff
@@ -109,10 +124,9 @@ module.exports = function(server){
 			socket.profile = {
 				id: socket.id,
 				name: data.name,
-				level: data.level,
-
-				state: { id: 0, name: 'initial' }
+				level: data.level
 			};
+			socket.state = { id: 0, name: 'initial' };
 			socket.join(room);
 
 			// Broadcast user list to other players
@@ -137,17 +151,23 @@ module.exports = function(server){
 
 			// Get the socket associated with the person being requested
 			var other_id = data.player_id;
-			var other = io.sockets.connected[other]
 
-			if(socket.profile.state != 0 || other.profile.state != 0){
+			if(!io.sockets.connected.hasOwnProperty(other_id)){
+				callback('Can not find the user you want to challenge');
+				return;
+			}
+
+			var other = io.sockets.connected[other_id]
+
+			if(socket.state.id != 0 || other.state.id != 0){
 				callback('You or the other player is currently unavailable.');
 				return;
 			}
 
 
 			// These two should be atomically be set
-			socket.profile.state = { id: 1, name: 'challenging', challengee: other_id  };
-			other.profile.state = { id: 2, name: 'challenged', challenger: socket.id };
+			socket.state = { id: 1, name: 'challenging', challengee: other_id  };
+			other.state = { id: 2, name: 'challenged', challenger: socket.id };
 
 
 			// Broadcast to other player
@@ -159,29 +179,26 @@ module.exports = function(server){
 				}
 			});
 
+
 			var accepted = false;
 
-
-
-
-
+			socket.state.callmeback = function(){
+				accepted = true;
+				callback(null, games[socket.id]);
+			}
 
 
 			// Timeout the challenge after 20 seconds
 			setTimeout(function(){
-
 				if(!accepted){
-
 					// TODO: Attomically reset both  users to their initial states
-
+					socket.state = {id: 0, name: 'initial'};
+					other.state = {id: 0, name: 'initial'};
 
 					callback({ reason: 'timeout' }, null);
 				}
 
-
 			}, 20 * 1000);
-
-
 
 		})
 
@@ -189,8 +206,33 @@ module.exports = function(server){
 		proc.register('accept', function(data, callback){ // Other player responds to request
 
 
+			if(socket.state.id != 2){
+				callback('Cannot accept: You haven\'t been challenged by anyone');
+				return;
+			}
+
 
 			// Set up an initial game and have both
+
+			var other_id = socket.state.challenger;
+			var other = io.sockets.connected[other_id];
+
+			var game = new Chess.Game();
+			game.players = [socket.profile, other.profile];
+
+			// Store the game state
+			games[socket.id] = game;
+			games[other_id]  = game;
+
+			// Let the challenger know that the game has started
+			other.state.callmeback();
+
+			// Set both player's states to ingame
+			socket.state = { id: 4, name: 'ingame' };
+			other.state = { id: 4, name: 'ingame' };
+
+
+			callback(null, game);
 		});
 
 
@@ -200,10 +242,25 @@ module.exports = function(server){
 		/////// Playing the game stuff
 
 
-		proc.register('move', function(){
+		proc.register('move', function(data, callback){
 
+			var game = games[socket.id];
+
+
+			var from = data.from;
+			var to = data.to;
+
+			// game.board.grid
+
+
+			// Emit to both players
 
 		});
+
+		proc.register('forfeit', function(data, callback){
+
+
+		})
 
 
 

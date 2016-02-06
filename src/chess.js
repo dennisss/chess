@@ -137,6 +137,17 @@ class Piece {
 };
 
 
+/**
+ * A move from one position on the board to another
+ */
+class Move {
+
+
+
+};
+
+
+
 
 /**
  * A collection of peices
@@ -200,7 +211,7 @@ class Board {
 	 * @returns {number[][]}
 	 */
 	toJSON(){
-		return this.grid.toJSON();
+		return this.grid;
 	};
 
 
@@ -211,6 +222,7 @@ class Board {
  * A game of chess
  *
  * @property {Board} board
+ * @property {string[]} players the profiles of each player
  */
 class Game {
 
@@ -222,6 +234,15 @@ class Game {
 	};
 
 
+
+	toJSON(){
+		return {
+
+			board: this.board,
+			players: this.players
+
+		};
+	};
 
 
 
