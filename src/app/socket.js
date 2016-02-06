@@ -27,12 +27,12 @@
 			-> If the challenge was successful, the data will be set
 				-> data is : { ... insert state of initial game and which player is which  ... } if the hame has started
 
-		- random_challenge();
+		- random_challenge({});
 
 
 		Accepting a challenge after receiving a 'challenged' event
-		- accept(); // { player_id: 'id of person that challenged you' }) -> callback returns the same thing as challenge()
-		- reject();
+		- accept({}); -> callback returns the same thing as challenge()
+		- reject({});
 
 
 		Moving a peice
@@ -47,6 +47,10 @@
 		- challenged : called with { player: { .. id, name, level, ... } }
 
 
+		When you are in a game and it finishes for some reason
+		- endgame : called with { result: 'win|lose|draw' }
+
+
 */
 
 
@@ -54,6 +58,20 @@
 
 var RPC = require('../rpc'),
 	Chess = require('../chess');
+
+
+
+var State = {
+
+	None: -1, // uninitialized/unavailable
+	Ready: 0, // ready/in room
+	Challenging: 1, // challenging someone
+	Challenged: 2, // being challenged
+	Searching: 3, // searching for random player
+	InGame: 4
+
+}
+
 
 
 // Get users in a room
@@ -112,7 +130,7 @@ module.exports = function(server){
 
 
 		// Initial unready state
-		socket.state = { id: -1, name: 'not ready' };
+		socket.state = State.None;
 
 
 		/////// Room managment stuff
@@ -130,7 +148,7 @@ module.exports = function(server){
 				name: data.name,
 				level: data.level
 			};
-			socket.state = { id: 0, name: 'initial' };
+			socket.state = State.Initial;
 			socket.join(room);
 
 			// Broadcast user list to other players
@@ -155,89 +173,102 @@ module.exports = function(server){
 
 			// Get the socket associated with the person being requested
 			var other_id = data.player_id;
+			var other = io.sockets.connected[other_id]
 
-			if(!io.sockets.connected.hasOwnProperty(other_id)){
+			if(other === undefined){
 				callback('Can not find the user you want to challenge');
 				return;
 			}
 
-			var other = io.sockets.connected[other_id]
 
-			if(socket.state.id != 0 || other.state.id != 0){
+
+			if(socket.state != State.Initial || other.state != State.Initial){
 				callback('You or the other player is currently unavailable.');
 				return;
 			}
 
 
 			// These two should be atomically be set
-			socket.state = { id: 1, name: 'challenging', challengee: other_id  };
-			other.state = { id: 2, name: 'challenged', challenger: socket.id };
+			socket.state = State.Challenging; socket.challengee = other_id;
+			other.state = State.Challenged; other.challenger = socket.id;
 
 
 			// Broadcast to other player
 			io.to(other_id).emit('challenged', {
-				player: {
-					id: socket.profile.id,
-					name: socket.profile.name,
-					level: socket.profile.level
-				}
+				player: socket.profile
 			});
 
 
-			var accepted = false;
-
-			socket.state.callmeback = function(){
-				accepted = true;
-				callback(null, games[socket.id]);
-			}
-
-
 			// Timeout the challenge after 20 seconds
-			setTimeout(function(){
-				if(!accepted){
-					// TODO: Attomically reset both  users to their initial states
-					socket.state = {id: 0, name: 'initial'};
-					other.state = {id: 0, name: 'initial'};
+			var time = setTimeout(function(){
+				// TODO: Attomically reset both  users to their initial states
+				socket.state = State.Initial;
+				other.state = State.Initial;
 
-					callback({ reason: 'timeout' }, null);
-				}
+				callback({ reason: 'timeout' }, null);
 
 			}, 20 * 1000);
+
+
+			socket.callmeback = function(answer){
+				clearTimeout(time);
+
+				if(answer){ // Accepted
+					callback(null, games[socket.id]);
+				}
+				else{ // Refused
+					callback({ reason: 'refused' }, null);
+				}
+			}
 
 		})
 
 
 		proc.register('accept', function(data, callback){ // Other player responds to request
 
-
-			if(socket.state.id != 2){
+			if(socket.state != State.Challenged){
 				callback('Cannot accept: You haven\'t been challenged by anyone');
 				return;
 			}
 
 
-			// Set up an initial game and have both
+			// Set up an initial game
 
-			var other_id = socket.state.challenger;
+			var other_id = socket.challenger;
 			var other = io.sockets.connected[other_id];
 
-			var game = new Chess.Game();
-			game.players = [socket.profile, other.profile];
+			var game = new Chess.Game(socket.profile, other.profile);
 
 			// Store the game state
 			games[socket.id] = game;
 			games[other_id]  = game;
 
-			// Let the challenger know that the game has started
-			other.state.callmeback();
-
 			// Set both player's states to ingame
-			socket.state = { id: 4, name: 'ingame' };
-			other.state = { id: 4, name: 'ingame' };
+			socket.state = State.InGame;
+			other.state = State.InGame;
 
 
+			// Let the challenger know that the game has started
+			other.callmeback(true);
+
+			// Let the challengee know
 			callback(null, game);
 		});
+
+		proc.register('refuse', function(data, callback){
+
+			if(socket.state != State.Challenged){
+				callback('Cannot refuse: You haven\'t been challenged by anyone');
+				return;
+			}
+
+			var other_id = socket.challenger;
+			var other = io.sockets.connected[other_id];
+
+			other.callmeback(false);
+
+			callback(null);
+		})
 
 
 
@@ -251,8 +282,6 @@ module.exports = function(server){
 			var game = games[socket.id];
 
 
-			var from = data.from;
-			var to = data.to;
 
 			// game.board.grid
 
@@ -274,7 +303,20 @@ module.exports = function(server){
 		socket.on('disconnect', function(){
 			leaveAll(socket);
 
-			// TODO: Also make sure this forgeits any games and declines all active requests
+
+			if(socket.state == State.InGame){
+
+				// Complete game
+
+			}
+			else if(socket.state == State.Challenged){
+
+				// Auto-reject
+
+			}
+
+
+
 		});
 
 
