@@ -68,15 +68,14 @@ class Piece {
 
 
 	/**
-	 * Determine if the given move is valid
+	 * Determine if the given move is valid. Assumes the positions are valid
 	 *
-	 * @param board
-	 * @param {Position} from
-	 * @param {Position} to
+	 * @param {Board} board
+	 * @param {Move} move
 	 */
-	isLegalMove(board, from, to){
+	isLegalMove(board, move){
 
-		if(from.x == to.x && from.y == to.y) // Cannot move to the same spot
+		if(move.from.equals(move.to)) // Cannot move to the same spot
 			return false;
 
 
@@ -84,12 +83,12 @@ class Piece {
 		if(this.type == Type.Pawn){
 
 			// Pawns cannot move horizontally unless attacking
-			if(from.x != to.x)
+			if(move.from.x != move.to.x)
 				return false;
 
 			if(this.color == Color.Black){
 
-				if(from.y == 1 && to.y == 3) // Allow 2 unit move in default position
+				if(move.from.y == 1 && move.to.y == 3) // Allow 2 unit move in default position
 					return true;
 
 			}
@@ -125,7 +124,7 @@ class Piece {
 
 
 	/**
-	 * Serialize the piece
+	 * Serialize the piece. Deserialize by doing "new Peice(other.toJSON())"
 	 *
 	 * @returns {number}
 	 */
@@ -142,6 +141,19 @@ class Piece {
  */
 class Move {
 
+	/**
+	 * Creates a move object
+	 *
+	 * @param {Position} from the start position of the peice
+	 * @param {Position} to the end position of the peice
+	 * @param {}
+	 *
+	 */
+	constructor(from, to, color){
+		this.from = from;
+		this.to = to;
+	}
+
 
 
 };
@@ -153,13 +165,34 @@ class Move {
  * A collection of pieces
  *
  * @property {Piece[][]} grid an 8x8 array of pieces placed on the board (null indicates no piece)
+ * @property {number} turn the color of the player who goes next
  */
 class Board {
 
 	/**
 	 * Create an empty chess board
+	 *
+	 * @param data options serialized form to use to build
 	 */
-	constructor(){
+	constructor(data){
+
+		// Deserialize it
+		if(arguments.length == 1){
+
+			// Instantiate each peice
+			for(var i = 0; i < data.grid.length; i++){
+				for(var j = 0; j < data.grid[i].length; j++){
+					data.grid[i][j] = new Piece(data.grid[i][j]);
+				}
+			}
+
+			this.grid = data.grid;
+			this.turn = data.turn;
+
+			return;
+		}
+
+
 
 		// Create an empty board
 		this.grid = [];
@@ -170,6 +203,8 @@ class Board {
 			}
 			this.grid.push(row);
 		}
+
+		this.turn = -1;
 	};
 
 	/**
@@ -191,6 +226,9 @@ class Board {
 			b.grid[7][i] = new Piece(order[i], Color.White);
 		}
 
+		// Have black take the first turn
+		b.turn = Color.Black;
+
 		return b;
 	};
 
@@ -202,18 +240,103 @@ class Board {
 	 * @returns {boolean}
      */
 	isOccupied(pos){
-		return this.grid[pos.y][pos.x] !== null;
+		return this.at(pos) !== null;
 	}
 
 	/**
-	 * Serialize the board
+	 * Serialize the board. The board can be recreated by doing "new Board(other.toJSON())"
 	 *
 	 * @returns {number[][]}
 	 */
 	toJSON(){
-		return this.grid;
+		return {
+			grid: this.grid,
+			turn: this.turn
+		};
 	};
 
+
+	isValidPosition(pos){
+		return !( pos.y < 0 || pos.y >= this.grid.length || pos.x < 0 || pos.x > this.grid[pos.y].length );
+	}
+
+	/**
+	 * Get the peice at the given position
+	 *
+	 * @param {Position} pos
+	 * @return {Peice|null} a peice or null if an invalid position/no peice at that position
+	 */
+	at(pos, value){
+
+		// Check out of bounds
+		if(!this.isValidPosition(pos))
+			return null;
+
+
+		if(arguments.length == 2){
+			this.grid[pos.y][pos.x] = value;
+		}
+
+		return this.grid[pos.y][pos.x];
+	};
+
+
+	/**
+	 * Get an identical copy of the board
+	 */
+	clone(){
+		return new Board(this.toJSON());
+	}
+
+	/**
+	 * Applys the move to the board and returns a new board
+	 *
+	 */
+	apply(move){
+
+		var p = this.at(move.from);
+
+		if(move.color != this.turn) // Not the current player's turn
+			return false;
+
+		if(p === null || !this.isValidPosition(move.to)) // Can't move if no peice
+			return false;
+
+		if(move.color != p.color) // Can't move someone else's peice
+			return false;
+
+		if(!p.isLegalMove(this, move)){
+			return null;
+		}
+
+
+		var b = this.clone();
+
+		// Simple pick and place
+		// TODO: Handle castling, queening etc.
+		var p = b.at(move.from);
+		b.at(move.from, null);
+		b.at(move.to, p);
+
+
+		// Switch players
+		b.turn = b.turn == Color.Black ? Color.White : Color.Black;
+
+		return b;
+	}
+
+	/**
+	 *
+	 * @return the color of the winner or 0 if none
+	 */
+	isEndGame(){
+
+
+	}
+
+	isDraw(){
+
+	}
 
 }
 
@@ -222,25 +345,38 @@ class Board {
  * A game of chess
  *
  * @property {Board} board
- * @property {string[]} players the profiles of each player
+ * @property {object} white_player the profiles of each player
+ * @property {object} black_player the profiles of each player
  */
 class Game {
 
 	/**
 	 * Creates a new game of chess
 	 */
-	constructor(){
+	constructor(white_player, black_player){
+
+		if(arguments.length == 1){
+			var data = arguments[0];
+			this.board = new Board(data.board);
+			white_player = data.white_player;
+			black_player = data.black_player;
+
+			return;
+		}
+
+
 		this.board = Board.Default();
+		this.white_player = white_player;
+		this.black_player = black_player;
 	};
 
 
 
 	toJSON(){
 		return {
-
 			board: this.board,
-			players: this.players
-
+			white_player: this.white_player,
+			black_player: this.black_player
 		};
 	};
 
@@ -255,5 +391,6 @@ module.exports = {
 	Color: Color,
 	Piece: Piece,
 	Board: Board,
-	Game: Game
+	Game: Game,
+	Move: Move
 };
