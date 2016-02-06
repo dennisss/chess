@@ -320,6 +320,57 @@
 	</div>
 </div>
 
+<div id="forfitNotification" class="modal fade" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Are you sure you'd like to forfeit?</h4>
+				</div>
+				<div class="modal-body">
+					<p>If you forfeit...
+						<ul>
+							<li>You cannot undo this "move."</li>
+							<li>You will automatically lose and the other player will win.</li>
+							<li>You will immediately be taken to the room menu.</li>
+						</ul>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Just kidding</button>
+					<button type="button" id="forfeitDone" class="btn btn-primary">Yes, I forfeit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="drawNotification" class="modal fade" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Are you sure you'd like to request a draw?</h4>
+				</div>
+				<div class="modal-body">
+					<p>If you draw...
+					<ul>
+						<li>You cannot undo this "move."</li>
+						<li>Your opponent must also accept the draw in order to make it official.</li>
+						<li>You and the other player will neither win nor lose.</li>
+						<li>You will immediately be taken to the room menu.</li>
+					</ul>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Just kidding</button>
+					<button type="button" id="sendDraw" class="btn btn-primary">Yes, Request a Draw</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="thisPlayerInfo" class="page-header bottom-right">
 	<h2 class="thisPlayerName"></h2>
 	<button id="forfeitGame" class="btn btn-raised btn-primary">Forfeit</button> &nbsp; &nbsp; &nbsp; <button id="drawGame" class="btn btn-raised btn-primary">Draw</button>
