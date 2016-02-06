@@ -13,6 +13,18 @@ function serve(){
 	var server = require('http').Server(app);
 
 
+	app.enable('trust proxy');
+	app.use(function(req, res, next){
+		// Redirect production server to https
+		if(req.protocol == 'http' && req.hostname == 'friendlychess.xyz'){
+			res.redirect('https://' + req.hostname + req.url);
+			return;
+		}
+
+		next();
+	});
+
+
 	// Setup routing
 	require('./socket')(server);
 	app.use(express.static(__dirname + '/../../public'));

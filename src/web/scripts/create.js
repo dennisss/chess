@@ -1,15 +1,12 @@
 var page;
 
-var siteURL = location.origin;
 var emailMessageLink = "mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to ";
 
 function load(router){
 	page = $('#room-creation');
 
-	$("#shareIcons").hide();
 
-
-	var roomName, roomURLName;
+	var roomName;
 
 	$("#roomName").keyup(function() {
 		var value = this.value;
@@ -18,18 +15,17 @@ function load(router){
 			$("#shareIcons").fadeOut();
 			$("#goRoom").addClass("disabled");
 			$("#goRoom").prop("disabled", true);
-			roomURLName = "lobby";
-			roomName = "Lobby";
+			roomName = "lobby";
 		} else {
-			//value = value.replace(new RegExp(" ", 'g'), "").replace("'", "").replace("/", "").replace("%", "").replace(";", "").replace("<", "").replace(">", "").replace(":", "").replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace("^", "");
 			roomName = value;
-			value = value.replace(/([.%*;.<>+?^=!:\\'${}()|\[\]\/\\])/g, "").replace(new RegExp(" ", 'g'), "");
-			roomURLName = "/r/" + value;
-			$("#groupURL").val(siteURL + "/r/" + value);
-			$("#fbShareLink").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + siteURL + roomURLName);
-			$("#gPlusShare").attr("href", "https://plus.google.com/share?url=" + siteURL + roomURLName);
-			$("#twitterShare").attr("href", "https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20" + siteURL + roomURLName);
-			$("#emailShare").attr("href", emailMessageLink + siteURL + roomURLName + " to get started!");
+			var roomUrl = router.link('room', {room: roomName});
+			var safeRoomUrl = encodeURIComponent(roomUrl); // For embedding in share links
+
+			$("#groupURL").val(roomUrl);
+			$("#fbShareLink").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + safeRoomUrl);
+			$("#gPlusShare").attr("href", "https://plus.google.com/share?url=" + safeRoomUrl);
+			$("#twitterShare").attr("href", "https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20" + safeRoomUrl);
+			$("#emailShare").attr("href", emailMessageLink + safeRoomUrl + " to get started!");
 			$("#goRoom").removeClass("disabled");
 			$("#goRoom").prop("disabled", false);
 			$("#shareIcons").fadeIn();
@@ -58,6 +54,9 @@ function load(router){
 }
 
 function enter(state){
+
+	$("#goRoom").toggleClass("disabled", true);
+	$("#goRoom").prop("disabled", true);
 
 	document.getElementById('roomName').value = '';
 	document.getElementById('groupURL').value = '';

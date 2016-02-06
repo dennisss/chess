@@ -52,5 +52,62 @@ describe('Socket', function(){
 	})
 
 
+	it('can challenge someone and they should be able to accept', function(done){
+
+
+		// Have both join a room
+		async.map([client, client2], function(c, callback){
+			c.proc.call('join', {room: 'hello', name: 'player ' + c.socket.id, level: ''}, function(err){
+				callback(err);
+			});
+		}, function(err){
+
+			if(err){
+				done(err)
+				return
+			}
+
+
+			async
+			.parallel([
+
+				function(callback){ // Player 2's actions
+					client2.socket.on('challenged', function(data){
+
+						client2.proc.call('accept', {}, function(err, game){
+
+							assert.equal(err, null);
+							assert.property(game, 'board');
+
+							callback(err);
+
+						})
+
+
+					})
+
+				},
+
+				function(callback){ // Player 1's actions
+					client.proc.call('challenge', {player_id: client2.socket.id}, function(err, game){
+
+						assert.equal(err, null);
+						assert.property(game, 'board');
+
+						callback(err);
+					});
+				}
+
+			], function(err){
+				done(err);
+			});
+
+
+
+
+		});
+	});
+
+
 
 });

@@ -104,7 +104,7 @@ class RPC {
 			this.methods[data.method](data.params, callback, progress);
 		}
 		catch(e){
-			console.log(e);
+			console.log(e.stack);
 			callback(e, undefined);
 			// Callback with an error
 		}

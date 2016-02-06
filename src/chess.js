@@ -4,7 +4,7 @@ var Position = require('./position');
 
 
 /**
- * An enum of possible peice types
+ * An enum of possible piece types
  */
 var Type = {
 	King: 1,
@@ -26,7 +26,7 @@ var Color = {
 
 
 /**
- * A single moveable peice placed on a board
+ * A single moveable piece placed on a board
  *
  * @property {number} type
  * @property {number} color
@@ -37,12 +37,12 @@ class Piece {
 	/**
 	 *
 	 *
-	 * @param {number} type the rank of the peice
+	 * @param {number} type the rank of the piece
 	 * @param {number} color optional value specifying the color of the piece. if not specified, the type is parsed as a code as returned by code()
 	 */
 	constructor(type, color){
 
-		if(arguments.length == 1){ // Just given raw peice code
+		if(arguments.length == 1){ // Just given raw piece code
 			var code = arguments[0];
 			type = code | 0b1111;
 			color = code >> 4;
@@ -60,7 +60,7 @@ class Piece {
 	};
 
 	/**
-	 * A single integer representation of the peice
+	 * A single integer representation of the piece
 	 */
 	code(){
 		return this.type | (this.color << 4);
@@ -125,7 +125,7 @@ class Piece {
 
 
 	/**
-	 * Serialize the peice
+	 * Serialize the piece
 	 *
 	 * @returns {number}
 	 */
@@ -137,11 +137,22 @@ class Piece {
 };
 
 
+/**
+ * A move from one position on the board to another
+ */
+class Move {
+
+
+
+};
+
+
+
 
 /**
- * A collection of peices
+ * A collection of pieces
  *
- * @property {Piece[][]} grid an 8x8 array of peices placed on the board (null indicates no peice)
+ * @property {Piece[][]} grid an 8x8 array of pieces placed on the board (null indicates no piece)
  */
 class Board {
 
@@ -170,7 +181,7 @@ class Board {
 
 		var b = new Board();
 
-		// Fill in the default peices (top black, bottom white)
+		// Fill in the default pieces (top black, bottom white)
 		var order = [ Type.Rook, Type.Knight, Type.Bishop, Type.Queen, Type.King, Type.Bishop, Type.Knight, Type.Rook ]; // The ordering of the back rows
 		for(var i = 0; i < 8; i++){
 			b.grid[0][i] = new Piece(order[i], Color.Black);
@@ -200,7 +211,7 @@ class Board {
 	 * @returns {number[][]}
 	 */
 	toJSON(){
-		return this.grid.toJSON();
+		return this.grid;
 	};
 
 
@@ -211,6 +222,7 @@ class Board {
  * A game of chess
  *
  * @property {Board} board
+ * @property {string[]} players the profiles of each player
  */
 class Game {
 
@@ -222,6 +234,15 @@ class Game {
 	};
 
 
+
+	toJSON(){
+		return {
+
+			board: this.board,
+			players: this.players
+
+		};
+	};
 
 
 
