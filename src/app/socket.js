@@ -27,8 +27,12 @@
 			-> If the challenge was successful, the data will be set
 				-> data is : { ... insert state of initial game and which player is which  ... } if the hame has started
 
+		- random_challenge();
+
+
 		Accepting a challenge after receiving a 'challenged' event
-		- accept({ player_id: 'id of person that challenged you' }) -> callback returns the same thing as challenge()
+		- accept(); // { player_id: 'id of person that challenged you' }) -> callback returns the same thing as challenge()
+		- reject();
 
 
 		Moving a peice
