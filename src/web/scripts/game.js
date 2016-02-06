@@ -19,6 +19,20 @@ function enter(state){
 	$("#thisPlayerInfo").show();
 	$("#thatPlayerInfo").show();
 
+	$("#forfeitGame").click(function() {
+		$("#forfitNotification").modal("show");
+	});
+
+	$("#drawGame").click(function() {
+		$("#drawNotification").modal("show");
+	});
+
+
+
+	$("#forfeitDone").click(function() {
+		router.go('room', {room: 'lobby'});
+	});
+
 }
 
 function leave(){
