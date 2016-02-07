@@ -1,7 +1,7 @@
 .vertical-alignment-helper {
 	display: table;
 	height: 100%;
-	width: 98%;
+	width: 100%;
 	pointer-events: none; /* This makes sure that we can still click outside of the modal to close it */
 }
 
@@ -41,8 +41,40 @@
   transform: translateY(-50%);
 } */
 
+
+body, html{
+	width: 100%;
+	height: 100%;
+}
+
+body{
+	overflow: hidden;
+}
+
+.chessboard-wrap{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
+}
+
+.center-board {
+	/*
+	margin: auto;
+	width: 100vmin;
+	*/
+
+	width: 96vmin;
+	height: 100%;
+	position: relative;
+	margin: 0 auto;
+
+}
+
 .chessboard {
-  width: 96vmin;
+  width: 100%;
   margin: auto;
   border: 3vmin solid #333;
   display: table;
@@ -79,10 +111,7 @@
 .light:hover {
   background-color: #FF0
 }
-.center-board {
-  margin: auto;
-  width: 100vmin;
-}
+
 .row {
   display: table-row;
   width: 100%;
@@ -101,7 +130,12 @@
   margin: 40px 20px 20px;
   border-bottom: 1px solid #eee;
 }
-
-.modal {
+/*
+.modal-dialog {
 	overflow-y: scroll;
 }
+
+.modal-open .modal{
+	overflow: hidden;
+}
+*/
