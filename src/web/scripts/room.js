@@ -64,11 +64,15 @@ function load(router){
 			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
 
 		});
+		router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 	});
 
 
 	$("#challengedDenied").click(function(){
 		$("#challengeNotification").modal("hide");
+		client.call('refuse', {}, function()  {
+
+		});
 	});
 
 	$("#joinGameBack").click(function(){
@@ -103,14 +107,13 @@ function load(router){
 			// TODO: Handle error
 
 			$("#loadingPlayer").modal("hide");
-			$("#player-creation").modal("hide");
-			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: data });
+			if(err) {
+				console.log(err);
+			} else {
+				$("#player-creation").modal("hide");
+				router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
+			}
 		});
-		/*
-			$("#loadingPlayer").modal("hide");
-
-
-		*/
 	});
 }
 
