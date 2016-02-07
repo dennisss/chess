@@ -58,20 +58,17 @@ function load(router){
 	$("#challengeAccepted").click(function(){
 		$("#challengeNotification").modal("hide");
 		client.call('accept', {player_id : opID}, function(err, game){
-
 			// TODO: Handle error
-
 			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
 
 		});
-		router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
+		//router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 	});
 
 
 	$("#challengedDenied").click(function(){
 		$("#challengeNotification").modal("hide");
 		client.call('refuse', {}, function()  {
-
 		});
 	});
 
@@ -102,16 +99,20 @@ function load(router){
 
 		$("#loadingPlayer").modal({ backdrop: 'static' });
 
-		client.call('challenge', {player_id : opID}, function(err, data) {
+		client.call('challenge', {player_id : opID}, function(err, game) {
 
 			// TODO: Handle error
 
 			$("#loadingPlayer").modal("hide");
 			if(err) {
 				console.log(err);
+				if (err.reason == "refused") {
+
+				}
 			} else {
 				$("#player-creation").modal("hide");
-				router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
+				//router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
+				router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
 			}
 		});
 	});
