@@ -116,7 +116,7 @@ class RPC {
 	};
 
 
-	// When a
+	// When a client gets a result from a server
 	_oncall_result(data){
 		if(!data.hasOwnProperty('id')){
 			console.warn('RPC: Result missing id');
@@ -133,15 +133,21 @@ class RPC {
 
 		var j = this.jobs[data.id];
 
-		if(data.result || data.error){ // Got a return value
+		if(data.hasOwnProperty('result') || data.hasOwnProperty('error')){ // Got a return value
 
 			delete this.jobs[data.id];
 
 			if(j.callback){
 				j.callback(data.error, data.result);
 			}
+			else if(j.promise){
+				if(data.error)
+					j.promise.reject(data.error);
+				else
+					j.promise.resolve(data.result);
+			}
 		}
-		else if(data.progress){ // Incremental status message
+		else if(data.hasOwnProperty('progress')){ // Incremental status message
 			if(j.progress)
 				j.progress(data.progress);
 		}
@@ -167,9 +173,25 @@ class RPC {
 		var job = { method: method, params: params, callback: callback, progress: progress };
 		this.jobs[id] = job;
 
+		if(!params)
+			params = {}
+
 		// TODO: Retry after timeout and cancel after another timeout
 
 		this.socket.emit('call', { method: method, params: params, id: id });
+
+
+		// Called without a callback, ES6ify it
+		if(arguments.length <= 2){
+			var p = new Promise(function(resolve, reject){
+				job.promise = {
+					resolve: resolve,
+					reject: reject
+				};
+			});
+
+			return p;
+		}
 
 
 		return id;
