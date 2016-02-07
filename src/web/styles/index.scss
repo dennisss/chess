@@ -130,12 +130,17 @@ body{
   margin: 40px 20px 20px;
   border-bottom: 1px solid #eee;
 }
-/*
-.modal-dialog {
-	overflow-y: scroll;
+
+
+.bottom-right {
+  right: 20px;
+  position: fixed;
+  bottom: 0px;
+  text-align: right;
 }
 
-.modal-open .modal{
-	overflow: hidden;
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 20px 20px;
+  border-bottom: 1px solid #eee;
 }
-*/
