@@ -4,7 +4,7 @@ var roomName;
 
 function load(router){
 	page = $('#player-creation');
-	$("#playerProblems").hide();
+
 
 	var opName = "";
 	var opLevel = "";
@@ -31,7 +31,7 @@ function load(router){
 			$("#playerProblems").hide();
 			thisPlayer = $('#playerName').val();
 			console.log( $('#experience').val());
-			$('#playerList').collapse();
+			$('#playerList').show();
 			client.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
 				$("#playerTableBody").html("");
 				data.forEach(printToTable);
@@ -63,10 +63,6 @@ function load(router){
 		router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 	});
 
-	$("#joinGameBack").click(function(){
-		$("#player-creation").modal("hide");
-		$("#playerList").hide();
-	});
 
 	$("#challengedDenied").click(function(){
 		$("#challengeNotification").modal("hide");
@@ -117,6 +113,8 @@ function enter(state){
 	roomName = state.params.room;
 
 
+	$("#playerList").hide();
+	$("#playerProblems").hide();
 	$('#playerName').val('');
 	$('#experience').prop('selectedIndex',0);
 

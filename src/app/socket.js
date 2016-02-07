@@ -115,7 +115,7 @@ module.exports = function(server){
 	function leaveAll(socket){
 
 		// TODO: There should only be one active room?
-		_.map(socket.rooms, function(r){
+		_.map(socket.real_rooms, function(r){
 			if(r != socket.id){ // The user is by default in a room with the same name as their id
 				socket.leave(r);
 
@@ -134,6 +134,10 @@ module.exports = function(server){
 		var proc = new RPC(socket, true);
 
 
+		// Because socket.io overwrites the room array before calling disconnect
+		socket.real_rooms = socket.rooms;
+
+
 		// Initial unready state
 		socket.state = State.None;
 
@@ -142,19 +146,29 @@ module.exports = function(server){
 
 		proc.register('join', function(data, callback){
 
-			var room = data.room;
-
-			// Leave all other rooms
-			leaveAll(socket);
-
-			// Store profile and join the current room
+			// Store profile
 			socket.profile = {
 				id: socket.id,
 				name: data.name,
 				level: data.level
 			};
-			socket.state = State.Initial;
-			socket.join(room);
+
+
+			var room = data.room;
+
+			// Join if not already in the room
+			if(socket.real_rooms.indexOf(room) == -1){
+
+				// Leave all other rooms
+				leaveAll(socket);
+
+
+				socket.state = State.Initial;
+
+				// TODO: Handle the callback of .join() and .leave()
+				socket.join(room);
+
+			}
 
 			// Broadcast user list to other players
 			var list = broadcast_userlist(room);
