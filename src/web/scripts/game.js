@@ -1,3 +1,6 @@
+var Chess = require('../../chess');
+
+var game;
 
 function load(router){
 
@@ -9,6 +12,20 @@ function load(router){
 }
 
 function enter(state){
+
+	if(!state.params.hasOwnProperty('data')){
+		state.go('home');
+		return;
+	}
+
+
+	game = new Chess.Game(state.params.data);
+
+	console.log(game);
+
+	// Draw me!
+
+
 
 	var thisPlayer = state.params.thisPlayer;
 	var opName = state.params.opName;

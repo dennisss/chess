@@ -59,8 +59,11 @@ function load(router){
 		$("#challengeNotification").modal("hide");
 		client.call('accept', {player_id : opID}, function(err, game){
 
+			// TODO: Handle error
+
+			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
+
 		});
-		router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 	});
 
 
@@ -95,10 +98,13 @@ function load(router){
 
 		$("#loadingPlayer").modal({ backdrop: 'static' });
 
-		client.call('challenge', {player_id : opID}, function(data) {
+		client.call('challenge', {player_id : opID}, function(err, data) {
+
+			// TODO: Handle error
+
 			$("#loadingPlayer").modal("hide");
 			$("#player-creation").modal("hide");
-			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
+			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: data });
 		});
 		/*
 			$("#loadingPlayer").modal("hide");

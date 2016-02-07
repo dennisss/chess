@@ -44,7 +44,7 @@ class Piece {
 
 		if(arguments.length == 1){ // Just given raw piece code
 			var code = arguments[0];
-			type = code | 0b1111;
+			type = code & 0b1111;
 			color = code >> 4;
 		}
 
@@ -191,7 +191,10 @@ class Board {
 			// Instantiate each peice
 			for(var i = 0; i < data.grid.length; i++){
 				for(var j = 0; j < data.grid[i].length; j++){
-					data.grid[i][j] = new Piece(data.grid[i][j]);
+					if(data.grid[i][j])
+						data.grid[i][j] = new Piece(data.grid[i][j]);
+					else
+						data.grid[i][j] = null;
 				}
 			}
 
@@ -430,8 +433,8 @@ class Game {
 		if(arguments.length == 1){
 			var data = arguments[0];
 			this.board = new Board(data.board);
-			white_player = data.white_player;
-			black_player = data.black_player;
+			this.white_player = data.white_player;
+			this.black_player = data.black_player;
 
 			return;
 		}
