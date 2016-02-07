@@ -26,7 +26,7 @@ function load(router){
 
 
 	$('#btnChooseOp').click(function(){
-		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Chose your experience...") {
+		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
 			$("#playerProblems").html("");
 			$("#playerProblems").hide();
 			thisPlayer = $('#playerName').val();
