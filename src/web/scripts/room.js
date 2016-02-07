@@ -29,7 +29,7 @@ function load(router){
 			thisPlayer = $('#playerName').val();
 			console.log( $('#experience').val());
 			$('#playerList').collapse();
-			client.proc.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
+			client.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
 				$("#playerTableBody").html("");
 				data.forEach(printToTable);
 			});
@@ -56,7 +56,7 @@ function load(router){
 
 	$("#challengeAccepted").click(function(){
 		$("#challengeNotification").modal("hide");
-		client.proc.call('accept', {player_id : opID}, function(err, game){
+		client.call('accept', {player_id : opID}, function(err, game){
 
 		});
 		router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
@@ -93,7 +93,7 @@ function load(router){
 
 		$("#loadingPlayer").modal({ backdrop: 'static' });
 
-		client.proc.call('challenge', {player_id : opID}, function(data) {
+		client.call('challenge', {player_id : opID}, function(data) {
 			$("#loadingPlayer").modal("hide");
 			$("#player-creation").modal("hide");
 			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
@@ -123,7 +123,7 @@ function enter(state){
 }
 
 function leave(){
-	client.proc.call('leave', {room: roomName}, function(err){
+	client.call('leave', {room: roomName}, function(err){
 
 	});
 

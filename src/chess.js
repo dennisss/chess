@@ -103,8 +103,8 @@ class Piece {
 	 * Get the available moves for this piece
 	 *
 	 * @param {Board} board the game state
-	 * @param {Position} pos the i,j position on the grid
-	 * @return {Position[]}
+	 * @param {Position} pos the i,j position on the grid of the peice
+	 * @return {Move[]}
 	 */
 	getMoves(board, pos){
 
@@ -113,8 +113,9 @@ class Piece {
 		for(var i = 0; i < board.grid.length; i++){
 			for(var j = 0; j < board.grid[i].length; j++){
 				var p = new Position(j, i);
-				if(this.isLegalMove(board, pos, p))
-					moves.push(p);
+				var m = new Move(pos, p);
+				if(this.isLegalMove(board, m))
+					moves.push(m);
 			}
 		}
 
@@ -146,12 +147,20 @@ class Move {
 	 *
 	 * @param {Position} from the start position of the peice
 	 * @param {Position} to the end position of the peice
-	 * @param {}
+	 * @param {number} color the color of the player performing the move
 	 *
 	 */
 	constructor(from, to, color){
+		if(arguments.length == 1){
+			var data = arguments[0];
+			from = new Position(data.from);
+			to = new Position(data.to);
+			color = data.color;
+		}
+
 		this.from = from;
 		this.to = to;
+		this.color = color;
 	}
 
 
@@ -256,6 +265,11 @@ class Board {
 	};
 
 
+	/**
+	 * Determine if the position is valid in the board
+	 *
+	 * @
+	 */
 	isValidPosition(pos){
 		return !( pos.y < 0 || pos.y >= this.grid.length || pos.x < 0 || pos.x > this.grid[pos.y].length );
 	}
@@ -297,13 +311,13 @@ class Board {
 		var p = this.at(move.from);
 
 		if(move.color != this.turn) // Not the current player's turn
-			return false;
+			return null;
 
 		if(p === null || !this.isValidPosition(move.to)) // Can't move if no peice
-			return false;
+			return null;
 
 		if(move.color != p.color) // Can't move someone else's peice
-			return false;
+			return null;
 
 		if(!p.isLegalMove(this, move)){
 			return null;
@@ -326,12 +340,67 @@ class Board {
 	}
 
 	/**
+	 * Determine if the current player is being checked (at the least)
+	 */
+	inCheck() {
+		// Get all available moves for the opponent
+
+		// Determine if a king of the current player can be taken
+			// If so, mark that the game is in check
+
+
+	};
+
+
+	/**
+	 * Get all available moves for the given player
 	 *
-	 * @return the color of the winner or 0 if none
+	 * @param {number} color the color of the player (or null if moves for the current player should be found)
+	 * @return {Move[]}
+	 */
+	getMoves(color) {
+
+		if(arguments.length == 0)
+			color = this.turn;
+
+
+		var moves = [];
+
+		for(var i = 0; i < this.grid.length; i++){
+			for(var j = 0; j < this.grid[i].length; j++){
+				var pos = new Position(j, i);
+				var pc = this.at(pos);
+
+				if(pc !== null && pc.color === color){
+					var ms = pc.getMoves(this, pos);
+					for(var k = 0; k < ms.length; k++)
+						moves.push(ms[k]);
+				}
+			}
+		}
+
+		return moves;
+	};
+
+
+
+	/**
+	 * Determine if the game is in checkmate (the current player lost)
 	 */
 	isEndGame(){
 
+		if(!this.inCheck())
+			return false;
 
+		var moves = this.getMoves();
+		for(var i = 0; i < moves.length; i++){
+			var state = this.apply(moves[i]);
+
+			if(!state.inCheck())
+				return false;
+		}
+
+		return true;
 	}
 
 	isDraw(){
@@ -352,6 +421,9 @@ class Game {
 
 	/**
 	 * Creates a new game of chess
+	 *
+	 * @example
+	 * var game = new Game({ id: '', name: 'Bob' }, { id: '', name: 'John' });
 	 */
 	constructor(white_player, black_player){
 

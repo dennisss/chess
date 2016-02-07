@@ -36,7 +36,7 @@
 
 
 		Moving a peice
-		- move({ from: [0,0], to: [1,1] }) -> callback called with game state
+		- move({ from: [0,0], to: [1,1] }) -> callback called with game state (and err if the move is invalid)
 
 
 	Events/Notification
@@ -46,6 +46,8 @@
 		When someone requests to play you
 		- challenged : called with { player: { .. id, name, level, ... } }
 
+		When you are waiting for the other player to make a move and they finish their move
+		- moved : called with { color: 1|2, from: [...], to: [...] }
 
 		When you are in a game and it finishes for some reason
 		- endgame : called with { result: 'win|lose|draw' }
@@ -57,7 +59,10 @@
 
 
 var RPC = require('../rpc'),
-	Chess = require('../chess');
+	Chess = require('../chess'),
+	Move = Chess.Move,
+	Position = Chess.Position,
+	Color = Chess.Color;
 
 
 
@@ -279,15 +284,37 @@ module.exports = function(server){
 
 		proc.register('move', function(data, callback){
 
+			if(socket.state != State.InGame){
+				callback('Cannot move: You are not in a game');
+				return;
+			}
+
+
 			var game = games[socket.id];
+			var move = new Move(data);
+
+			// Validate color : make sure the
+			var color = game.white_player.id == socket.id? Color.White : Color.Black;
+			if(move.color !== color){
+				callback('Cannot move as the other player');
+				return;
+			}
+
+			var other_id = color === Color.White? game.black_player.id : game.white_player.id;
 
 
+			var newstate = game.board.apply(move);
 
-			// game.board.grid
+			if(newstate === null){
+				callback('Invalid move');
+				return;
+			}
+
+			io.to(other_id).emit('moved', move);
+			game.board = newstate;
 
 
-			// Emit to both players
-
+			callback(null);
 		});
 
 		proc.register('forfeit', function(data, callback){
