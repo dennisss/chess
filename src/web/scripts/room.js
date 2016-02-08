@@ -64,7 +64,7 @@ function load(router){
 		client.call('accept', {player_id : opID}, function(err, game){
 			// TODO: Handle error
 			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
-
+			$("#locationOfChessboard").html($("#blackBoard").html());
 		});
 		//router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 	});
@@ -92,7 +92,6 @@ function load(router){
 		$(".requestPlayerSkill").html(data.player.level);
 		opName = data.player.name;
 		opLevel = data.player.level;
-		$("#locationOfChessboard").html($("#blackBoard").html());
 	});
 
 
