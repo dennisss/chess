@@ -64,9 +64,7 @@ function load(router){
 		client.call('accept', {player_id : opID}, function(err, game){
 			// TODO: Handle error
 			router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
-			$("#locationOfChessboard").html($("#blackBoard").html());
 		});
-		//router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 	});
 
 
@@ -115,9 +113,7 @@ function load(router){
 				}
 			} else {
 				$("#player-creation").modal("hide");
-				//router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer });
 				router.go('game', { opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game });
-				$("#locationOfChessboard").html($("#whiteBoard").html());
 			}
 		});
 	});

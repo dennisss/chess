@@ -83,6 +83,9 @@ body{
   -ms-transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
+
+
+	opacity: 0;
 }
 
 .dark {
@@ -105,12 +108,34 @@ body{
   display: table-cell;
   vertical-align:middle;
 }
+
+/*
 .dark:hover {
   background-color: #FF0
 }
 .light:hover {
   background-color: #FF0
 }
+*/
+
+.chessboard .cell {
+	cursor: default;
+}
+
+.chessboard .cell.moveable {
+	cursor: pointer;
+}
+.chessboard .cell.moveable:hover {
+	background-color: #FF0
+}
+.chessboard .cell.moving{
+	background-color: #0BF;
+}
+.chessboard .cell.placeable {
+	cursor: pointer;
+}
+
+
 
 .row {
   display: table-row;
@@ -143,4 +168,9 @@ body{
   padding-bottom: 9px;
   margin: 40px 20px 20px;
   border-bottom: 1px solid #eee;
+}
+
+
+#availPlayerTable .player {
+	cursor: pointer;
 }

@@ -302,7 +302,7 @@ class Board {
 	 * Get an identical copy of the board
 	 */
 	clone(){
-		return new Board(this.toJSON());
+		return new Board(JSON.parse(JSON.stringify(this.toJSON())));
 	}
 
 	/**
