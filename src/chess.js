@@ -75,26 +75,99 @@ class Piece {
 	 */
 	isLegalMove(board, move){
 
+		// TODO: Assert that all positions are integer values
+
 		if(move.from.equals(move.to)) // Cannot move to the same spot
 			return false;
 
 
+		// TODO: Handle special moves like castling and queening here
 
-		if(this.type == Type.Pawn){
 
-			// Pawns cannot move horizontally unless attacking
-			if(move.from.x != move.to.x)
+
+
+
+		//// Regular moves : peices aren't mutated and only one peice is moved
+		// For the most part, the logic whitelists moves, so avoid returning false
+
+		// Assert not taking your own peice
+		if(board.at(move.to) !== null && board.at(move.to).color === this.color)
+			return false;
+
+		var diff = move.from.sub(move.to);
+
+
+		if(this.type == Type.King){
+			if(Math.abs(diff.x) <= 1 && Math.abs(diff.y) <= 1)
+				return true;
+		}
+		if(this.type == Type.Rook || this.type == Type.Queen){
+
+			if(diff.x == 0 || diff.y == 0)
+				return true;
+
+
+			// Check clearance of the path
+		}
+		if(this.type == Type.Bishop || this.type == Type.Queen){
+
+			// Check that it is diagonal
+			if(Math.abs(diff.x) != Math.abs(diff.y))
 				return false;
 
-			if(this.color == Color.Black){
 
-				if(move.from.y == 1 && move.to.y == 3) // Allow 2 unit move in default position
-					return true;
-
-			}
+			// Check clearance of the path
 
 		}
+		if(this.type == Type.Knight){
 
+			var ax = Math.abs(diff.x), ay = Math.abs(diff.y);
+
+			if((ax == 2 && ay == 1) || (ax == 1 && ay == 2))
+				return true;
+		}
+		if(this.type == Type.Pawn){
+
+			// Forward moves
+			if(board.at(move.to) === null){
+
+				// Pawns cannot move horizontally unless attacking
+				if(move.from.x != move.to.x)
+					return false;
+
+				if(this.color == Color.Black){
+					if(move.from.y == 1 && move.to.y == 3) // Allow 2 unit move in default position
+						return true;
+					else if(move.to.y - move.from.y == 1)
+						return true;
+				}
+				else if(this.color == Color.White){
+					if(move.from.y == 6 && move.to.y == 4)
+						return true;
+					else if(move.from.y - move.to.y == 1)
+						return true;
+				}
+			}
+			else{ // Attacking
+
+				if(Math.abs(move.from.x - move.to.x) !== 1)
+					return false;
+
+				if(this.color == Color.Black){
+					if(move.to.y - move.from.y == 1)
+						return true;
+				}
+				else if(this.color == Color.White){
+					if(move.from.y - move.to.y == 1)
+						return true;
+				}
+
+
+
+			}
+		}
+
+		return false;
 
 	};
 
