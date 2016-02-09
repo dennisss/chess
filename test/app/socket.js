@@ -21,14 +21,13 @@ describe('Socket', function(){
 				client = c[0];
 				client2 = c[1];
 				done(err);
-			})
+			});
 		});
 	});
 
 	afterEach(function(){
 		server.close();
 	});
-
 
 	it('should be able to join a room', function(done){
 
@@ -45,24 +44,36 @@ describe('Socket', function(){
 				assert.lengthOf(data, 2);
 
 				done();
-			})
-
-
+			});
 		});
+	});
 
-	})
+	it('should be able to leave a room', function(done) {
+
+		// Have one user join
+		client.call('join', {room: 'vROOM', name: 'TruckDriver', level: ''}, function(err, data){
+			assert.equal(err, null);
+			assert.lengthOf(data, 1); // Should be one user
 
 
+			// Have the user leave
+			client.call('leave', {room: 'vROOM'}, function(err){
+				assert.equal(err, null);
+				done(err);
+			});
 
+			// TODO: assert there are no more users in this room now.
+			// TODO: add alternative tests when there are other users in the room.
+		});
+	});
 
 	describe('in a room', function(){
 
 		beforeEach(function *(){
 			// Have both join a room
 			yield client.call('join', {room: 'hello', name: 'bob', level: 'Noob'});
-			yield client2.call('join', {room: 'hello', name: 'jeff', level: 'Noob'});
+			yield client2.call('join', {room: 'hello', name: 'medusa', level: 'Noob'});
 		});
-
 
 		it('can challenge someone and they should be able to accept', function(done){
 
@@ -83,10 +94,10 @@ describe('Socket', function(){
 
 							callback(err);
 
-						})
+						});
 
 
-					})
+					});
 
 				},
 
@@ -108,9 +119,7 @@ describe('Socket', function(){
 
 		});
 
-
 		it('should be able to refuse a challenge', function(done){
-
 
 			async
 			.parallel([
@@ -119,8 +128,8 @@ describe('Socket', function(){
 						client2.call('refuse', {}, function(err){
 							assert.equal(err, null);
 							callback(err);
-						})
-					})
+						});
+					});
 				},
 
 				function(callback){ // Player 1's actions
@@ -136,9 +145,16 @@ describe('Socket', function(){
 
 		});
 
+		it.skip('should be able to be randomly matched', function(done){
+
+			// TODO: random_challenge isn't implemented yet
+
+			// Start by putting two users in a room and have them both random_chellenge, see if they get matched
+
+			// TODO: scale to multiple users in a room as well (probably new test cases)
+		});
 
 	});
-
 
 	describe('in a game', function(){
 
@@ -161,18 +177,16 @@ describe('Socket', function(){
 			assert.equal(game.turn, Chess.Type.Black);
 		});
 
-		it.skip('should be able to make a move', function(){
+		it('should be able to make a move', function(){
 
-			// TODO: Determine which player's turn it is
+			client2.call('move',{ from: [0,0], to: [1,1]}, function(err){
+				assert.equal(err, null);
+				done(err); // TODO: does this have to do with the errors the tests have been throwing?
+			});
 
+			// Verification for legal moves are in chess.js
 		});
 
-
-
-	})
-
-
-
-
+	});
 
 });
