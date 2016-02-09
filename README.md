@@ -31,7 +31,7 @@ Common tasks
 
 - Static code analysis: `gulp lint`
 
-- Running tests: `gulp test`
+- Running tests: `mocha`
 
 - Generate coverage report into `/public/coverage`: `gulp cover`
 
