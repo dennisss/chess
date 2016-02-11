@@ -112,8 +112,8 @@ class Piece {
 		if(this.type == Type.Bishop || this.type == Type.Queen){
 
 			// Check that it is diagonal
-			if(Math.abs(diff.x) != Math.abs(diff.y))
-				return false;
+			if(Math.abs(diff.x) == Math.abs(diff.y))
+				return true;
 
 
 			// Check clearance of the path

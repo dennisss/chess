@@ -106,8 +106,10 @@ class BoardUi extends EventEmitter {
 				self.updateState(UiState.Placing);
 			}
 			else if(self.state == UiState.Placing){
-				if(!$cell.hasClass('placeable'))
+				if(!$cell.hasClass('placeable')){
+					self.updateState(UiState.Picking); // If clicking outside an allowed cell, cancel the picking
 					return;
+				}
 
 				var move = new Chess.Move(self.activePosition, position, self.me);
 
@@ -222,8 +224,15 @@ class BoardUi extends EventEmitter {
 
 					if(position.equals(this.activePosition))
 						moving = true;
-					else
-						placeable = true;
+					else{
+
+						var activePeice = this.game.board.at(this.activePosition);
+						var m = new Chess.Move(this.activePosition, position);
+
+						if(activePeice.isLegalMove(this.game.board, m))
+							placeable = true;
+
+					}
 				}
 				else if(this.state == UiState.Waiting){
 
