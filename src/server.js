@@ -32,11 +32,7 @@ var State = {
 	/** Searching for a random player in the same room */
 	Searching: 3,
 	/** Playing a game */
-	InGame: 4,
-	/** In a game, but trying to declare a draw */
-	//InGame_Drawing: 5,
-	/** In a game, but trying to undo */
-	//InGame_Undoing: 6
+	InGame: 4
 }
 
 
@@ -134,7 +130,7 @@ class Server {
 			socket.state = State.None;
 
 			var proc = new RPC(socket, true);
-			var exports = ['join', 'leave', 'challenge', 'accept', 'refuse', 'move', 'forfeit', 'draw'];
+			var exports = ['join', 'leave', 'challenge', 'accept', 'refuse', 'move', 'forfeit', 'draw', 'draw_respond', 'undo', 'undo_respond'];
 			_.map(exports, function(func){
 				proc.register(func, function(data, callback){
 					self[func].call(self, socket, data, callback);
@@ -237,39 +233,8 @@ class Server {
 	 * @param {object} data should be of the form {room: 'roomName'}
 	 */
 	leave(socket, data, callback){
-
 		this._leaveAll(socket);
 		callback(null);
-
-		if(socket.state != State.Challenged){
-			callback('Cannot accept: You haven\'t been challenged by anyone');
-			return;
-		}
-
-
-		// Set up an initial game
-
-		var other_id = socket.challenger;
-		var other = this.io.sockets.connected[other_id];
-
-		var game = new Chess.Game(socket.profile, other.profile);
-
-		// Store the game state
-		this.games[socket.id] = game;
-		this.games[other_id]  = game;
-
-		// Set both player's states to ingame
-		socket.state = State.InGame;
-		other.state = State.InGame;
-
-
-		// Let the challenger know that the game has started
-		other.callmeback(true);
-
-		// Let the challengee know
-		callback(null, game);
-
-
 	};
 
 
@@ -285,7 +250,9 @@ class Server {
 		// Get the socket associated with the person being requested
 		var other_id = data.player_id;
 
-		if(other_id == 'random'){ // Find someone in the
+		if(other_id == 'random'){ // Find someone in the room to challenge
+
+			socket.state = State.Searching;
 
 			var room = this._room(socket);
 			if(!room){
@@ -293,12 +260,37 @@ class Server {
 				return;
 			}
 
-			var list = this._userlist(room);
+
+			// Get a list of sockets in the room
+			var clients = this.io.sockets.adapter.rooms[room];
+			var self = this;
+			var list = _.map(_.keys(clients), function(id){ return self.io.sockets.connected[id]; });
 
 
+			var other = null;
 
+			for(var i = 0; i < list.length; i++){
+				var c = list[i];
+				if(c.id !== socket.id && c.state === State.Searching){
+					other = c;
+					break;
+				}
+			}
 
+			if(other !== null){ // Can match immediately
+				var game = this._startgame(socket, other);
+				other.callmeback();
+				callback(null, game);
+			}
+			else{ // Wait to be matched
+				socket.callmeback = function(){
+					callback(null, self.games[socket.id]);
+				}
+			}
+
+			return;
 		}
+
 
 		var other = this.io.sockets.connected[other_id]
 
@@ -370,15 +362,8 @@ class Server {
 		var other_id = socket.challenger;
 		var other = this.io.sockets.connected[other_id];
 
-		var game = new Chess.Game(socket.profile, other.profile);
 
-		// Store the game state
-		this.games[socket.id] = game;
-		this.games[other_id]  = game;
-
-		// Set both player's states to ingame
-		socket.state = State.InGame;
-		other.state = State.InGame;
+		var game = this._startgame(socket, other);
 
 
 		// Let the challenger know that the game has started
@@ -387,6 +372,27 @@ class Server {
 		// Let the challengee know
 		callback(null, game);
 	};
+
+	/**
+	 * Start a game between two sockets
+	 *
+	 * @private
+	 */
+	_startgame(socket, other){
+
+		var game = new Chess.Game(socket.profile, other.profile);
+
+		// Store the game state
+		this.games[socket.id] = game;
+		this.games[other.id]  = game;
+
+		// Set both player's states to ingame
+		socket.state = State.InGame;
+		other.state = State.InGame;
+
+		return game;
+	}
+
 
 	/**
 	 * Refuse a challenge
@@ -417,7 +423,6 @@ class Server {
 			callback('Cannot move: You are not in a game');
 			return;
 		}
-
 
 		var game = this.games[socket.id];
 		var move = new Move(data);
@@ -481,22 +486,19 @@ class Server {
 
 
 		var game = this.games[socket.id];
-
 		var other_id = (game.white_player.id == socket.id)? game.black_player.id : game.white_player.id;
-		//var other = this.io.sockets.connected(other_id);
+		var other = this.io.sockets.connected[other_id];
 
 		// TODO: Check that the other person isn't already drawing
 
 
-		socket.state = State.InGame_Drawing;
+		game.drawing = socket.id;
 
 
 		this.io.to(other_id).emit('drawing');
 
 		socket.callmeback = function(accepted){
-
 			callback(null, accepted);
-
 		}
 
 	};
@@ -508,17 +510,48 @@ class Server {
 	 */
 	draw_respond(socket, data, callback){
 		if(socket.state !== State.InGame){
-
+			callback('Must be in a game');
+			return;
 		}
 
+		var game = this.games[socket.id];
+		var other_id = (game.white_player.id == socket.id)? game.black_player.id : game.white_player.id;
+		var other = this.io.sockets.connected[other_id];
 
-		other.callmeback(data)
+		if(!game.drawing || game.drawing !== other_id){
+			callback('The other person isn\'t drawing');
+			return;
+		}
 
+		delete game.drawing;
+
+		other.callmeback(data);
 		if(data){
 			this._finishgame(socket, 'draw');
 		}
+	};
+
+	/**
+	 * Request to undo a move
+	 *
+	 */
+	undo(socket, data, callback){
+		// TODO: Only allow if the current user just went
+
+		// TODO: Ask the other user for permission
+	};
+
+	/**
+	 * Respond to a request to undo a move
+	 *
+	 * @param socket
+	 * @param {boolean} data whether or not you accept the undo
+	 */
+	undo_respond(socket, data, callback){
+
 
 	};
+
 
 
 
@@ -536,7 +569,7 @@ class Server {
 
 
 		var other_id = (game.white_player.id == socket.id)? game.black_player.id : game.white_player.id;
-		var other = this.io.sockets.connected(other_id);
+		var other = this.io.sockets.connected[other_id];
 
 		delete this.games[game.white_player.id];
 		delete this.games[game.black_player.id];

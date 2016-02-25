@@ -246,7 +246,7 @@ class BoardUi extends EventEmitter {
 					else{
 
 						var activePeice = this.board.at(this.activePosition);
-						var m = new Chess.Move(this.activePosition, position);
+						var m = new Chess.Move(this.activePosition, position, this.me);
 
 						if(activePeice.isLegalMove(this.board, m))
 							placeable = true;

@@ -4,7 +4,8 @@ var http = require('http'),
 	Client = require(__src + '/client'),
 	App = require(__src + '/app'),
 	Chess = require(__src + '/chess'),
-	express = require('express');
+	express = require('express'),
+	Position = require(__src +'/position');
 
 describe('Server', function(){
 
@@ -26,6 +27,8 @@ describe('Server', function(){
 	});
 
 	afterEach(function(){
+		client.socket.close();
+		client2.socket.close();
 		server.close();
 	});
 
@@ -145,22 +148,20 @@ describe('Server', function(){
 
 		});
 
-		it.skip('should be able to be randomly matched', function *(done){
-
-			yield client.call('join', {room: 'hello', name: 'bob', level: 'Noob'});
-			yield client2.call('join', {room: 'hello', name: 'jeff', level: 'Noob'});
-
+		it('should be able to be randomly matched', function(done){
 
 			async
 			.parallel([
-				function(done){
+				function(callback){
 					client.call('challenge', {player_id: 'random'}, function(err, game){
-						done(err);
+						assert.property(game, 'board');
+						callback(err);
 					});
 				},
-				function(done){
+				function(callback){
 					client2.call('challenge', {player_id: 'random'}, function(err, game){
-						done(err);
+						assert.property(game, 'board');
+						callback(err);
 					});
 				}
 
@@ -169,7 +170,7 @@ describe('Server', function(){
 				done();
 			});
 
-			// TODO: random_challenge isn't implemented yet
+
 
 			// Start by putting two users in a room and have them both random_chellenge, see if they get matched
 
@@ -191,24 +192,87 @@ describe('Server', function(){
 				client2.call('accept');
 			});
 
-			game = yield client.call('challenge', { player_id: client2.socket.id });
+			game = new Chess.Game(yield client.call('challenge', { player_id: client2.socket.id }));
 		});
 
 
-		it('black should start first', function(){
-			assert.equal(game.turn, Chess.Type.Black);
+		it('white player should start first', function(){
+			assert.equal(game.board.turn, Chess.Color.White);
 		});
 
-		it.skip('should be able to make a move', function(){
+		it('challengee should move first', function(){
+			assert.equal(game.white_player.id, client2.socket.id);
+		})
 
-			client2.call('move',{ from: [0,0], to: [1,1]}, function(err){
-				console.log(err);
+		it('should be able to make a move', function(done){
+
+			client2.call('move',{ from: [1,6], to: [1,5], color: Chess.Color.White }, function(err){
 				assert.equal(err, null);
 				done(err); // TODO: does this have to do with the errors the tests have been throwing?
 			});
 
 			// Verification for legal moves are in chess.js
 		});
+
+		it('can forfeit while in a game', function(done){
+
+			async
+			.parallel([
+				function(done){
+					client.socket.on('endgame', function(data){
+						assert.equal(data.reason, 'forfeit');
+						assert.equal(data.result, 'win');
+						done();
+					});
+				},
+				function(done){
+
+					client2.socket.on('endgame', function(data){
+						assert.equal(data.reason, 'forfeit');
+						assert.equal(data.result, 'lose');
+						done();
+					})
+
+					client2.call('forfeit'); // TODO: Also validate the response of this call
+				}
+			], function(err){
+				done(err);
+			});
+
+		});
+
+
+		it('can agree to a draw', function(done){
+
+			// Listen for endgame
+			async
+			.parallel([
+				function(done){
+					client.socket.on('endgame', function(data){
+						assert.equal(data.result, 'draw');
+						done();
+					});
+				},
+				function(done){
+					client2.socket.on('endgame', function(data){
+						assert.equal(data.result, 'draw');
+						done();
+					})
+				}
+			], function(err){
+				done(err);
+			});
+
+
+
+			client2.socket.on('drawing', function(){
+				client2.call('draw_respond', true);
+			})
+
+			// Do the drawing
+			client.call('draw');
+
+		})
 
 	});
 

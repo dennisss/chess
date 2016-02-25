@@ -306,8 +306,8 @@ class Board {
 			b.grid[7][i] = new Piece(order[i], Color.White);
 		}
 
-		// Have black take the first turn
-		b.turn = Color.Black;
+		// Have white take the first turn
+		b.turn = Color.White;
 
 		return b;
 	};
@@ -490,6 +490,7 @@ class Board {
  * @property {Board} board
  * @property {User} white_player the profiles of each player
  * @property {User} black_player the profiles of each player
+ * @property {Array.<Board>} history all previous states of the game
  */
 class Game {
 
