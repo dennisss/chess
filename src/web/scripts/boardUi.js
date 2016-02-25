@@ -26,18 +26,32 @@ PeiceText[Chess.Color.Black] = {
 
 
 
-
+/**
+ * States in which the UI can be when playing on a board
+ *
+ * @enum {number}
+ */
 var UiState = {
+	/** No game is being played */
 	None: 0,
+	/** The current user needs to pick out a piece */
 	Picking: 1,
+	/** The current user has picked a peice and must choose a location to move */
 	Placing: 2,
-	Pending: 3, // A move has been placed and is awaiting validation
-	Waiting: 4 // Waiting for the other player to move
+	/** After placing, the the move is waiting for validation */
+	Pending: 3,
+	/** Waiting for the opponent to make a move  */
+	Waiting: 4
 };
 
 
 
-
+/**
+ * Board Manipulation UI Component
+ *
+ * @property {UiState} state
+ * @property {Board} board
+ */
 class BoardUi extends EventEmitter {
 
 	constructor($el){
@@ -126,9 +140,9 @@ class BoardUi extends EventEmitter {
 					}
 
 					// TODO: Emit it and wait for validation
-					var newboard = self.game.board.apply(move);
+					var newboard = self.board.apply(move);
 
-					self.game.board = newboard;
+					self.board = newboard;
 					self.updateBoard();
 					self.updateState(UiState.Waiting);
 
@@ -136,21 +150,22 @@ class BoardUi extends EventEmitter {
 			}
 
 		});
+
+
+		this.updatePlayer(0);
 	}
 
 
 	/**
 	 * Set up the the ui to start playing a game
 	 */
-	start(game, me){
+	start(board, me){
 
-		this.game = game;
 		this.updatePlayer(me);
+		this.updateBoard(board);
 
-		this.updateBoard();
 
-
-		if(this.game.board.turn == this.me)
+		if(this.board.turn == this.me)
 			this.updateState(UiState.Picking);
 		else
 			this.updateState(UiState.Waiting);
@@ -186,8 +201,12 @@ class BoardUi extends EventEmitter {
 	/**
 	 * Make the UI look like the given board
 	 */
-	updateBoard(){
-		var board = this.game.board;
+	updateBoard(newBoard){
+		if(arguments.length == 1){
+			this.board = newBoard;
+		}
+
+		var board = this.board;
 
 		for(var i = 0; i < 8; i++){
 			for(var j = 0; j < 8; j++){
@@ -211,7 +230,7 @@ class BoardUi extends EventEmitter {
 				var cell = this.cells[i][j];
 
 				var position = cell[0].position;
-				var peice = this.game.board.at(position);
+				var peice = this.board.at(position);
 
 
 				var moveable = false, moving = false, placeable = false;
@@ -226,17 +245,16 @@ class BoardUi extends EventEmitter {
 						moving = true;
 					else{
 
-						var activePeice = this.game.board.at(this.activePosition);
+						var activePeice = this.board.at(this.activePosition);
 						var m = new Chess.Move(this.activePosition, position);
 
-						if(activePeice.isLegalMove(this.game.board, m))
+						if(activePeice.isLegalMove(this.board, m))
 							placeable = true;
 
 					}
 				}
 				else if(this.state == UiState.Waiting){
-
-
+					// All pieces should be disabled
 				}
 
 
@@ -251,8 +269,7 @@ class BoardUi extends EventEmitter {
 	 * Clear it
 	 */
 	reset(){
-		this.game = { board: new Chess.Board() };
-		this.updateBoard();
+		this.updateBoard(new Chess.Board());
 	}
 
 

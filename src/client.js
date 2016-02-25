@@ -12,6 +12,11 @@ var io = require('socket.io-client'),
 A Socket instance is returned for the namespace specified by the pathname in the URL, defaulting to /. For example, if the url is http://localhost/users, a transport connection will be established to http://localhost and a Socket.IO connection will be established to /users.
 */
 
+/**
+ * Client-side connection to the server
+ *
+ * @extends RPC
+ */
 class Client extends RPC {
 
 	constructor(url, options){

@@ -12,6 +12,12 @@ global.assert = chai.assert;
 global.__src = path.resolve(__dirname + '/../src');
 
 describe('Friendly Chess', function() {
+	require('./rpc');
+	require('./chess');
+
+	require('./client');
+	require('./server');
+
 	require('./app');
 	require('./web');
 });

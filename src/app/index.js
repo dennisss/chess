@@ -2,7 +2,8 @@
 
 var express = require('express'),
 	bodyParser = require('body-parser'),
-	path = require('path');
+	path = require('path'),
+	Server = require('../server');
 
 global.async = require('async');
 global._ = require('underscore');
@@ -26,7 +27,7 @@ function serve(){
 
 
 	// Setup routing
-	require('./socket')(server);
+	var chessServer = new Server(server);
 	app.use(express.static(__dirname + '/../../public'));
 	app.use(bodyParser.json());
 	app.get('*', function(req, res){

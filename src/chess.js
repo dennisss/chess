@@ -48,19 +48,14 @@ class Piece {
 			color = code >> 4;
 		}
 
-		/**
-		 * Whether this component is visible or not
-		 *
-		 * @name Component#visible
-		 * @type Boolean
-		 * @default false
-		 */
 		this.type = type;
 		this.color = color;
 	};
 
 	/**
 	 * A single integer representation of the piece
+	 *
+	 * @return {number}
 	 */
 	code(){
 		return this.type | (this.color << 4);
@@ -87,10 +82,10 @@ class Piece {
 
 
 
-		//// Regular moves : peices aren't mutated and only one peice is moved
+		//// Regular moves : pieces aren't mutated and only one piece is moved
 		// For the most part, the logic whitelists moves, so avoid returning false
 
-		// Assert not taking your own peice
+		// Assert not taking your own piece
 		if(board.at(move.to) !== null && board.at(move.to).color === this.color)
 			return false;
 
@@ -176,7 +171,7 @@ class Piece {
 	 * Get the available moves for this piece
 	 *
 	 * @param {Board} board the game state
-	 * @param {Position} pos the i,j position on the grid of the peice
+	 * @param {Position} pos the i,j position on the grid of the piece
 	 * @return {Move[]}
 	 */
 	getMoves(board, pos){
@@ -198,7 +193,7 @@ class Piece {
 
 
 	/**
-	 * Serialize the piece. Deserialize by doing "new Peice(other.toJSON())"
+	 * Serialize the piece. Deserialize by doing "new Piece(other.toJSON())"
 	 *
 	 * @returns {number}
 	 */
@@ -218,8 +213,8 @@ class Move {
 	/**
 	 * Creates a move object
 	 *
-	 * @param {Position} from the start position of the peice
-	 * @param {Position} to the end position of the peice
+	 * @param {Position} from the start position of the piece
+	 * @param {Position} to the end position of the piece
 	 * @param {number} color the color of the player performing the move
 	 *
 	 */
@@ -261,7 +256,7 @@ class Board {
 		// Deserialize it
 		if(arguments.length == 1){
 
-			// Instantiate each peice
+			// Instantiate each piece
 			for(var i = 0; i < data.grid.length; i++){
 				for(var j = 0; j < data.grid[i].length; j++){
 					if(data.grid[i][j])
@@ -344,17 +339,17 @@ class Board {
 	/**
 	 * Determine if the position is valid in the board
 	 *
-	 * @
+	 * @param {Position} pos
 	 */
 	isValidPosition(pos){
 		return !( pos.y < 0 || pos.y >= this.grid.length || pos.x < 0 || pos.x > this.grid[pos.y].length );
 	}
 
 	/**
-	 * Get the peice at the given position
+	 * Get the piece at the given position
 	 *
 	 * @param {Position} pos
-	 * @return {Peice|null} a peice or null if an invalid position/no peice at that position
+	 * @return {Piece|null} a piece or null if an invalid position/no piece at that position
 	 */
 	at(pos, value){
 
@@ -381,6 +376,7 @@ class Board {
 	/**
 	 * Applys the move to the board and returns a new board
 	 *
+	 * @param {Move} move
 	 */
 	apply(move){
 
@@ -389,10 +385,10 @@ class Board {
 		if(move.color != this.turn) // Not the current player's turn
 			return null;
 
-		if(p === null || !this.isValidPosition(move.to)) // Can't move if no peice
+		if(p === null || !this.isValidPosition(move.to)) // Can't move if no piece
 			return null;
 
-		if(move.color != p.color) // Can't move someone else's peice
+		if(move.color != p.color) // Can't move someone else's piece
 			return null;
 
 		if(!p.isLegalMove(this, move)){
@@ -462,6 +458,8 @@ class Board {
 
 	/**
 	 * Determine if the game is in checkmate (the current player lost)
+	 *
+	 * @return {boolean} whether or not the current player lost
 	 */
 	isEndGame(){
 
@@ -490,14 +488,16 @@ class Board {
  * A game of chess
  *
  * @property {Board} board
- * @property {object} white_player the profiles of each player
- * @property {object} black_player the profiles of each player
+ * @property {User} white_player the profiles of each player
+ * @property {User} black_player the profiles of each player
  */
 class Game {
 
 	/**
 	 * Creates a new game of chess
 	 *
+	 * @param {User} white_player
+	 * @param {User} black_player
 	 * @example
 	 * var game = new Game({ id: '', name: 'Bob' }, { id: '', name: 'John' });
 	 */

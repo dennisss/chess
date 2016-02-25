@@ -1,9 +1,23 @@
 'use strict';
 
-
+/**
+ * A 2d vector representing a position on the chess board
+ *
+ * @property {number} x the column coordinate
+ * @property {number} y the row coordinate
+ */
 class Position {
 
+	/**
+	 * Makes a new position
+	 *
+	 *
+	 * @param {number} x
+	 * @param {number} y
+	 */
 	constructor(x,y){
+
+		// TODO: Validate that it is validate array and valid numbers
 		if(arguments.length == 1){ // Deserialize
 			var data = arguments[0];
 			x = data[0];
@@ -15,22 +29,43 @@ class Position {
 	};
 
 
+	/**
+	 * Add another position to this one
+	 *
+	 * @param {Position} p
+	 */
 	add(p){
 		return new Position(this.x + p.x, this.y + p.y);
 	};
 
+	/**
+	 * Subtract another position from the current
+	 *
+	 * @param {Position} p
+	 */
 	sub(p){
 		return this.add(new Position(-p.x, -p.y));
 	};
 
+	/**
+	 * Get the Euclidean distance from the origin
+	 *
+	 * @return {number}
+	 */
 	norm(){
 		return Math.sqrt(this.x*this.x, this.y*this.y);
 	};
 
 
+	/**
+	 * Determine if two positions are equal
+	 *
+	 * @param {Position} other the position that is being compared
+	 * @return {boolean} whether or not they are equal
+	 */
 	equals(other){
 		return this.x == other.x && this.y == other.y;
-	}
+	};
 
 
 	toJSON(){

@@ -24,8 +24,7 @@ function load(router){
 	client.socket.on('moved', function(data){
 		var move = new Chess.Move(data);
 
-		game.board = game.board.apply(move);
-		boardUi.updateBoard();
+		boardUi.updateBoard(game.board.apply(move));
 		boardUi.updateState(1);
 	})
 
@@ -46,7 +45,7 @@ function enter(state){
 	// Figure out which color the current client is
 	var me = client.socket.id == game.white_player.id ? Chess.Color.White : Chess.Color.Black;
 
-	boardUi.start(game, me);
+	boardUi.start(game.board, me);
 
 
 	var thisPlayer = state.params.thisPlayer;
@@ -75,8 +74,7 @@ function enter(state){
 
 function leave(){
 
-	// TODO: Breaks when going straight to the '/game' url
-	//boardUi.reset();
+	boardUi.reset();
 
 
 	$("#thisPlayerInfo").hide();
