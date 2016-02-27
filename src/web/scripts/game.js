@@ -60,14 +60,53 @@ function enter(state){
 		$("#forfitNotification").modal("show");
 	});
 
+	$("#forfeitDone").click(function() {
+		client.call('forfeit');
+	});
+
 	$("#drawGame").click(function() {
 		$("#drawNotification").modal("show");
 	});
 
+	$("#acceptDraw").click(function() {
+		client.call('draw_respond', true);
+	});
 
+	$("#refuseDraw").click(function() {
+		client.call('draw_respond', false);
+	});
 
-	$("#forfeitDone").click(function() {
-		router.go('room', {room: 'lobby'});
+	$(".goToMain").click(function() {
+		state.go('room', {room: 'lobby'});
+		$(".statNotification").modal("hide");
+	});
+
+	$("#sendDraw").click(function () {
+		client.call('draw');
+	});
+
+	client.socket.on('drawing', function(){
+		$("#drawRequestNotification").modal("show");
+	});
+
+	client.socket.on('endgame', function(data){
+		console.log(data);
+		if(data.reason === 'forfeit') {
+			$("#forfitNotification").modal("hide");
+			if(data.result == 'win')
+				$("#winNotification").modal("show");
+			else
+				$("#lossNotification").modal("show");
+		} else if(data.result === 'draw') {
+			$("#drawNotification").modal("hide");
+			$("#drawRequestNotification").modal("hide");
+			$("#drawFinalNotification").modal("show");
+		} else {
+			if(data.result == 'win')
+				$("#winNotification").modal("show");
+			else
+				$("#lossNotification").modal("show");
+		}
 	});
 
 }

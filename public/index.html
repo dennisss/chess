@@ -228,7 +228,7 @@
 					<h4 class="modal-title"><span class="requestPlayerName"></span> is requesting to play!</h4>
 				</div>
 				<div class="modal-body">
-					<p>A user <span class="requestPlayerName"></span> (Skill level <span class="requestPlayerSkill"></span>) wants to play a round of Friendly Chess.</p>
+					<p>A user <span class="requestPlayerName"></span> (skill level <span class="requestPlayerSkill"></span>) wants to play a round of Friendly Chess.</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" id="challengedDenied" class="btn btn-default" data-dismiss="modal">No thanks</button>
@@ -284,6 +284,88 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Just kidding</button>
 					<button type="button" id="sendDraw" class="btn btn-primary">Yes, Request a Draw</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="drawRequestNotification" class="modal fade" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Your opponent has requested a draw!</h4>
+				</div>
+				<div class="modal-body">
+					<p>If you draw...
+					<ul>
+						<li>Your opponent must also accept the draw in order to make it official.</li>
+						<li>You and the other player will neither win nor lose.</li>
+						<li>You will immediately be taken to the room menu.</li>
+					</ul>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="refuseDraw" class="btn btn-default" data-dismiss="modal">Refuse Draw</button>
+					<button type="button" id="acceptDraw" class="btn btn-primary">Accept Draw</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="winNotification" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">You won!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Congrats!  You won this game of Friendly Chess.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary goToMain">Go to Main Menu</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="lossNotification" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">You lost!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Sorry!  You lost this game of Friendly Chess.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary goToMain">Go to Main Menu</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="drawFinalNotification" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">It's a draw!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Both players have agreed to draw.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary goToMain">Go to Main Menu</button>
 				</div>
 			</div>
 		</div>
