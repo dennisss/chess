@@ -7,6 +7,8 @@ function load(router){
 
 	$("#thisPlayerInfo").hide();
 	$("#thatPlayerInfo").hide();
+	$("#drawGame").hide();
+	$("#forfeitGame").hide();
 
 
 	boardUi = new BoardUi($('.chessboard'));
@@ -55,6 +57,40 @@ function enter(state){
 	$(".otherPlayerName").html(opName);
 	$("#thisPlayerInfo").show();
 	$("#thatPlayerInfo").show();
+
+	$("#forfeitGame").show();
+	$("#drawGame").show();
+
+	$("#actionMenu").click(function() {
+		if ($(this).hasClass('clicked')) {
+			$(this).removeClass('clicked');
+			$('#forfeitGame, #drawGame').hide();
+			$("#forfeitGame, #drawGame").css({
+				bottom: "5px", right: 0, margin: "5px", position: "fixed"
+			});
+		}
+		else {
+			$(this).addClass('clicked');
+			$('#forfeitGame, #drawGame').show().css({
+				'opacity': 0,
+				'transform': 'scale(0.7)'
+			});
+			$("#forfeitGame").animate({
+				opacity: '1',
+				bottom: "105px",
+				right: 0,
+				margin: "5px",
+				position: "fixed"
+			}, 500);
+			$("#drawGame").animate({
+				opacity: '1',
+				bottom: "55px",
+				right: 0,
+				margin: "5px",
+				position: "fixed"
+			}, 500);
+		}
+	});
 
 	$("#forfeitGame").click(function() {
 		$("#forfitNotification").modal("show");

@@ -50,7 +50,7 @@
 </div>
 
 
-<div div="thatPlayerInfo" class="page-header">
+<div id="thatPlayerInfo" class="page-header">
 	<h2 class="otherPlayerName"></h2>
 </div>
 
@@ -374,7 +374,11 @@
 
 <div id="thisPlayerInfo" class="page-header bottom-right">
 	<h2 class="thisPlayerName"></h2>
-	<button id="forfeitGame" class="btn btn-raised btn-primary">Forfeit</button> &nbsp; &nbsp; &nbsp; <button id="drawGame" class="btn btn-raised btn-primary">Draw</button>
+	<br><br>
+	<button id="forfeitGame" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Forfeit"><i class="material-icons">flag</i></button>
+	<button id="drawGame" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Request a Draw"><i class="material-icons fa fa-meh-o"></i></button>
+	<button id="actionMenu" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Game Actions"><i class="material-icons">grade</i></button>
+	<!--<button id="forfeitGame" class="btn btn-raised btn-primary">Forfeit</button> &nbsp; &nbsp; &nbsp; <button id="drawGame" class="btn btn-raised btn-primary">Draw</button>-->
 </div>
 </body>
 </html>

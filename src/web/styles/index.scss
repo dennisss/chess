@@ -175,3 +175,26 @@ body{
 #availPlayerTable .player {
 	cursor: pointer;
 }
+
+@media only screen and (max-width: 1400px)
+{
+  #thisPlayerInfo .thisPlayerName {
+	display: none;
+  }
+
+  #thatPlayerInfo .otherPlayerName {
+	display: none;
+  }
+}
+
+#forfeitGame {
+  bottom: 5px; right: 0; margin: 5px; position: fixed; transform: scale(0.0);
+}
+
+#drawGame {
+  bottom: 5px; right: 0; margin: 5px; position: fixed; transform: scale(0.0);
+}
+
+#actionMenu {
+  bottom: 0; right: 0; margin: 5px; position: fixed;
+}
