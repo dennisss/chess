@@ -111,17 +111,17 @@
 								<input type="text" disabled class="form-control" id="groupURL" placeholder="Room URL will be generated here...">
 							</div>
 							<div class="col-md-2">
-								<button type="button" id="copyRoomUrl" class="btn btn-info" data-toggle="popover" data-placement="top" title="Copied successfully!" data-content="Now send this URL to whoever you want to play chess with!">Copy</button>
+								<button type="button" id="copyRoomUrl" class="btn btn-info">Copy</button>
 							</div>
 						</div>
 					</form>
 
 					<div id="shareIcons" class="text-center">
 						Share your link on social media!<br><br>
-						<a id="fbShareLink" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=friendlychess.com"><img src="/fb-art.jpg" height="32px"></a>&nbsp;&nbsp;
-						<a id="gPlusShare" target="_blank" href="https://plus.google.com/share?url=https://friendlychess.com" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img src="https://www.gstatic.com/images/icons/gplus-32.png" alt="Share on Google+"></a>&nbsp;&nbsp;
-						<a id="twitterShare" target="_blank" href="https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20friendlychess.com"><img src="/twitter_logo_blue.png" height="32px"></a>&nbsp;&nbsp;
-						<a id="emailShare" target="_blank" href="mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to https://friendlychess.com to get started!" ><i class="fa fa-envelope fa-3x" color="green" style=" vertical-align: middle;"></i></a>
+						<a id="fbShareLink" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=friendlychess.xyz"><img src="/fb-art.jpg" height="32px"></a>&nbsp;&nbsp;
+						<a id="gPlusShare" target="_blank" href="https://plus.google.com/share?url=https://friendlychess.xyz" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img src="https://www.gstatic.com/images/icons/gplus-32.png" alt="Share on Google+"></a>&nbsp;&nbsp;
+						<a id="twitterShare" target="_blank" href="https://twitter.com/home?status=Play%20Friendly%20Chess%20with%20me!%20%20friendlychess.xyz"><img src="/twitter_logo_blue.png" height="32px"></a>&nbsp;&nbsp;
+						<a id="emailShare" target="_blank" href="mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to https://friendlychess.xyz to get started!" ><i class="fa fa-envelope fa-3x" color="green" style=" vertical-align: middle;"></i></a>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -143,19 +143,15 @@
 				<div class="modal-body">
 					<h3 class="text-center">Welcome to <span class="roomName">the Lobby</span>!</h3>
 					<div id="playerProblems" class="alert alert-danger" role="alert"></div>
-					<form class="form-horizontal">
-						<div class="form-group">
-							<label for="playerName" class="col-md-2 control-label">Player Name:</label>
-							<div class="col-md-9">
+					<form class="form-horizontal" style="margin: 0 20px 0 20px">
+						<div class="form-group label-floating">
+							<label for="playerName" class="control-label">Player Name</label>
+							<div class="">
 								<input type="text" class="form-control" id="playerName">
-							</div>
-							<div class="col-md-1">
-								&nbsp;
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="experience" class="col-md-2 control-label">Experience:</label>
-							<div class="col-md-9">
+							<div class="">
 								<select id="experience" class="form-control">
 									<option> Choose your experience... </option>
 									<option> Noob </option>
@@ -164,15 +160,12 @@
 									<option> Jedi </option>
 								</select>
 							</div>
-							<div class="col-md-1">
-
-							</div>
 						</div>
+
 					</form>
 					<br><br>
 					<div class="text-center">
-						<button  class="btn btn-raised btn-primary" id="btnChooseOp" aria-expanded="false" aria-controls="collapseExample">Choose Your Opponent</button>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-raised btn-primary" id="btnChooseOp" aria-expanded="false" aria-controls="collapseExample">Choose Your Opponent</button>
 						<button class="btn btn-raised btn-primary" id="btnRandomOp">Random Opponent</button>
 					</div>
 					<div class="collapse" id="playerList">
@@ -373,12 +366,11 @@
 </div>
 
 <div id="thisPlayerInfo" class="page-header bottom-right">
-	<h2 class="thisPlayerName"></h2>
-	<br><br>
 	<button id="forfeitGame" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Forfeit"><i class="material-icons">flag</i></button>
 	<button id="drawGame" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Request a Draw"><i class="material-icons fa fa-meh-o"></i></button>
 	<button id="actionMenu" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Game Actions"><i class="material-icons">grade</i></button>
 	<!--<button id="forfeitGame" class="btn btn-raised btn-primary">Forfeit</button> &nbsp; &nbsp; &nbsp; <button id="drawGame" class="btn btn-raised btn-primary">Draw</button>-->
 </div>
+<h2 class="thisPlayerName bottom-right btmRight"></h2>
 </body>
 </html>

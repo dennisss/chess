@@ -19,7 +19,7 @@ function load(router){
 			if (roomName != "lobby") {
 				extraInfo = "Hang in there for your friends or <a href='/r/lobby' id='exitLink'>click here</a> to go to the main lobby.";
 			}
-			$("#playerTableBody").append("<tr><td colspan='2' class='text-center disabled'><img src='https://orig11.deviantart.net/dcab/f/2011/158/1/6/nyan_cat_by_valcreon-d3iapfh.gif' style='height: 150px; opacity: 0.4; padding-right: 100px;'><br>Sorry!  There are no available players available at this time.  " + extraInfo + "<br></td></tr>");
+			$("#playerTableBody").append("<tr><td colspan='2' class='text-center disabled'><img src='https://orig11.deviantart.net/dcab/f/2011/158/1/6/nyan_cat_by_valcreon-d3iapfh.gif' style='height: 7em; opacity: 0.4; padding-right: 5em;'><br>Sorry!  There are no available players available at this time.  " + extraInfo + "<br></td></tr>");
 		} // https://49.media.tumblr.com/8210fd413c5ce209678ef82d65731443/tumblr_mjphnqLpNy1s5jjtzo1_400.gif
 	}
 

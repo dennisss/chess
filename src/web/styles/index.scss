@@ -145,7 +145,7 @@ body{
 }
 
 .bottom-right {
-  right: 20px;
+  right: 50px;
   position: fixed;
   bottom: 0px;
   text-align: right;
@@ -159,7 +159,7 @@ body{
 
 
 .bottom-right {
-  right: 20px;
+  right: 50px;
   position: fixed;
   bottom: 0px;
   text-align: right;
@@ -176,7 +176,7 @@ body{
 	cursor: pointer;
 }
 
-@media only screen and (max-width: 1400px)
+@media only screen and (min-width: 450px) and (max-width: 1100px)
 {
   #thisPlayerInfo .thisPlayerName {
 	display: none;
@@ -197,4 +197,13 @@ body{
 
 #actionMenu {
   bottom: 0; right: 0; margin: 5px; position: fixed;
+}
+
+#player-creation {
+  overflow: auto;
+}
+
+.btmRight {
+  right:  80px;
+  z-index: -1;
 }
