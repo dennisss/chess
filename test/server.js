@@ -1,7 +1,6 @@
 // Tests for all the server-side functions
 
-var http = require('http'),
-	Client = require(__src + '/client'),
+var Client = require(__src + '/client'),
 	App = require(__src + '/app'),
 	Chess = require(__src + '/chess'),
 	express = require('express'),

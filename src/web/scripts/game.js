@@ -12,12 +12,11 @@ function load(router){
 
 
 	boardUi = new BoardUi($('.chessboard'));
-	boardUi.root.css('opacity', 1);
+
 
 
 	boardUi.on('move', function(move, callback){
 		client.call('move', move, function(err){
-			console.log(err);
 			callback(err);
 		});
 	});
@@ -26,8 +25,7 @@ function load(router){
 	client.socket.on('moved', function(data){
 		var move = new Chess.Move(data);
 
-		boardUi.updateBoard(game.board.apply(move));
-		boardUi.updateState(1);
+		boardUi.processMove(move);
 	})
 
 }
@@ -42,7 +40,6 @@ function enter(state){
 
 	game = new Chess.Game(state.params.data);
 
-	console.log(game);
 
 	// Figure out which color the current client is
 	var me = client.socket.id == game.white_player.id ? Chess.Color.White : Chess.Color.Black;

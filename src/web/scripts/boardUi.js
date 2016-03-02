@@ -134,15 +134,13 @@ class BoardUi extends EventEmitter {
 				self.emit('move', move, function(err){
 
 					if(err){
-						alert('Invalid Move')
+						alert(err)
 						self.updateState(UiState.Picking);
 						return;
 					}
 
-					// TODO: Emit it and wait for validation
-					var newboard = self.board.apply(move);
+					self.board.apply(move);
 
-					self.board = newboard;
 					self.updateBoard();
 					self.updateState(UiState.Waiting);
 
@@ -153,6 +151,8 @@ class BoardUi extends EventEmitter {
 
 
 		this.updatePlayer(0);
+
+		this.root.css('opacity', 1);
 	}
 
 
@@ -272,6 +272,20 @@ class BoardUi extends EventEmitter {
 			}
 		}
 	}
+
+
+	/**
+	 * Process a move that was received (should be called when a move is received from the server)
+	 *
+	 * @param {Move} move
+	 */
+	processMove(move){
+		this.board.apply(move);
+
+		this.updateBoard();
+		this.updateState(UiState.Picking);
+	};
+
 
 
 	/**

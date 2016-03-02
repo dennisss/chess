@@ -130,7 +130,7 @@ function Router(options){
 		gotoPath(path);
 	}
 
-	$(window).on('load', function() {
+	function load(){
 
 		// Load all states
 		var keys = _.keys(states);
@@ -153,8 +153,13 @@ function Router(options){
 		setTimeout(function() {
 			$(window).on('popstate', popstate);
 		}, 0);
-	});
+	};
 
+
+	if(document.readyState == 'complete')
+		load()
+	else
+		$(window).on('load', load);
 
 }
 

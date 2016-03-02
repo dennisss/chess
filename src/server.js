@@ -443,14 +443,12 @@ class Server {
 		var other_id = color === Color.White? game.black_player.id : game.white_player.id;
 
 
-		var newstate = game.board.apply(move);
+		var err = game.board.apply(move);
 
-		if(newstate === null){
-			callback('Invalid move');
+		if(err){
+			callback(err);
 			return;
 		}
-
-		game.board = newstate;
 
 		this.io.to(other_id).emit('moved', move);
 		callback(null);
