@@ -144,7 +144,7 @@
 					<h3 class="text-center">Welcome to <span class="roomName">the Lobby</span>!</h3>
 					<div id="playerProblems" class="alert alert-danger" role="alert"></div>
 					<form class="form-horizontal" style="margin: 0 20px 0 20px">
-						<div class="form-group label-floating">
+						<div class="form-group">
 							<label for="playerName" class="control-label">Player Name</label>
 							<div class="">
 								<input type="text" class="form-control" id="playerName">
@@ -161,7 +161,6 @@
 								</select>
 							</div>
 						</div>
-
 					</form>
 					<br><br>
 					<div class="text-center">
@@ -208,6 +207,44 @@
 					<!--<button type="button" class="btn btn-primary">Save changes</button>-->
 				</div>
 
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="playerRequestDenied" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Request Denied!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Sorry!  Your request to play Friendly Chess was denied.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="playerRequestTO" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Request Unanswered!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Sorry!  Your request to play Friendly Chess timed out.  Try your request again later.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -316,7 +353,7 @@
 					<h4 class="modal-title text-center">You won!</h4>
 				</div>
 				<div class="modal-body">
-					<p>Congrats!  You won this game of Friendly Chess.
+					<p>Congrats!  You won this game of Friendly Chess.  <span id="reasonWon"></span>
 					</p>
 				</div>
 				<div class="modal-footer">

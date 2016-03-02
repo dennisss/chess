@@ -119,6 +119,8 @@ function enter(state){
 
 	$("#sendDraw").click(function () {
 		client.call('draw');
+		$("#drawNotification").modal("hide");
+		$("#loadingPlayer").modal("show");
 	});
 
 	client.socket.on('drawing', function(){
@@ -127,19 +129,26 @@ function enter(state){
 
 	client.socket.on('endgame', function(data){
 		console.log(data);
+		$("#reasonWon").html("");
 		if(data.reason === 'forfeit') {
 			$("#forfitNotification").modal("hide");
-			if(data.result == 'win')
+			if(data.result == 'win') {
+				$("#reasonWon").html("Your opponent forfeit.");
 				$("#winNotification").modal("show");
+			}
 			else
 				$("#lossNotification").modal("show");
 		} else if(data.result === 'draw') {
-			$("#drawNotification").modal("hide");
+			$("#loadingPlayer").modal("hide");
 			$("#drawRequestNotification").modal("hide");
 			$("#drawFinalNotification").modal("show");
 		} else {
-			if(data.result == 'win')
+			if(data.result == 'win') {
+				if(data.reason === "disconnect") {
+					$("#reasonWon").html("Your opponent disconnected from the game.");
+				}
 				$("#winNotification").modal("show");
+			}
 			else
 				$("#lossNotification").modal("show");
 		}
