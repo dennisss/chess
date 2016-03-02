@@ -163,6 +163,7 @@ function leave(){
 
 	$("#thisPlayerInfo").hide();
 	$("#thatPlayerInfo").hide();
+	$("#thisPlayerInfoName").hide();
 
 }
 
