@@ -30,17 +30,19 @@ var Color = {
  *
  * @property {number} type
  * @property {number} color
+ * @property {boolean} moved
  */
 class Piece {
 
 
 	/**
-	 *
+	 * Makes a new peice
 	 *
 	 * @param {number} type the rank of the piece
-	 * @param {number} color optional value specifying the color of the piece. if not specified, the type is parsed as a code as returned by code()
+	 * @param {number} color value specifying the color of the piece. if not specified, the type is parsed as a code as returned by code()
+	 * @param {boolean} moved whether or not the peice has moved from the its default position
 	 */
-	constructor(type, color){
+	constructor(type, color, moved){
 
 		if(arguments.length == 1){ // Just given raw piece code
 			var code = arguments[0];
@@ -50,15 +52,16 @@ class Piece {
 
 		this.type = type;
 		this.color = color;
+		this.moved = moved;
 	};
 
 	/**
-	 * A single integer representation of the piece
+	 * A single byte representation of the piece (0b0MCC TTTT)
 	 *
 	 * @return {number}
 	 */
 	code(){
-		return this.type | (this.color << 4);
+		return this.type | (this.color << 4) | ((this.moved ? 1 : 0) << 6);
 	};
 
 
@@ -374,41 +377,43 @@ class Board {
 	}
 
 	/**
-	 * Applys the move to the board and returns a new board
+	 * Applys the move to the current board
 	 *
 	 * @param {Move} move
+	 * @return {string} an error message if the apply failed
 	 */
 	apply(move){
 
 		var p = this.at(move.from);
 
-		if(move.color != this.turn) // Not the current player's turn
-			return null;
+		if(move.color != this.turn){ // Not the current player's turn
+			return 'Not the player\'s turn';
+		}
 
-		if(p === null || !this.isValidPosition(move.to)) // Can't move if no piece
-			return null;
+		if(p === null || !this.isValidPosition(move.to)){ // Can't move if no piece
+			return 'Can\'t move if no piece';
+		}
 
-		if(move.color != p.color) // Can't move someone else's piece
-			return null;
+		if(move.color != p.color){ // Can't move someone else's piece
+			return 'Can\' move someone else\'s peice';
+		}
 
 		if(!p.isLegalMove(this, move)){
-			return null;
+			return 'Not a legal move';
 		}
 
 
-		var b = this.clone();
-
 		// Simple pick and place
 		// TODO: Handle castling, queening etc.
-		var p = b.at(move.from);
-		b.at(move.from, null);
-		b.at(move.to, p);
+		var p = this.at(move.from);
+		this.at(move.from, null);
+		this.at(move.to, p);
 
 
 		// Switch players
-		b.turn = b.turn == Color.Black ? Color.White : Color.Black;
+		this.turn = (this.turn == Color.Black) ? Color.White : Color.Black;
 
-		return b;
+		return null;
 	}
 
 	/**
@@ -468,7 +473,8 @@ class Board {
 
 		var moves = this.getMoves();
 		for(var i = 0; i < moves.length; i++){
-			var state = this.apply(moves[i]);
+			var state = this.clone();
+			state.apply(moves[i]);
 
 			if(!state.inCheck())
 				return false;
