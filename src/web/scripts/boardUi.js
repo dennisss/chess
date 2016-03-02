@@ -165,10 +165,13 @@ class BoardUi extends EventEmitter {
 		this.updateBoard(board);
 
 
-		if(this.board.turn == this.me)
+		if(this.board.turn == this.me) {
 			this.updateState(UiState.Picking);
-		else
+		}
+		else {
 			this.updateState(UiState.Waiting);
+			$("#waitingTurn").modal("show");
+		}
 	};
 
 	/**
@@ -223,6 +226,12 @@ class BoardUi extends EventEmitter {
 	updateState(s){
 
 		this.state = s;
+
+		if(this.state == UiState.Picking) {
+			$("#waitingTurn").modal("hide");
+		} else if(this.state == UiState.Waiting){
+			$("#waitingTurn").modal("show");
+		}
 
 		for(var i = 0; i < 8; i++){
 			for(var j = 0; j < 8; j++){

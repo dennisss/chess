@@ -119,7 +119,7 @@ function load(router){
 		$("#loadingPlayer").modal({ backdrop: 'static' });
 
 		client.call('challenge', {player_id : opID}, function(err, game) {
-
+			console.log(err, game);
 			// TODO: Handle error
 
 			$("#loadingPlayer").modal("hide");

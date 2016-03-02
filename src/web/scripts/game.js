@@ -128,7 +128,8 @@ function enter(state){
 	});
 
 	client.socket.on('endgame', function(data){
-		console.log(data);
+		//console.log(data);
+		$("#waitingTurn").modal("hide");
 		$("#reasonWon").html("");
 		if(data.reason === 'forfeit') {
 			$("#forfitNotification").modal("hide");
