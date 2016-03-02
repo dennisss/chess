@@ -144,7 +144,7 @@
 					<h3 class="text-center">Welcome to <span class="roomName">the Lobby</span>!</h3>
 					<div id="playerProblems" class="alert alert-danger" role="alert"></div>
 					<form class="form-horizontal" style="margin: 0 20px 0 20px">
-						<div class="form-group label-floating">
+						<div class="form-group">
 							<label for="playerName" class="control-label">Player Name</label>
 							<div class="">
 								<input type="text" class="form-control" id="playerName">
@@ -161,7 +161,6 @@
 								</select>
 							</div>
 						</div>
-
 					</form>
 					<br><br>
 					<div class="text-center">
@@ -208,6 +207,67 @@
 					<!--<button type="button" class="btn btn-primary">Save changes</button>-->
 				</div>
 
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="waitingTurn" class="modal fade" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#10060;</button>-->
+					<h3 class="modal-title text-center">Waiting for turn...&nbsp;&nbsp;<img src="/cube.svg" style="height: 2em"></h3>
+				</div>
+				<!--
+				<div class="modal-body text-center">
+					<img src="/ring-alt.svg" style="height: 4em">
+				</div>
+				-->
+				<div class="modal-footer">
+					<!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel Request</button>
+					<button type="button" class="btn btn-primary">Save changes</button>-->
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="playerRequestDenied" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Request Denied!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Sorry!  Your request to play Friendly Chess was denied.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="playerRequestTO" class="modal fade statNotification" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title text-center">Request Unanswered!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Sorry!  Your request to play Friendly Chess timed out.  Try your request again later.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -316,7 +376,7 @@
 					<h4 class="modal-title text-center">You won!</h4>
 				</div>
 				<div class="modal-body">
-					<p>Congrats!  You won this game of Friendly Chess.
+					<p>Congrats!  You won this game of Friendly Chess.  <span id="reasonWon"></span>
 					</p>
 				</div>
 				<div class="modal-footer">
@@ -371,6 +431,6 @@
 	<button id="actionMenu" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Game Actions"><i class="material-icons">grade</i></button>
 	<!--<button id="forfeitGame" class="btn btn-raised btn-primary">Forfeit</button> &nbsp; &nbsp; &nbsp; <button id="drawGame" class="btn btn-raised btn-primary">Draw</button>-->
 </div>
-<h2 class="thisPlayerName bottom-right btmRight"></h2>
+<h2 id="thisPlayerInfoName" class="thisPlayerName bottom-right btmRight"></h2>
 </body>
 </html>
