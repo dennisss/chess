@@ -137,6 +137,14 @@ body{
 }
 
 
+/* Piece animations */
+.chessboard .cell>div{
+	position: relative;
+	transition: left 0.5s, top 0.5s;
+	top: 0;
+	left: 0;
+}
+
 
 .row {
   display: table-row;

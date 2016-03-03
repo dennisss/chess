@@ -100,6 +100,8 @@ class BoardUi extends EventEmitter {
 			while(cell !== null){
 				if($(cell).hasClass('cell'))
 					break;
+
+				cell = cell.parentNode;
 			}
 
 			if(cell === null)
@@ -127,8 +129,8 @@ class BoardUi extends EventEmitter {
 
 				var move = new Chess.Move(self.activePosition, position, self.me);
 
-
 				self.updateState(UiState.Pending);
+
 
 				// Emit the move so that it can be validated by the server
 				self.emit('move', move, function(err){
@@ -139,12 +141,17 @@ class BoardUi extends EventEmitter {
 						return;
 					}
 
-					self.board.apply(move);
 
-					self.updateBoard();
-					self.updateState(UiState.Waiting);
+					self.animateMove(move, function(){
+						self.board.apply(move);
+
+						self.updateBoard();
+						self.updateState(UiState.Waiting);
+
+					});
 
 				});
+
 			}
 
 		});
@@ -216,7 +223,7 @@ class BoardUi extends EventEmitter {
 
 				var cell = this.cells[i][j];
 				var p = board.at(cell.get(0).position);
-				var html = p === null? '&nbsp;' : PeiceText[p.color][p.type];
+				var html = p === null? '&nbsp;' : ('<div>' + PeiceText[p.color][p.type] + '</div>');
 
 				cell.html(html);
 			}
@@ -275,15 +282,54 @@ class BoardUi extends EventEmitter {
 
 
 	/**
+	 * Get the cell element at a given position
+	 */
+	getCell(pos){
+		for(var i = 0; i < 8; i++){
+			for(var j = 0; j < 8; j++){
+				if(pos.equals(this.cells[i][j][0].position))
+					return this.cells[i][j];
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Animate a move being done. What more is there to say
+	 *
+	 * @param {Move} move
+	 * @param callback called when the move is done being animated
+	 */
+	animateMove(move, callback){
+
+		// Movement animation
+		var fromC = this.getCell(move.from).children().first();
+		var toC = this.getCell(move.to);
+
+		var orig = fromC.offset(), targ = toC.offset();
+		fromC
+		.css('top', (targ.top - orig.top) + 'px')
+		.css('left', (targ.left - orig.left) + 'px');
+
+		$(fromC).one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', callback);
+	}
+
+	/**
 	 * Process a move that was received (should be called when a move is received from the server)
 	 *
 	 * @param {Move} move
 	 */
 	processMove(move){
-		this.board.apply(move);
+		var self = this;
+		this.animateMove(move, function(){
 
-		this.updateBoard();
-		this.updateState(UiState.Picking);
+			self.board.apply(move);
+
+			self.updateBoard();
+			self.updateState(UiState.Picking);
+		});
 	};
 
 
