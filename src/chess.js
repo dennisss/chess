@@ -66,6 +66,34 @@ class Piece {
 
 
 	/**
+	 * Simple clearance checking function for parallel, perpendicular, and diagonal moves.
+	 *
+	 * @private
+	 */
+	_isClear(board, start, stop){
+
+		// Get a normalized increment between pieces in the line path
+		var step = stop.sub(start);
+		if(step.x != 0)
+			step.x /= Math.abs(step.x);
+		if(step.y != 0)
+			step.y /= Math.abs(step.y);
+
+
+		start = start.add(step);
+		var i = 0; // Just in case there is invalid data, terminate instead of infinite looping
+		while(!start.equals(stop) && i++ <= 8){
+
+			if(board.at(start) !== null)
+				return false;
+
+			start = start.add(step);
+		}
+
+		return true;
+	};
+
+	/**
 	 * Determine if the given move is valid. Assumes the positions are valid
 	 *
 	 * @param {Board} board
@@ -92,7 +120,7 @@ class Piece {
 		if(board.at(move.to) !== null && board.at(move.to).color === this.color)
 			return false;
 
-		var diff = move.from.sub(move.to);
+		var diff = move.to.sub(move.from);
 
 
 		if(this.type == Type.King){
@@ -101,20 +129,15 @@ class Piece {
 		}
 		if(this.type == Type.Rook || this.type == Type.Queen){
 
-			if(diff.x == 0 || diff.y == 0)
+			if((diff.x == 0 || diff.y == 0) && this._isClear(board, move.from, move.to))
 				return true;
-
-
-			// Check clearance of the path
 		}
 		if(this.type == Type.Bishop || this.type == Type.Queen){
 
 			// Check that it is diagonal
-			if(Math.abs(diff.x) == Math.abs(diff.y))
+			if(Math.abs(diff.x) == Math.abs(diff.y) && this._isClear(board, move.from, move.to)){
 				return true;
-
-
-			// Check clearance of the path
+			}
 
 		}
 		if(this.type == Type.Knight){
