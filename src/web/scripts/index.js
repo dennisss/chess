@@ -7,6 +7,8 @@ window.client = client;
 
 var Router = require('./router');
 
+var Connect = require('./connect')
+
 
 Router({
 	states: {

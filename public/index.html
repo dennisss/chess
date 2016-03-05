@@ -430,15 +430,32 @@
 		<div class="modal-dialog vertical-align-center">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title text-center">Choose a piece to promote your pawn to:</h4>
+					<h2 class="modal-title text-center">Choose a piece to promote your pawn to:</h2>
 				</div>
-				<div class="modal-body">
-					<div class="btn-group-lg" role="group">
-						<button type="button" class="btn btn-secondary" id="promoteQueen">&#9813;</button>
-						<button type="button" class="btn btn-secondary" id="promoteRook">&#9814;</button>
-						<button type="button" class="btn btn-secondary" id="promoteBishop">&#9815;</button>
-						<button type="button" class="btn btn-secondary" id="promoteKnight">&#9816;</button>
+				<div class="modal-body text-center">
+					<div>
+						<button type="button" class="btn btn-secondary btn-chesspiece" id="promoteQueen">&#9813;</button>
+						<button type="button" class="btn btn-secondary btn-chesspiece" id="promoteRook">&#9814;</button>
+						<button type="button" class="btn btn-secondary btn-chesspiece" id="promoteBishop">&#9815;</button>
+						<button type="button" class="btn btn-secondary btn-chesspiece" id="promoteKnight">&#9816;</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="disconnectWarning" class="modal fade" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title text-center">Connection Lost</h2>
+				</div>
+				<div class="modal-body text-center">
+					You've lost connection to the server.  Check your internet connection.
+					<br><br>
+					If we detect we can reconnect to the server once again, we'll refresh this page.
 				</div>
 			</div>
 		</div>
