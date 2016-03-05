@@ -305,13 +305,14 @@ class Piece {
 
 				// En Passant (only valid when there is at least one parent state)
 				if(board.parent){
+
 					var adj = new Position(spot.x, pos.y);
 					var adjP = board.at(adj)
 
-					if(adjP !== null && adjP.Type === Type.Pawn && adjP.color !== this.color){
+					if(adjP !== null && adjP.type === Type.Pawn && adjP.color !== this.color){
 
 						// Check that the other pawn just did a double move
-						if(board.move.from.equals(adjP) && Math.abs(board.move.from.y - board.move.to.y === 2)){
+						if(board.move.to.equals(adj) && Math.abs(board.move.from.y - board.move.to.y) === 2){
 							addMove(spot, Type.EnPassant);
 							continue; // This will ensure that en-passant is prefered to a regular movement
 						}
@@ -404,7 +405,7 @@ class Move {
 		}
 		else if(this.type === Type.EnPassant){
 			// Capture
-			board.at(new Position(this.from.y, this.to.x), null);
+			board.at(new Position(this.to.x, this.from.y), null);
 		}
 		else if(this.type === Type.Castling){
 

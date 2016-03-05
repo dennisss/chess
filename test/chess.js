@@ -52,7 +52,36 @@ describe('Chess', function(){
 				describe('En Passant', function() {
 					// If a pawn has moved up 2 spaces then did not move again
 
+					it('works', function(){
+						var board = Chess.Board.Default();
+
+						// Place an attacking black pawn
+						board.at(new Position(1, 4), new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black));
+
+						// Move the White pawn up two spaces
+						board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
+
+						// The adjacent pawn should be in place (precondition)
+						assert(board.at(new Position(0, 4)) !== null);
+
+						// Construct the move
+						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
+						assert(board.at(enPassant.from).isLegalMove(board, enPassant));
+
+
+						// Perform the move
+						assert.equal(board.apply(enPassant), null);
+
+						// The adjacent pawn should be gone
+						assert(board.at(new Position(0, 4)) === null);
+
+						// The attacking pawn should have moved up/down
+						// TODO
+
+					})
+
 					it.skip('After capture, the attacking pawn moves normally (diagonally)', function(){
+
 
 					});
 
