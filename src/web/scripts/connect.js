@@ -3,6 +3,7 @@
  */
 
 client.socket.on("disconnect", function () {
+	$(".modal").modal("hide");
 	$("#disconnectWarning").modal("show");
 });
 
