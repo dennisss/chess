@@ -34,20 +34,18 @@ function load(router){
 	});
 
 	function setCookie(cname, cvalue, exdays) {
-		var d = new Date();
-		d.setTime(d.getTime() + (exdays*24*60*60*1000));
-		var expires = "expires="+d.toUTCString();
-		var cValue = cname + "=" + cvalue + "; " + expires;
-		console.log(cValue);
-		document.cookie = cValue;
-		console.log(document.cookie);
+		if(typeof(Storage) !== "undefined") {
+			localStorage.setItem(cname, cvalue);
+		} else {
+			// Sorry! No Web Storage support..
+		}
 	}
 
 
 	$('#btnChooseOp').click(function(){
 		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
 			setCookie(playerNameCookie, $("#playerName").val(), 30);
-			setCookie(playerLevelCookie, document.getElementById("experience").selectedIndex);
+			setCookie(playerLevelCookie, document.getElementById("experience").selectedIndex, 30);
 			$("#playerProblems").html("");
 			$("#playerProblems").hide();
 			thisPlayer = $('#playerName').val();
@@ -146,14 +144,12 @@ function enter(state){
 	var cookies = document.cookie.split(';');
 
 	function getAndSetFromCookie(cookie, cookieVal) {
-		for(var i=0; i<cookie.length; i++) {
-			var c = cookie[i];
-			while (c.charAt(0)==' ') c = c.substring(1);
-			var search = cookieVal + "=";
-			if (c.indexOf(search) === 0)
-				return c.substring(search.length,c.length);
+		if(typeof(Storage) !== "undefined") {
+			return localStorage.getItem(cookieVal);
+		} else {
+			return "";
+			// Sorry! No Web Storage support..
 		}
-		return "";
 	}
 
 	$("#playerList").hide();

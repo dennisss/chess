@@ -7,5 +7,7 @@ client.socket.on("disconnect", function () {
 });
 
 client.socket.on("reconnect", function () {
-	location.reload();
+	setTimeout( function() {
+		location.reload();
+	}, 2000);
 });
