@@ -66,7 +66,23 @@ function load(router){
 		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
 			$("#playerProblems").html("");
 			$("#playerProblems").hide();
-			$('#loadingPlayer').modal({ backdrop: 'static' });
+			$('#loadingPlayer').modal();
+			thisPlayer = $('#playerName').val();
+			client.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
+				if (err === null) {
+					client.call('challenge', {player_id: 'random'}, function (err, game) {
+						console.log(err, game);
+						// TODO: Handle error
+						$("#loadingPlayer").modal("hide");
+						if (err) {
+							console.log(err);
+						} else {
+							$("#player-creation").modal("hide");
+							router.go('game', {opName: null, opLevel: null, thisPlayer: thisPlayer, data: game});
+						}
+					});
+				}
+			});
 		} else {
 			$("#playerProblems").html("Please enter your name and choose your difficulty!");
 			$("#playerProblems").fadeIn();

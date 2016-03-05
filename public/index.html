@@ -35,7 +35,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/ripples.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.5.7/js/material.min.js"></script>
-
+	<!-- Place this tag right after the last button or just before your close body tag. -->
+	<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
 	<script src="/assets/scripts/app.js"></script>
 
 </head>
@@ -63,13 +64,16 @@
 					<h1 class="modal-title text-center">&#9812; Welcome to Friendly Chess! &#9813;</h1>
 				</div>
 				<div class="modal-body text-center">
-			<span data-placement="left" title="Create a private space to play with friends!" data-toggle="tooltip">
-				<button class="btn btn-raised btn-primary" id="btnCreateGame">Create a Room</button>
-			</span>
-			<span data-placement="right" title="Join a game with other Friendly Chess members!" data-toggle="tooltip">
-				<button class="btn btn-raised btn-primary" id="btnJoinGame">Join a Game!</button>
-			</span>
-				</div>
+					<span data-placement="left" title="Create a private space to play with friends!" data-toggle="tooltip">
+						<button class="btn btn-raised btn-primary" id="btnCreateGame">Create a Room</button>
+					</span>
+					<span data-placement="right" title="Join a game with other Friendly Chess members!" data-toggle="tooltip">
+						<button class="btn btn-raised btn-primary" id="btnJoinGame">Join a Game!</button>
+					</span>
+					<br><br>
+					&#169; <script>document.write(new Date().getFullYear())</script> Friendly Chess Inc.  Version 0.90  <br><br>
+					<!-- Place this tag where you want the button to render. -->
+					<a class="github-button" href="https://github.com/dennisss/chess" data-style="mega" aria-label="Watch dennisss/chess on GitHub">Watch</a>				</div>
 				<!--
 				<div class="modal-footer">
 				  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -97,20 +101,21 @@
 					</ul>
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label for="roomName" class="col-md-2 control-label">Room Name:</label>
-							<div class="col-md-7">
-								<input type="text" class="form-control" id="roomName" placeholder="Example:  Ziggy's Realm">
+							<label for="roomName" class="col-sm-12 col-md-2 control-label" style="text-align: left">Room Name:</label>
+							<div class="col-sm-9 col-md-8">
+								<input type="text" class="form-control" id="roomName" placeholder="Example:  CS451 Party">
 							</div>
-							<div class="col-md-3">
+							<div class="col-sm-3 col-md-2">
 								&nbsp;
 							</div>
 						</div>
+						<div class="clearfix"></div>
 						<div class="form-group">
-							<label for="groupURL" class="col-md-2 control-label">Group URL</label>
-							<div class="col-md-7">
+							<label for="groupURL" class="col-sm-12 col-md-2 control-label" style="text-align: left">Group URL</label>
+							<div class="col-sm-9 col-md-8">
 								<input type="text" disabled class="form-control" id="groupURL" placeholder="Room URL will be generated here...">
 							</div>
-							<div class="col-md-2">
+							<div class="col-sm-3 col-md-2">
 								<button type="button" id="copyRoomUrl" class="btn btn-info">Copy</button>
 							</div>
 						</div>
@@ -445,7 +450,7 @@
 	</div>
 </div>
 
-<div id="disconnectWarning" class="modal fade" data-backdrop="false">
+<div id="disconnectWarning" class="modal fade dark-bkgrnd" data-backdrop="false">
 	<div class="vertical-alignment-helper">
 		<div class="modal-dialog vertical-align-center">
 			<div class="modal-content">
@@ -453,6 +458,8 @@
 					<h2 class="modal-title text-center">Connection Lost</h2>
 				</div>
 				<div class="modal-body text-center">
+					<img src="https://media.giphy.com/media/uprwwjptZW4Za/giphy.gif" width="50%">
+					<br><br>
 					You've lost connection to the server.  Check your internet connection.
 					<br><br>
 					If we detect we can reconnect to the server once again, we'll refresh this page.
