@@ -140,6 +140,9 @@ class Piece {
 			if(to.equals(pos)) // Never allow a regular move to the same spot
 				return false;
 
+			if(!board.isValidPosition(to))
+				return false;
+
 			var at = board.at(to);
 			return at === null || at.color !== self.color;
 		}
@@ -218,14 +221,14 @@ class Piece {
 				var leftCastle = board.at(new Position(0, pos.y));
 				var rightCastle = board.at(new Position(7, pos.y));
 
-				if(leftCastle !== null && leftCastle.type === Type.Castle && leftCastle.color === this.color && !leftCastle.moved){
-					if(isClear(1, pos.x, pos.y)){
+				if(leftCastle !== null && leftCastle.type === Type.Rook && leftCastle.color === this.color && !leftCastle.moved){
+					if(isClear(1, pos.x - 1, pos.y)){
 						addMove(new Position(pos.x - 2, pos.y), Type.Castling);
 					}
 				}
 
-				if(rightCastle !== null && rightCastle.type === Type.Castle && rightCastle.color === this.color && !rightCastle.moved){
-					if(isClear(pos.x, 6, pos.y)){
+				if(rightCastle !== null && rightCastle.type === Type.Rook && rightCastle.color === this.color && !rightCastle.moved){
+					if(isClear(pos.x + 1, 6, pos.y)){
 						addMove(new Position(pos.x + 2, pos.y), Type.Castling);
 					}
 				}

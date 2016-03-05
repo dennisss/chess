@@ -27,6 +27,28 @@ describe('Chess', function(){
 
 				describe('Castling', function() {
 
+					it('works', function(){
+						var board = Chess.Board.Default();
+
+						// Clear space for castling
+						board.at(new Position(1, 7), null);
+						board.at(new Position(2, 7), null);
+						board.at(new Position(3, 7), null);
+
+						var leftCastle = board.at(new Position(0, 7));
+						var king = board.at(new Position(4,7));
+
+						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
+
+						assert(king.isLegalMove(board, castling));
+
+						assert.equal(board.apply(castling), null);
+
+						assert.equal(board.at(new Position(2,7)), king);
+						assert.equal(board.at(new Position(3,7)), leftCastle);
+
+					});
+
 					it.skip('Rook and King can partake in Castling', function () {
 
 					});
@@ -164,6 +186,17 @@ describe('Chess', function(){
 			});
 
 			describe('Kings', function() {
+
+				it('should not have available moves at the start of the game', function(){
+					var board = Chess.Board.Default();
+
+					var kingPos = new Position(4,7);
+					var king = board.at(kingPos);
+
+					assert(king.type === Chess.Type.King);
+
+					assert.lengthOf(king.getMoves(board, kingPos), 0);
+				});
 
 				it.skip('a king can move to any directly adjacent location', function(){
 

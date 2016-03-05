@@ -141,6 +141,8 @@ class RPC {
 				j.callback(data.error, data.result);
 			}
 			else if(j.promise){
+				//console.log(j.promise.resolve);
+				//console.log(data)
 				if(data.error)
 					j.promise.reject(data.error);
 				else
@@ -169,30 +171,38 @@ class RPC {
 	 */
 	call(method, params, callback, progress){
 
+		if(!this.jobs){
+			console.warn('Can only call this from a client');
+			return;
+		}
+
 		var id = ++this.id;
 		var job = { method: method, params: params, callback: callback, progress: progress };
 		this.jobs[id] = job;
 
 		if(!params)
-			params = {}
+			params = {};
+
+
+		var p = null;
+		// Called without a callback, ES6ify it
+		if(arguments.length <= 2){
+			p = new Promise(function(resolve, reject){
+				job.promise = {
+					resolve: resolve,
+					reject: reject
+				};
+			});
+		}
+
 
 		// TODO: Retry after timeout and cancel after another timeout
 
 		this.socket.emit('call', { method: method, params: params, id: id });
 
 
-		// Called without a callback, ES6ify it
-		if(arguments.length <= 2){
-			var p = new Promise(function(resolve, reject){
-				job.promise = {
-					resolve: resolve,
-					reject: reject
-				};
-			});
-
+		if(p)
 			return p;
-		}
-
 
 		return id;
 	};
