@@ -67,8 +67,9 @@ function load(router){
 			$("#playerProblems").html("");
 			$("#playerProblems").hide();
 			$('#loadingPlayer').modal();
+			thisPlayer = $('#playerName').val();
 			client.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
-				if (err == null) {
+				if (err === null) {
 					client.call('challenge', {player_id: 'random'}, function (err, game) {
 						console.log(err, game);
 						// TODO: Handle error
@@ -77,7 +78,7 @@ function load(router){
 							console.log(err);
 						} else {
 							$("#player-creation").modal("hide");
-							router.go('game', {opName: opName, opLevel: opLevel, thisPlayer: thisPlayer, data: game});
+							router.go('game', {opName: null, opLevel: null, thisPlayer: thisPlayer, data: game});
 						}
 					});
 				}

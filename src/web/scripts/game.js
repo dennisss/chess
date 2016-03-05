@@ -43,10 +43,23 @@ function enter(state){
 
 
 	game = new Chess.Game(state.params.data);
+	console.log(game);
 
+	var thisPlayer = "";
+	var opName = "";
 
 	// Figure out which color the current client is
 	var me = client.socket.id == game.white_player.id ? Chess.Color.White : Chess.Color.Black;
+	var op ;
+	if (me == Chess.Color.White) {
+		thisPlayer = game.white_player.name;
+		op = Chess.Color.Black;
+		opName = game.black_player.name;
+	} else {
+		thisPlayer = game.black_player.name;
+		op = Chess.Color.White;
+		opName = game.white_player.name;
+	}
 
 	if (!me == game.board.turn) {
 		$("#waitingTurn").modal("show");
@@ -54,14 +67,13 @@ function enter(state){
 
 	boardUi.start(game.board, me);
 
-
-	var thisPlayer = state.params.thisPlayer;
-	var opName = state.params.opName;
+	console.log("playerNames: " + thisPlayer + " " + opName);
 
 	$(".thisPlayerName").html(thisPlayer);
 	$(".otherPlayerName").html(opName);
 	$("#thisPlayerInfo").show();
 	$("#thatPlayerInfo").show();
+	$("#thisPlayerInfoName").show();
 
 	$("#forfeitGame").show();
 	$("#drawGame").show();
