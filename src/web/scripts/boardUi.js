@@ -207,7 +207,6 @@ class BoardUi extends EventEmitter {
 		this.updatePlayer(me);
 		this.updateBoard(board);
 
-
 		if(this.board.turn == this.me) {
 			this.updateState(UiState.Picking);
 		}
@@ -270,11 +269,15 @@ class BoardUi extends EventEmitter {
 
 		this.state = s;
 
-		if(this.state == UiState.Picking) {
-			$("#waitingTurn").modal("hide");
-		} else if(this.state == UiState.Waiting){
-			$("#waitingTurn").modal("show");
-		}
+		/*wuz here
+		*
+		* 				if(this.state == UiState.Picking) {
+		 $("#waitingTurn").modal("hide");
+		 } else if(this.state == UiState.Waiting){
+		 $("#waitingTurn").modal("show");
+		 }
+		*
+		* */
 
 		for(var i = 0; i < 8; i++){
 			for(var j = 0; j < 8; j++){
