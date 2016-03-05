@@ -443,6 +443,9 @@ class Server {
 		var other_id = color === Color.White? game.black_player.id : game.white_player.id;
 
 
+		// TODO: Shouldn't be able to make a move while in check that doesn't get you out of check
+		// TODO: Shouldn't be able to make moves that put you into check
+
 		var err = game.board.apply(move);
 
 		if(err){
@@ -452,6 +455,12 @@ class Server {
 
 		this.io.to(other_id).emit('moved', move);
 		callback(null);
+
+
+		// Check if game is in checkmate, if so, end the game
+		if(game.board.isEndGame()){
+			this._finishgame(socket, 'win', 'checkmate');
+		}
 	};
 
 

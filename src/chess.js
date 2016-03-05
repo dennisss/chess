@@ -644,15 +644,54 @@ class Board {
 	}
 
 	/**
+	 * Get all possible child states of the current board
+	 *
+	 * @return {Board[]}
+	 */
+	children() {
+
+		var moves = this.getMoves(this.turn);
+
+		var childs = [];
+		for(var i = 0; i < moves.length; i++){
+			var c = this.clone();
+
+			// TODO: Apply does a redundant clone of the parent state
+			c.apply(moves[i]);
+			c.parent = this;
+			c.move = moves[i];
+
+			childs.push(c);
+		}
+
+		return childs;
+	}
+
+
+
+	/**
 	 * Determine if the current player is being checked (at the least)
 	 */
-	inCheck() {
+	inCheck(color) {
+		if(arguments.length === 0)
+			color = this.turn;
+
+		var opponent_color = color === Color.Black? Color.White : Color.Black;
+
 		// Get all available moves for the opponent
+		var opponent_moves = this.getMoves(opponent_color);
 
 		// Determine if a king of the current player can be taken
-			// If so, mark that the game is in check
+		for(var i = 0; i < opponent_moves.length; i++){
 
+			var target = this.at(opponent_moves[i].to);
 
+			if(target !== null && target.type === Type.King && target.color === color){
+				return true;
+			}
+		}
+
+		return false;
 	};
 
 
@@ -698,13 +737,12 @@ class Board {
 		if(!this.inCheck())
 			return false;
 
-		var moves = this.getMoves();
-		for(var i = 0; i < moves.length; i++){
-			var state = this.clone();
-			state.apply(moves[i]);
-
-			if(!state.inCheck())
+		// Check if any move by the current player will remove the check
+		var childs = this.children();
+		for(var i = 0; i < childs.length; i++){
+			if(!childs[i].inCheck(this.turn)){
 				return false;
+			}
 		}
 
 		return true;
