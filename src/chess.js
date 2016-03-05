@@ -1,18 +1,24 @@
 'use strict';
 
-var Position = require('./position');
+var Position = require('./position'),
+	_ = require('underscore');
 
 
 /**
- * An enum of possible piece types
+ * An enum of possible piece and move types
  */
 var Type = {
+	None: 0,
 	King: 1,
 	Queen: 2,
 	Rook: 3,
 	Bishop: 4,
 	Knight: 5,
-	Pawn: 6
+	Pawn: 6,
+
+	EnPassant: 8,
+	Castling: 16,
+	Promotion: 32 // For queening, the promotion type is ANDed with this value
 };
 
 /**
@@ -47,7 +53,8 @@ class Piece {
 		if(arguments.length == 1){ // Just given raw piece code
 			var code = arguments[0];
 			type = code & 0b1111;
-			color = code >> 4;
+			color = (code >> 4) & 0b11;
+			moved = (code >> 6)? true : false;
 		}
 
 		this.type = type;
@@ -93,6 +100,7 @@ class Piece {
 		return true;
 	};
 
+
 	/**
 	 * Determine if the given move is valid. Assumes the positions are valid
 	 *
@@ -101,95 +109,14 @@ class Piece {
 	 */
 	isLegalMove(board, move){
 
-		// TODO: Assert that all positions are integer values
+		var possible = this.getMoves(board, move.from);
 
-		if(move.from.equals(move.to)) // Cannot move to the same spot
-			return false;
-
-
-		// TODO: Handle special moves like castling and queening here
-
-
-
-
-
-		//// Regular moves : pieces aren't mutated and only one piece is moved
-		// For the most part, the logic whitelists moves, so avoid returning false
-
-		// Assert not taking your own piece
-		if(board.at(move.to) !== null && board.at(move.to).color === this.color)
-			return false;
-
-		var diff = move.to.sub(move.from);
-
-
-		if(this.type == Type.King){
-			if(Math.abs(diff.x) <= 1 && Math.abs(diff.y) <= 1)
+		for(var i = 0; i < possible.length; i++){
+			if(possible[i].equals(move))
 				return true;
-		}
-		if(this.type == Type.Rook || this.type == Type.Queen){
-
-			if((diff.x == 0 || diff.y == 0) && this._isClear(board, move.from, move.to))
-				return true;
-		}
-		if(this.type == Type.Bishop || this.type == Type.Queen){
-
-			// Check that it is diagonal
-			if(Math.abs(diff.x) == Math.abs(diff.y) && this._isClear(board, move.from, move.to)){
-				return true;
-			}
-
-		}
-		if(this.type == Type.Knight){
-
-			var ax = Math.abs(diff.x), ay = Math.abs(diff.y);
-
-			if((ax == 2 && ay == 1) || (ax == 1 && ay == 2))
-				return true;
-		}
-		if(this.type == Type.Pawn){
-
-			// Forward moves
-			if(board.at(move.to) === null){
-
-				// Pawns cannot move horizontally unless attacking
-				if(move.from.x != move.to.x)
-					return false;
-
-				if(this.color == Color.Black){
-					if(move.from.y == 1 && move.to.y == 3) // Allow 2 unit move in default position
-						return true;
-					else if(move.to.y - move.from.y == 1)
-						return true;
-				}
-				else if(this.color == Color.White){
-					if(move.from.y == 6 && move.to.y == 4)
-						return true;
-					else if(move.from.y - move.to.y == 1)
-						return true;
-				}
-			}
-			else{ // Attacking
-
-				if(Math.abs(move.from.x - move.to.x) !== 1)
-					return false;
-
-				if(this.color == Color.Black){
-					if(move.to.y - move.from.y == 1)
-						return true;
-				}
-				else if(this.color == Color.White){
-					if(move.from.y - move.to.y == 1)
-						return true;
-				}
-
-
-
-			}
 		}
 
 		return false;
-
 	};
 
 
@@ -202,18 +129,207 @@ class Piece {
 	 */
 	getMoves(board, pos){
 
+		//assert(pos instanceof Position)
+
+		var self = this;
 		var moves = [];
 
-		for(var i = 0; i < board.grid.length; i++){
-			for(var j = 0; j < board.grid[i].length; j++){
-				var p = new Position(j, i);
-				var m = new Move(pos, p);
-				if(this.isLegalMove(board, m))
-					moves.push(m);
+
+		// Quick validation of a target position for a normal move
+		function availableSpot(to){
+			if(to.equals(pos)) // Never allow a regular move to the same spot
+				return false;
+
+			var at = board.at(to);
+			return at === null || at.color !== self.color;
+		}
+
+		// Generate positions reachable from the starting point
+		function buildPath(stepx, stepy){
+
+			var step = new Position(stepx, stepy);
+			var start = pos;
+			var spots = [];
+
+			var to = start.add(step);
+			while(board.isValidPosition(to)){
+
+				if(availableSpot(to)){
+					spots.push(to);
+				}
+
+				// Stop at a collision with another piece
+				var at = board.at(to);
+				if(at !== null){
+					break;
+				}
+
+				to = to.add(step);
 			}
+
+			return spots;
+		}
+
+		function isClear(xmin, xmax, y){
+			for(var i = xmin; i <= xmax; i++){
+				if(board.at(new Position(i, y)) !== null)
+				   return false;
+			}
+			return true;
+		}
+
+
+		function addMove(to, type){
+			if(availableSpot(to))
+				moves.push(new Move(pos, to, self.color, type));
+		}
+
+
+		// Add spots to which you want to move
+		function addNormalSpots(spots){
+			_.map(spots, function(to){
+				addMove(to);
+			})
+		}
+
+		// Add position changes
+		function addNormalDeltas(deltas){
+			addNormalSpots(_.map(deltas, function(d){ return pos.add(d) }));
+		}
+
+
+
+
+
+
+
+		if(this.type === Type.King){
+
+			var spots = Position.cartesianProduct([-1, 0, 1], [-1, 0, 1]);
+
+			// Add Basic Moves
+			addNormalDeltas(spots);
+
+
+			// Add castling moves
+			// TODO: Ensure castling move does not result in the player going into check
+			if(!this.moved){
+
+				var leftCastle = board.at(new Position(0, pos.y));
+				var rightCastle = board.at(new Position(7, pos.y));
+
+				if(leftCastle !== null && leftCastle.type === Type.Castle && leftCastle.color === this.color && !leftCastle.moved){
+					if(isClear(1, pos.x, pos.y)){
+						addMove(new Position(pos.x - 2, pos.y), Type.Castling);
+					}
+				}
+
+				if(rightCastle !== null && rightCastle.type === Type.Castle && rightCastle.color === this.color && !rightCastle.moved){
+					if(isClear(pos.x, 6, pos.y)){
+						addMove(new Position(pos.x + 2, pos.y), Type.Castling);
+					}
+				}
+
+			}
+		}
+		if(this.type === Type.Rook || this.type === Type.Queen){
+
+			var spots = [].concat(
+				buildPath(0, 1),
+				buildPath(0, -1),
+				buildPath(1, 0),
+				buildPath(-1, 0)
+			);
+
+			addNormalSpots(spots);
+
+		}
+		if(this.type === Type.Bishop || this.type === Type.Queen){
+
+			var spots = [].concat(
+				buildPath(1, 1),
+				buildPath(-1, -1),
+				buildPath(-1, 1),
+				buildPath(1, -1)
+			);
+
+			addNormalSpots(spots);
+
+		}
+		if(this.type === Type.Knight){
+			var spots = [].concat(
+				Position.cartesianProduct([-1, 1], [-2, 2]),
+				Position.cartesianProduct([-2, 2], [-1, 1])
+			);
+
+			addNormalDeltas(spots);
+		}
+		if(this.type === Type.Pawn){
+
+
+			// The y direction in which this pawn moves
+			var dir = this.color == Color.Black? 1 : -1;
+
+
+			// Add normal single and double moves for pawns
+			// TODO: For a double jump, make sure there is no other piece in the way of the pawn moving
+			var moveSpots = [];
+			if(!this.moved) // Double
+				moveSpots.push(pos.add(0, 2*dir));
+			moveSpots.push(pos.add(0, dir)); // Single
+			for(var i = 0; i < moveSpots.length; i++){
+				var spot = moveSpots[i];
+
+				// Only allow if empty
+				if(board.at(spot) !== null)
+					continue;
+
+				// Queening
+				if(spot.y === 0 || spot.y === 7){
+					addMove(spot, Type.Promotion | Type.Queen);
+					addMove(spot, Type.Promotion | Type.Rook);
+					addMove(spot, Type.Promotion | Type.Bishop);
+					addMove(spot, Type.Promotion | Type.Knight);
+					continue;
+				}
+
+				addMove(spot);
+			}
+
+
+			// Add attacking moves
+			var attackSpots = [pos.add(1, dir), pos.add(-1, dir)];
+			for(var i = 0; i < attackSpots.length; i++){
+
+				var spot = attackSpots[i];
+
+				// En Passant (only valid when there is at least one parent state)
+				if(board.parent){
+					var adj = new Position(spot.x, pos.y);
+					var adjP = board.at(adj)
+
+					if(adjP !== null && adjP.Type === Type.Pawn && adjP.color !== this.color){
+
+						// Check that the other pawn just did a double move
+						if(board.move.from.equals(adjP) && Math.abs(board.move.from.y - board.move.to.y === 2)){
+							addMove(spot, Type.EnPassant);
+							continue; // This will ensure that en-passant is prefered to a regular movement
+						}
+					}
+				}
+
+				// Regular attack
+				if(board.at(spot) === null)
+					continue;
+
+				addMove(spot);
+			}
+
 		}
 
 		return moves;
+
+
 	};
 
 
@@ -233,6 +349,11 @@ class Piece {
 
 /**
  * A move from one position on the board to another
+ *
+ * @property {Position} from
+ * @property {Position} to
+ * @property {Color} color
+ * @property {Type} type
  */
 class Move {
 
@@ -242,19 +363,88 @@ class Move {
 	 * @param {Position} from the start position of the piece
 	 * @param {Position} to the end position of the piece
 	 * @param {number} color the color of the player performing the move
+	 * @param {number} type
 	 *
 	 */
-	constructor(from, to, color){
+	constructor(from, to, color, type){
 		if(arguments.length == 1){
 			var data = arguments[0];
 			from = new Position(data.from);
 			to = new Position(data.to);
 			color = data.color;
+			type = data.type;
 		}
+
+		if(!type)
+			type = Type.None;
 
 		this.from = from;
 		this.to = to;
 		this.color = color;
+		this.type = type;
+	}
+
+
+	/**
+	 * Perform the action of the move on a board. We assume that the move has been validated and is legal
+	 */
+	perform(board){
+
+		var p = board.at(this.from);
+
+
+		if(this.type === Type.None){
+			// Simple pick and (re)place
+			// Handled by the code outside the if statements
+		}
+		else if(this.type & Type.Promotion !== 0){
+			// Promote piece
+			var promoType = this.type & 0x111;
+			p = new Piece(promoType, p.color, true);
+		}
+		else if(this.type === Type.EnPassant){
+			// Capture
+			board.at(new Position(this.from.y, this.to.x), null);
+		}
+		else if(this.type === Type.Castling){
+
+			var rank = this.from.y;
+			var dir = this.to.x - this.from.x;
+
+			var castleFrom, castleTo;
+
+			if(dir < 0){
+				castleFrom = new Position(0, rank);
+				castleTo = new Position(this.to.x + 1, rank);
+			}
+			else{
+				castleFrom = new Position(7, rank);
+				castleTo = new Position(this.to.x - 1, rank);
+			}
+
+
+			var castle = board.at(castleFrom);
+			castle.moved = true;
+			board.at(castleFrom, null);
+			board.at(castleTo, castle);
+		}
+		else{
+			// Throw error?
+		}
+
+
+		// Move the main piece
+		p.moved = true;
+		board.at(this.from, null);
+		board.at(this.to, p);
+	}
+
+
+
+	equals(other){
+		return this.type === other.type
+			&& this.from.equals(other.from)
+			&& this.to.equals(other.to);
 	}
 
 
@@ -269,6 +459,8 @@ class Move {
  *
  * @property {Piece[][]} grid an 8x8 array of pieces placed on the board (null indicates no piece)
  * @property {number} turn the color of the player who goes next
+ * @property {Board} parent the previous state to this one
+ * @property {Move} move the move that was performed to get from the parent to this state
  */
 class Board {
 
@@ -368,7 +560,12 @@ class Board {
 	 * @param {Position} pos
 	 */
 	isValidPosition(pos){
-		return !( pos.y < 0 || pos.y >= this.grid.length || pos.x < 0 || pos.x > this.grid[pos.y].length );
+
+		//assert(pos instanceof Position);
+
+		// TODO: Do integer validation
+
+		return pos.y >= 0 && pos.y < this.grid.length && pos.x >= 0 && pos.x < this.grid[pos.y].length;
 	}
 
 	/**
@@ -426,15 +623,18 @@ class Board {
 		}
 
 
-		// Simple pick and place
-		// TODO: Handle castling, queening etc.
-		var p = this.at(move.from);
-		this.at(move.from, null);
-		this.at(move.to, p);
+		var old = this.clone();
+		old.parent = this.parent;
+		old.move = this.move;
 
+		move.perform(this);
 
 		// Switch players
 		this.turn = (this.turn == Color.Black) ? Color.White : Color.Black;
+
+
+		this.parent = old;
+		this.move = move;
 
 		return null;
 	}
@@ -557,7 +757,6 @@ class Game {
 			black_player: this.black_player
 		};
 	};
-
 
 
 };

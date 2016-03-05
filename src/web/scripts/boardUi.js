@@ -127,31 +127,33 @@ class BoardUi extends EventEmitter {
 					return;
 				}
 
-				var move = new Chess.Move(self.activePosition, position, self.me);
 
-				self.updateState(UiState.Pending);
+				var piece = self.board.at(self.activePosition);
+				var possible = piece.getMoves(self.board, self.activePosition);
 
+				// Get all the moves that can happen at this target position
+				var options = [];
+				for(var i = 0; i < possible.length; i++){
+					if(possible[i].to.equals(position))
+						options.push(possible[i]);
+				}
 
-				// Emit the move so that it can be validated by the server
-				self.emit('move', move, function(err){
-
-					if(err){
-						alert(err)
-						self.updateState(UiState.Picking);
-						return;
-					}
-
-
-					self.animateMove(move, function(){
-						self.board.apply(move);
-
-						self.updateBoard();
-						self.updateState(UiState.Waiting);
-
+				if(options.length == 0){
+					alert('Failed to move here, please try again')
+					self.updateState(UiState.Picking);
+					return;
+				}
+				else if(options.length == 1){
+					var move = options[0];
+					self._submitMove(move);
+				}
+				else if(options.length > 1){
+					// Ask for user to pick which move to do
+					// This should only happen for queening/promotion
+					self.emit('chooseMove', options, function(move){
+						self._submitMove(move);
 					});
-
-				});
-
+				}
 			}
 
 		});
@@ -160,6 +162,40 @@ class BoardUi extends EventEmitter {
 		this.updatePlayer(0);
 
 		this.root.css('opacity', 1);
+	}
+
+	/**
+	 * Gets a move ready to be submitted to the server (sent back to the BoardUi host page to do that)
+	 *
+	 * @private
+	 */
+	_submitMove(move){
+		var self = this;
+
+		this.updateState(UiState.Pending);
+
+
+		// Emit the move so that it can be validated by the server
+		this.emit('move', move, function(err){
+
+			if(err){
+				alert(err)
+				self.updateState(UiState.Picking);
+				return;
+			}
+
+
+			self.animateMove(move, function(){
+				self.board.apply(move);
+
+				self.updateBoard();
+				self.updateState(UiState.Waiting);
+
+			});
+
+		});
+
+
 	}
 
 
@@ -264,6 +300,7 @@ class BoardUi extends EventEmitter {
 						var activePeice = this.board.at(this.activePosition);
 						var m = new Chess.Move(this.activePosition, position, this.me);
 
+						// TODO: This will call getMoves for each position (which is slow)
 						if(activePeice.isLegalMove(this.board, m))
 							placeable = true;
 

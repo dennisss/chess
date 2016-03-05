@@ -35,6 +35,10 @@ class Position {
 	 * @param {Position} p
 	 */
 	add(p){
+		if(arguments.length === 2){
+			p = new Position(arguments[0], arguments[1]);
+		}
+
 		return new Position(this.x + p.x, this.y + p.y);
 	};
 
@@ -66,6 +70,20 @@ class Position {
 	equals(other){
 		return this.x == other.x && this.y == other.y;
 	};
+
+
+
+	static cartesianProduct(a, b){
+		var out = [];
+		for(var i = 0; i < a.length; i++){
+			for(var j = 0; j < b.length; j++){
+				out.push(new Position(a[i], b[j]));
+			}
+		}
+
+		return out;
+	}
+
 
 
 	toJSON(){
