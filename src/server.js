@@ -250,6 +250,8 @@ class Server {
 		// Get the socket associated with the person being requested
 		var other_id = data.player_id;
 
+		// TODO: Make sure that if one person is randomly waiting and the only person specifically challenges them, then the request goes through
+
 		if(other_id == 'random'){ // Find someone in the room to challenge
 
 			socket.state = State.Searching;

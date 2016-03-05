@@ -6,11 +6,24 @@ var webdriverio = require('webdriverio');
 var options = { desiredCapabilities: { browserName: 'firefox' } };
 
 
+global.makeClient = function(done){
+	var client = webdriverio.remote(options)
+	client.init().then(function(err){
+		done();
+	});
+
+	return client;
+}
+
+global.endClient = function(client, done){
+	client.end().then(done);
+}
+
 describe('Web', function(){
 
 	require('./router');
 
-	describe.skip('Pages', function(){
+	describe('Pages', function(){
 
 		// Spin up full server for automated testing
 		var server, child;
@@ -30,16 +43,13 @@ describe('Web', function(){
 					child = c;
 
 
-					// Open a browser
-					global.client = webdriverio.remote(options)
-					client.init().then(function(err){
-						done();
-					});
+					// Open a primary browser
+					global.client = makeClient(done);
 				});
 			});
 		})
 		after(function(done){
-			global.client.end().then(function(){
+			endClient(global.client, function(){
 				child.kill();
 				server.close();
 				done();
@@ -50,6 +60,7 @@ describe('Web', function(){
 
 
 		require('./home');
+		require('./game');
 
 	});
 
