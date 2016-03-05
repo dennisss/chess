@@ -301,10 +301,19 @@ class BoardUi extends EventEmitter {
 					else{
 
 						var activePeice = this.board.at(this.activePosition);
-						var m = new Chess.Move(this.activePosition, position, this.me);
+
+						var options = activePeice.getMoves(this.board, this.activePosition);
+
+						var hasmove = false;
+						for(var k = 0; k < options.length; k++){
+							if(options[k].to.equals(position)){
+								hasmove = true;
+								break;
+							}
+						}
 
 						// TODO: This will call getMoves for each position (which is slow)
-						if(activePeice.isLegalMove(this.board, m))
+						if(hasmove)
 							placeable = true;
 
 					}
