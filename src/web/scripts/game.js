@@ -18,13 +18,17 @@ function load(router){
 	boardUi.on('move', function(move, callback){
 		client.call('move', move, function(err){
 			callback(err);
+			if(err === null) {
+				$("#waitingTurn").modal("show");
+			}
 		});
+
 	});
 
 
 	client.socket.on('moved', function(data){
 		var move = new Chess.Move(data);
-
+		$("#waitingTurn").modal("hide");
 		boardUi.processMove(move);
 	})
 
@@ -43,6 +47,10 @@ function enter(state){
 
 	// Figure out which color the current client is
 	var me = client.socket.id == game.white_player.id ? Chess.Color.White : Chess.Color.Black;
+
+	if (!me == game.board.turn) {
+		$("#waitingTurn").modal("show");
+	}
 
 	boardUi.start(game.board, me);
 
