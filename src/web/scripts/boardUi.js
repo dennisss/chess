@@ -235,6 +235,13 @@ class BoardUi extends EventEmitter {
 					pos = new Position(j, i);
 
 				this.cells[i][j][0].position = pos;
+
+
+				// a,b,c,d, goes along x to the right
+				// 8,7,6,5
+				var col = String.fromCharCode('a'.charCodeAt(0) + pos.x)
+				var row = '' + (8 - pos.y);
+				this.cells[i][j][0].id = col + row;
 			}
 		}
 	}

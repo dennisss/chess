@@ -3,9 +3,12 @@
  */
 
 client.socket.on("disconnect", function () {
+	$(".modal").modal("hide");
 	$("#disconnectWarning").modal("show");
 });
 
 client.socket.on("reconnect", function () {
-	location.reload();
+	setTimeout( function() {
+		location.reload();
+	}, 2000);
 });

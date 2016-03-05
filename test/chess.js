@@ -90,7 +90,6 @@ describe('Chess', function(){
 						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
 						assert(board.at(enPassant.from).isLegalMove(board, enPassant));
 
-
 						// Perform the move
 						assert.equal(board.apply(enPassant), null);
 
@@ -244,6 +243,57 @@ describe('Chess', function(){
 
 		});
 
+
+
+		describe('children()', function(){
+
+			it('has the correct number of moves for the first turn', function(){
+				var board = Chess.Board.Default();
+				assert.lengthOf(board.children(), 20);
+			})
+		});
+
+		describe('inCheck()', function(){
+
+			it('initial board should not be in check', function(){
+				var board = Chess.Board.Default();
+				assert(!board.inCheck());
+			})
+
+
+		});
+
+		describe('isEndGame()', function(){
+
+			it('is not the endgame for the initial board', function(){
+
+				var board = Chess.Board.Default();
+
+				board.turn = Chess.Color.White;
+				assert(!board.isEndGame());
+
+				board.turn = Chess.Color.Black;
+				assert(!board.isEndGame());
+			});
+
+			it('detects a simple checkmate', function(){
+
+				var board = new Chess.Board();
+				board.at(new Position(5, 3), new Chess.Piece(Chess.Type.King, Chess.Color.White));
+				board.at(new Position(7, 3), new Chess.Piece(Chess.Type.King, Chess.Color.Black));
+				board.at(new Position(7, 7), new Chess.Piece(Chess.Type.Rook, Chess.Color.White));
+
+				board.turn = Chess.Color.White;
+				assert(!board.inCheck());
+				assert(!board.isEndGame());
+
+
+				board.turn = Chess.Color.Black;
+				assert(board.inCheck());
+				assert(board.isEndGame());
+			})
+
+		});
 
 	});
 
