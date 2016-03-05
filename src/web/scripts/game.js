@@ -25,6 +25,44 @@ function load(router){
 
 	});
 
+	boardUi.on('chooseMove', function(data, callback){
+		$("#promotionSelection").modal("show");
+		var moves = data;
+
+		$("#promoteQueen").click(function(){
+			var m = moves.filter(function( obj ) {
+				return obj.type === (Chess.Type.Promotion | Chess.Type.Queen);
+			})[0];
+			$("#promotionSelection").modal("hide");
+			callback(m);
+		});
+
+		$("#promoteBishop").click(function(){
+			var m = moves.filter(function( obj ) {
+				return obj.type === (Chess.Type.Promotion | Chess.Type.Bishop);
+			})[0];
+			$("#promotionSelection").modal("hide");
+			callback(m);
+		});
+
+		$("#promoteKnight").click(function(){
+			var m = moves.filter(function( obj ) {
+				return obj.type === (Chess.Type.Promotion | Chess.Type.Knight);
+			})[0];
+			$("#promotionSelection").modal("hide");
+			callback(m);
+		});
+
+		$("#promoteRook").click(function(){
+			var m = moves.filter(function( obj ) {
+				return obj.type === (Chess.Type.Promotion | Chess.Type.Rook);
+			})[0];
+			$("#promotionSelection").modal("hide");
+			callback(m);
+		});
+
+	});
+
 
 	client.socket.on('moved', function(data){
 		var move = new Chess.Move(data);
