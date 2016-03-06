@@ -3,6 +3,8 @@ var Chess = require('../../chess'),
 
 var game, boardUi;
 
+var inFocus = false;
+
 function load(router){
 
 	$("#thisPlayerInfo").hide();
@@ -127,6 +129,7 @@ function enter(state){
 			});
 		}
 		else {
+			inFocus = true;
 			$(this).addClass('clicked');
 			$('#forfeitGame, #drawGame').show().css({
 				'opacity': 0,
@@ -147,6 +150,21 @@ function enter(state){
 				position: "fixed"
 			}, 500);
 		}
+	});
+
+	$("#actionMenu").on("blur", function() {
+		inFocus = false;
+		setTimeout(function() {
+			if(!inFocus) {
+				if ($("#actionMenu").hasClass('clicked')) {
+					$("#actionMenu").removeClass('clicked');
+					$('#forfeitGame, #drawGame').hide();
+					$("#forfeitGame, #drawGame").css({
+						bottom: "5px", right: 0, margin: "5px", position: "fixed"
+					});
+				}
+			}
+		});
 	});
 
 	$("#forfeitGame").click(function() {
@@ -178,7 +196,8 @@ function enter(state){
 		client.call('draw', {}, function(err, data){
 			var agreed = data.answer;
 			if(!agreed){
-				alert('The other person does not want a draw')
+				$("#loadingPlayer").modal("hide");
+				$("#drawReject").modal("show");
 			}
 		});
 		$("#drawNotification").modal("hide");

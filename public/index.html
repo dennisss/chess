@@ -472,7 +472,6 @@
 	</div>
 </div>
 
-
 <div id="startGame" class="modal fade" data-backdrop="false">
 	<div class="vertical-alignment-helper">
 		<div class="modal-dialog vertical-align-center">
@@ -491,10 +490,28 @@
 	</div>
 </div>
 
+<div id="drawReject" class="modal fade" data-backdrop="false">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title text-center">Draw Request Rejected</h2>
+				</div>
+				<div class="modal-body text-center">
+					Your opponent has refused your draw request.
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="continueAfterDrawFail" data-dismiss="modal">Continue</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="thisPlayerInfo" class="page-header bottom-right">
-	<button id="forfeitGame" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Forfeit"><i class="material-icons">flag</i></button>
-	<button id="drawGame" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Request a Draw"><i class="material-icons fa fa-meh-o"></i></button>
-	<button id="actionMenu" class="btn btn-primary btn-fab" data-toggle="tooltip" data-placement="left" title="Game Actions"><i class="material-icons">grade</i></button>
+		<button id="forfeitGame" class="btn btn-primary btn-fab buttonsForGame" data-toggle="tooltip" data-placement="left" title="Forfeit"><i class="material-icons">flag</i></button>
+		<button id="drawGame" class="btn btn-primary btn-fab buttonsForGame" data-toggle="tooltip" data-placement="left" title="Request a Draw"><i class="material-icons fa fa-meh-o"></i></button>
+		<button id="actionMenu" class="btn btn-primary btn-fab buttonsForGame" data-toggle="tooltip" data-placement="left" title="Game Actions"><i class="material-icons">grade</i></button>
 	<!--<button id="forfeitGame" class="btn btn-raised btn-primary">Forfeit</button> &nbsp; &nbsp; &nbsp; <button id="drawGame" class="btn btn-raised btn-primary">Draw</button>-->
 </div>
 <h2 id="thisPlayerInfoName" class="thisPlayerName bottom-right btmRight"></h2>
