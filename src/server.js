@@ -123,7 +123,7 @@ class Server {
 		io.on('connection', function(socket){
 
 			setTimeout(function(){
-				io.emit('user_count', io.sockets.sockets.length);
+				self._stats();
 			}, 500);
 
 			// Because socket.io overwrites the room array before calling disconnect
@@ -144,7 +144,7 @@ class Server {
 
 			socket.on('disconnect', function(){
 
-				io.emit('user_count', io.sockets.sockets.length);
+				self._stats();
 
 				if(socket.state == State.Ready){
 					self._leaveAll(socket);
@@ -414,6 +414,8 @@ class Server {
 		socket.state = State.InGame;
 		other.state = State.InGame;
 
+		this._stats();
+
 		return game;
 	}
 
@@ -626,6 +628,8 @@ class Server {
 		// Send to both players
 		this.io.to(socket.id).emit('endgame', {result: result, reason: reason});
 		this.io.to(other.id).emit('endgame', {result: other_result, reason: reason});
+
+		this._stats();
 	};
 
 
@@ -689,6 +693,13 @@ class Server {
 				self._broadcast_userlist(r);
 			}
 		});
+	}
+
+	_stats(){
+		var ngames = _.keys(this.games).length / 2;
+		var nusers = _.keys(this.io.sockets.connected).length;
+
+		this.io.emit('stats', {users: nusers, games: ngames});
 	}
 
 

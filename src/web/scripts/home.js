@@ -18,9 +18,12 @@ function load(router){
 
 
 
-	client.socket.on('user_count', function(nusers){
+	client.socket.on('stats', function(data){
+		var nusers = data.users;
+		var ngames = data.games;
+
 		if(nusers > 1){
-			$('#userCount').html('<br /><b>' + nusers + ' users online</b>');
+			$('#userCount').html('<br /><b>' + nusers + ' users online playing ' + ngames + ' game' + (ngames !== 1? 's' : '') + '</b>');
 		}
 		else{
 			$('#userCount').html('');
