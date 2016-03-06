@@ -149,6 +149,16 @@ function enter(state){
 		}
 	});
 
+	$("#thisPlayerInfo").on("focusout", "#actionMenu", function() {
+		if ($("#actionMenu").hasClass('clicked')) {
+			$("#actionMenu").removeClass('clicked');
+			$('#forfeitGame, #drawGame').hide();
+			$("#forfeitGame, #drawGame").css({
+				bottom: "5px", right: 0, margin: "5px", position: "fixed"
+			});
+		}
+	});
+
 	$("#forfeitGame").click(function() {
 		$("#forfitNotification").modal("show");
 	});
