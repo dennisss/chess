@@ -99,8 +99,10 @@ function enter(state){
 		opName = game.white_player.name;
 	}
 
-	if (!me == game.board.turn) {
+	if (!(me == game.board.turn)) {
 		$("#waitingTurn").modal("show");
+	} else {
+		$("#startGame").modal("show");
 	}
 
 	boardUi.start(game.board, me);

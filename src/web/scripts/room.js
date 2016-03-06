@@ -44,16 +44,25 @@ function load(router){
 
 	$('#btnChooseOp').click(function(){
 		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
-			setCookie(playerNameCookie, $("#playerName").val(), 30);
-			setCookie(playerLevelCookie, document.getElementById("experience").selectedIndex, 30);
-			$("#playerProblems").html("");
-			$("#playerProblems").hide();
-			thisPlayer = $('#playerName').val();
-			console.log( $('#experience').val());
-			$('#playerList').show();
 			client.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
-				$("#playerTableBody").html("");
-				data.forEach(printToTable);
+				if(err) {
+					switch(err) {
+						case "user_taken":
+							$("#playerProblems").html("Someone else is currently using that name!  Please enter another name.");
+							$("#playerProblems").fadeIn();
+							break;
+					}
+				} else {
+					setCookie(playerNameCookie, $("#playerName").val(), 30);
+					setCookie(playerLevelCookie, document.getElementById("experience").selectedIndex, 30);
+					$("#playerProblems").html("");
+					$("#playerProblems").hide();
+					thisPlayer = $('#playerName').val();
+					console.log( $('#experience').val());
+					$('#playerList').show();
+					$("#playerTableBody").html("");
+					data.forEach(printToTable);
+				}
 			});
 		} else {
 			$("#playerProblems").html("Please enter your name and choose your difficulty!");
@@ -64,12 +73,21 @@ function load(router){
 
 	$('#btnRandomOp').click(function(){
 		if ($('#playerName').val().length > 0 && $('#experience').val() !== "Choose your experience...") {
-			$("#playerProblems").html("");
-			$("#playerProblems").hide();
-			$('#loadingPlayer').modal();
-			thisPlayer = $('#playerName').val();
 			client.call('join', {room: roomName, name: $('#playerName').val(), level: $('#experience').val()}, function(err, data){
-				if (err === null) {
+				if(err) {
+					switch(err) {
+						case "user_taken":
+							$("#playerProblems").html("Someone else is currently using that name!  Please enter another name.");
+							$("#playerProblems").fadeIn();
+							break;
+					}
+				} else {
+					setCookie(playerNameCookie, $("#playerName").val(), 30);
+					setCookie(playerLevelCookie, document.getElementById("experience").selectedIndex, 30);
+					$("#playerProblems").html("");
+					$("#playerProblems").hide();
+					$('#loadingPlayer').modal();
+					thisPlayer = $('#playerName').val();
 					client.call('challenge', {player_id: 'random'}, function (err, game) {
 						console.log(err, game);
 						// TODO: Handle error
