@@ -4,7 +4,7 @@ function pause(msecs){
 		setTimeout(function(){
 			res();
 		}, msecs);
-	})
+	});
 }
 
 describe('/game', function(){
@@ -45,19 +45,19 @@ describe('/game', function(){
 		var playertxt = yield client.getText('#availPlayerTable tr.player');
 		assert(playertxt.indexOf('Player 2') >= 0);
 
-		yield client.click('#availPlayerTable tr.player')
+		yield client.click('#availPlayerTable tr.player');
 
 
 		// Assert #challengeNotification modal was open
 
 		yield pause(600);
-		yield second.click('#challengeAccepted')
+		yield second.click('#challengeAccepted');
 
-	})
+	});
 
 	after(function(done){
 		endClient(second, function(){ done(); });
-	})
+	});
 
 
 	it('it can complete a simple game', function *(){

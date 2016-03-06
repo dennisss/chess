@@ -25,6 +25,16 @@ describe('Router', function(){
 
 	});
 
+	/*
+	it('can split an empty path', function(done){
+
+		var parts = [];
+
+		parts=Router.splitpath('');
+
+		assert.isNull(parts);
+	});
+	*/
 
 	it('should redirect to the default state if none is specified', function(done){
 
@@ -59,7 +69,7 @@ describe('Router', function(){
 			delete global.location;
 			done();
 		}, 0);
-	})
+	});
 
 
 	/*
@@ -72,4 +82,4 @@ describe('Router', function(){
 	*/
 
 
-})
+});
