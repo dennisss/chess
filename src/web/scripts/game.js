@@ -153,9 +153,8 @@ function enter(state){
 	});
 
 	$("#actionMenu").on("blur", function() {
-		inFocus = false;
 		setTimeout(function() {
-			if(!inFocus) {
+			//if(!inFocus) {
 				if ($("#actionMenu").hasClass('clicked')) {
 					$("#actionMenu").removeClass('clicked');
 					$('#forfeitGame, #drawGame').hide();
@@ -163,8 +162,8 @@ function enter(state){
 						bottom: "5px", right: 0, margin: "5px", position: "fixed"
 					});
 				}
-			}
-		});
+			//}
+		}, 200);
 	});
 
 	$("#forfeitGame").click(function() {
