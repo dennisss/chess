@@ -32,6 +32,7 @@ Common tasks
 - Static code analysis: `gulp lint`
 
 - Running tests: `mocha`
+	- Running the UI testing suite requires selenium-standalone to be setup: `./node_modules/.bin/selenium-standalone install`
 
 - Generate coverage report into `/public/coverage`: `gulp cover`
 

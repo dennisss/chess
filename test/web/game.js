@@ -50,6 +50,7 @@ describe('/game', function(){
 
 		// Assert #challengeNotification modal was open
 
+		yield pause(600);
 		yield second.click('#challengeAccepted')
 
 	})
@@ -64,7 +65,7 @@ describe('/game', function(){
 		this.timeout(100000000);
 
 		// TODO: Add more assertions
-
+		yield pause(600);
 		yield second.click('#e2').click('#e3');
 		yield pause(600);
 		yield client.click('#f7').click('#f5');
@@ -82,7 +83,7 @@ describe('/game', function(){
 		yield client.click('#g7').click('#g6');
 		yield pause(600);
 		yield second.click('#f5').click('#f7');
-
+		yield pause(600);
 
 		assert.include(yield second.getAttribute('#winNotification','class'), 'in');
 		assert.include(yield client.getAttribute('#lossNotification','class'), 'in');
