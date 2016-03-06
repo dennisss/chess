@@ -18,8 +18,11 @@ describe('Chess', function(){
 					assert(!p.isLegalMove(b, new Move(new Position(0, 0), new Position(0, 0))));
 				});
 
-				it.skip('no piece can invade another piece of the same color\'s spot', function(){
+				it('no piece can invade another piece of the same color\'s spot', function(){
+					var b = Chess.Board.Default();
+					var p = b.grid[0][0];
 
+					assert(!p.isLegalMove(b, new Move(new Position(0,0), new Position(0,1))));
 				});
 			});
 
@@ -162,31 +165,101 @@ describe('Chess', function(){
 
 					var b = Chess.Board.Default();
 
-					// TODO: Check other side pawns going in the other direction as well
 					for (var i = 0; i < 8; i++) {
 						var p = b.grid[1][i];
 						assert(p.isLegalMove(b, new Move(new Position(i, 1), new Position(i, 3))));
 					}
+
+					for (i = 0; i < 8; i++) {
+						var n = b.grid[6][i];
+						assert(n.isLegalMove(b, new Move(new Position(i, 6), new Position(i, 4))));
+					}
 				});
 
-				it.skip('if attacking, a pawn cannot move straight ahead', function(){
+				it('if attacking, a pawn cannot move straight ahead', function(){
+					var board = Chess.Board.Default();
+
+					// Place an attacking black pawn
+					board.at(new Position(0, 5), new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black));
+					var b = board.grid[5][0];
+					var w = board.grid[6][0];
+
+					// Make sure you can't move the white pawn forward
+					assert(!w.isLegalMove(board, new Move(new Position(0, 6), new Position(0, 5), Chess.Color.White)));
+
+					// Make sure you can't move the black pawn forward
+					assert(!b.isLegalMove(board, new Move(new Position(0, 5), new Position(0, 6), Chess.Color.Black)));
+				});
+
+				it('if attacking, a pawn can move 1 step diagonally', function(){
+
+					var board = Chess.Board.Default();
+					var w = board.grid[6][3];
+
+					var pawn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black, true);
+					var pawnpos = new Position(1, 4);
+
+					// Place the pawn down
+					board.at(pawnpos, pawn);
+					board.turn = Chess.Color.White;
+
+					// Check that white can't attack diagonally two spaces
+					assert(!w.isLegalMove(board, new Move(new Position(3,6), new Position(1,4), Chess.Color.White)));
+				});
+
+				it('a pawn can never move backwards', function(){
+					var board = Chess.Board.Default();
+
+					// Move a white and black pawn up two spaces
+					board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
+					board.apply(new Move(new Position(1, 1), new Position(1, 3), Chess.Color.Black));
+
+					var w = board.grid[4][0];
+					var b = board.grid[3][1];
+
+					// Test that the white pawn can't move backwards, and that it can still move forward
+					assert(!w.isLegalMove(board, new Move(new Position(0,4), new Position(0,5))));
+					assert(w.isLegalMove(board, new Move(new Position(0,4), new Position(0,3))));
+
+					// Test that the black pawn can't move backwards, and that it can still move forward
+					assert(!b.isLegalMove(board, new Move(new Position(1,3), new Position(1,2))));
+					assert(b.isLegalMove(board, new Move(new Position(1,3), new Position(1,4))));
 
 				});
 
-				it.skip('if attacking, a pawn can move 1 step diagonally', function(){
+				it('a pawn can only move directly forward one step normally', function(){
+					var board = Chess.Board.Default();
 
+					// Move a white and black pawn up two spaces
+					board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
+					board.apply(new Move(new Position(1, 1), new Position(1, 3), Chess.Color.Black));
+
+					var w = board.grid[4][0];
+					var b = board.grid[3][1];
+
+					// Test that the white pawn only move forward one space normally
+					assert(!w.isLegalMove(board, new Move(new Position(0,4), new Position(0,2))));
+					assert(w.isLegalMove(board, new Move(new Position(0,4), new Position(0,3))));
+
+					// Test that the black pawn can only move forward once space normally
+					assert(!b.isLegalMove(board, new Move(new Position(1,3), new Position(1,5))));
+					assert(b.isLegalMove(board, new Move(new Position(1,3), new Position(1,4))));
 				});
 
-				it.skip('a pawn can never move backwards', function(){
-
-				});
-
-				it.skip('a pawn can only move directly forward one step normally', function(){
-
-				});
-
-				it.skip('a pawn cannot move OVER another piece', function(){
+				it('a pawn cannot move OVER another piece', function(){
 					// this should only be relevant when moving from its original location
+					var board = Chess.Board.Default();
+					var w = board.grid[6][0];
+
+					var pawn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black, true);
+					var pawnpos = new Position(0, 5);
+
+					// Place the pawn down
+					board.at(pawnpos, pawn);
+					board.turn = Chess.Color.White;
+
+					// Try to move the white pawn over the black pawn that's in the way
+					assert(!w.isLegalMove(board, new Move(new Position(0,6), new Position(0,4), Chess.Color.White)));
 				});
 			});
 
