@@ -58,7 +58,7 @@ function load(router){
 					$("#playerProblems").html("");
 					$("#playerProblems").hide();
 					thisPlayer = $('#playerName').val();
-					console.log( $('#experience').val());
+					//console.log( $('#experience').val());
 					$('#playerList').show();
 					$("#playerTableBody").html("");
 					data.forEach(printToTable);
@@ -89,11 +89,11 @@ function load(router){
 					$('#loadingPlayer').modal();
 					thisPlayer = $('#playerName').val();
 					client.call('challenge', {player_id: 'random'}, function (err, game) {
-						console.log(err, game);
+						//console.log(err, game);
 						// TODO: Handle error
 						$("#loadingPlayer").modal("hide");
 						if (err) {
-							console.log(err);
+							//console.log(err);
 						} else {
 							$("#player-creation").modal("hide");
 							router.go('game', {opName: null, opLevel: null, thisPlayer: thisPlayer, data: game});
@@ -133,7 +133,7 @@ function load(router){
 	});
 
 	client.socket.on('challenged', function(data) {
-		console.log(data);
+		//console.log(data);
 		$("#challengeNotification").modal("show");
 		$(".requestPlayerName").html(data.player.name);
 		$(".requestPlayerSkill").html(data.player.level);
@@ -146,12 +146,12 @@ function load(router){
 		opName = $(this).find(".opName").html();
 		opLevel = $(this).find(".opLevel").html();
 		opID = $(this).find(".opName").data("opid");
-		console.log(opID);
+		//console.log(opID);
 
 		$("#loadingPlayer").modal({ backdrop: 'static' });
 
 		client.call('challenge', {player_id : opID}, function(err, game) {
-			console.log(err, game);
+			//console.log(err, game);
 			// TODO: Handle error
 
 			$("#loadingPlayer").modal("hide");

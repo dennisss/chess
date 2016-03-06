@@ -81,7 +81,7 @@ function enter(state){
 
 
 	game = new Chess.Game(state.params.data);
-	console.log(game);
+	//console.log(game);
 
 	var thisPlayer = "";
 	var opName = "";
@@ -107,7 +107,7 @@ function enter(state){
 
 	boardUi.start(game.board, me);
 
-	console.log("playerNames: " + thisPlayer + " " + opName);
+	//console.log("playerNames: " + thisPlayer + " " + opName);
 
 	$(".thisPlayerName").html(thisPlayer);
 	$(".otherPlayerName").html(opName);
