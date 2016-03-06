@@ -162,11 +162,11 @@ function enter(state){
 	});
 
 	$("#acceptDraw").click(function() {
-		client.call('draw_respond', true);
+		client.call('draw_respond', {answer: true});
 	});
 
 	$("#refuseDraw").click(function() {
-		client.call('draw_respond', false);
+		client.call('draw_respond', {answer: false});
 	});
 
 	$(".goToMain").click(function() {
@@ -175,7 +175,12 @@ function enter(state){
 	});
 
 	$("#sendDraw").click(function () {
-		client.call('draw');
+		client.call('draw', {}, function(err, data){
+			var agreed = data.answer;
+			if(!agreed){
+				alert('The other person does not want a draw')
+			}
+		});
 		$("#drawNotification").modal("hide");
 		$("#loadingPlayer").modal("show");
 	});

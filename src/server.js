@@ -564,7 +564,7 @@ class Server {
 		delete game.drawing;
 
 		other.callmeback(data);
-		if(data){
+		if(data.answer){
 			this._finishgame(socket, 'draw');
 		}
 	};
