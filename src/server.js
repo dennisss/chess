@@ -274,7 +274,7 @@ class Server {
 
 			var room = this._room(socket);
 			if(!room){
-				callback('Not in a room!');
+				callback({text: 'Not in a room!'});
 				return;
 			}
 
@@ -313,14 +313,14 @@ class Server {
 		var other = this.io.sockets.connected[other_id]
 
 		if(other === undefined){
-			callback('Can not find the user you want to challenge');
+			callback({text: 'Can not find the user you want to challenge'});
 			return;
 		}
 
 
 
 		if(socket.state != State.Initial || other.state != State.Initial){
-			callback('You or the other player is currently unavailable.');
+			callback({text: 'You or the other player is currently unavailable.'});
 			return;
 		}
 
