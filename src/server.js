@@ -228,7 +228,7 @@ class Server {
 			this._leaveAll(socket);
 
 
-			socket.state = State.Initial;
+			socket.state = State.Ready;
 
 			// TODO: Handle the callback of .join() and .leave()
 			socket.join(room);
@@ -319,7 +319,7 @@ class Server {
 
 
 
-		if(socket.state != State.Initial || other.state != State.Initial){
+		if(socket.state != State.Ready || other.state != State.Ready){
 			callback({text: 'You or the other player is currently unavailable.'});
 			return;
 		}
@@ -339,8 +339,8 @@ class Server {
 		// Timeout the challenge after 20 seconds
 		var time = setTimeout(function(){
 			// TODO: Attomically reset both  users to their initial states
-			socket.state = State.Initial;
-			other.state = State.Initial;
+			socket.state = State.Ready;
+			other.state = State.Ready;
 
 			callback({ reason: 'timeout' }, null);
 
@@ -423,6 +423,9 @@ class Server {
 
 		var other_id = socket.challenger;
 		var other = this.io.sockets.connected[other_id];
+
+		socket.state = State.Ready;
+		other.state = State.Ready;
 
 		other.callmeback(false);
 
