@@ -116,6 +116,36 @@ describe('Chess', function(){
 				});
 
 				describe('Promotion', function() {
+
+					it('works', function(){
+						var board = new Chess.Board();
+
+						var piece = new Chess.Piece(Chess.Type.Pawn, Chess.Color.White, true);
+						var pos = new Position(2, 1);
+
+						// Place the pawn down
+						board.at(pos, piece);
+						board.turn = Chess.Color.White;
+
+
+						var moves = piece.getMoves(board, pos);
+
+						assert.lengthOf(moves, 4);
+
+						for(var i = 0; i < moves.length; i++){
+
+							var child = board.clone();
+							var err = child.apply(moves[i]);
+
+							assert.equal(err, null)
+
+							var p = child.at(new Position(2, 0));
+
+							assert(p !== null);
+							assert.equal(p.type, moves[i].type & (~Chess.Type.Promotion));
+						}
+					})
+
 					it.skip('When a pawn reaches the other side,it is requested to be promoted', function(){
 
 					});
