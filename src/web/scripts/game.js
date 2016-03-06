@@ -3,6 +3,8 @@ var Chess = require('../../chess'),
 
 var game, boardUi;
 
+var inFocus = false;
+
 function load(router){
 
 	$("#thisPlayerInfo").hide();
@@ -127,6 +129,7 @@ function enter(state){
 			});
 		}
 		else {
+			inFocus = true;
 			$(this).addClass('clicked');
 			$('#forfeitGame, #drawGame').show().css({
 				'opacity': 0,
@@ -149,6 +152,20 @@ function enter(state){
 		}
 	});
 
+	$("#actionMenu").on("blur", function() {
+		setTimeout(function() {
+			//if(!inFocus) {
+				if ($("#actionMenu").hasClass('clicked')) {
+					$("#actionMenu").removeClass('clicked');
+					$('#forfeitGame, #drawGame').hide();
+					$("#forfeitGame, #drawGame").css({
+						bottom: "5px", right: 0, margin: "5px", position: "fixed"
+					});
+				}
+			//}
+		}, 200);
+	});
+
 	$("#forfeitGame").click(function() {
 		$("#forfitNotification").modal("show");
 	});
@@ -162,11 +179,11 @@ function enter(state){
 	});
 
 	$("#acceptDraw").click(function() {
-		client.call('draw_respond', true);
+		client.call('draw_respond', {answer: true});
 	});
 
 	$("#refuseDraw").click(function() {
-		client.call('draw_respond', false);
+		client.call('draw_respond', {answer: false});
 	});
 
 	$(".goToMain").click(function() {
@@ -175,7 +192,13 @@ function enter(state){
 	});
 
 	$("#sendDraw").click(function () {
-		client.call('draw');
+		client.call('draw', {}, function(err, data){
+			var agreed = data.answer;
+			if(!agreed){
+				$("#loadingPlayer").modal("hide");
+				$("#drawReject").modal("show");
+			}
+		});
 		$("#drawNotification").modal("hide");
 		$("#loadingPlayer").modal("show");
 	});

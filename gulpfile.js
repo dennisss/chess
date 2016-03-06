@@ -25,7 +25,11 @@ gulp.task('watch', function(){
 gulp.task('lint', function(){
 	return gulp.src('./src/**/*.js')
 	.pipe(jshint())
-	.pipe(jshint.reporter('default'))
+	.pipe(jshint.reporter('gulp-jshint-html-reporter', {
+		filename: './public/quality.html',
+		createMissingFolders : false
+	}))
+	.pipe(jshint.reporter(require('jshint-stylish')))
 })
 
 gulp.task('doc', function(cb){
@@ -50,7 +54,7 @@ gulp.task('clean', function(){
 
 gulp.task('build', ['clean'], function(){
 
-	var b = browserify({ debug: true })
+	var b = browserify({ debug: false })
 	.add(es6ify.runtime)
 	.transform(es6ify.configure(/^(?!.*node_modules)+.+\.js$/)) // Some packages aren't ES6 compatible
 	.require(require.resolve('./src/web/scripts/index.js'), { entry: true });

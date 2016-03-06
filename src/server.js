@@ -106,6 +106,7 @@ class Server {
 	 */
 	constructor(baseServer){
 
+		this.nusers = 0;
 		this.games = {};
 
 		this.clients = {};
@@ -121,6 +122,11 @@ class Server {
 
 		// Route new connections through the serve
 		io.on('connection', function(socket){
+
+			self.nusers++;
+			setTimeout(function(){
+				self._stats();
+			}, 500);
 
 			// Because socket.io overwrites the room array before calling disconnect
 			socket.real_rooms = socket.rooms;
@@ -139,6 +145,8 @@ class Server {
 
 
 			socket.on('disconnect', function(){
+				self.nusers--;
+				self._stats();
 
 				if(socket.state == State.Ready){
 					self._leaveAll(socket);
@@ -228,7 +236,7 @@ class Server {
 			this._leaveAll(socket);
 
 
-			socket.state = State.Initial;
+			socket.state = State.Ready;
 
 			// TODO: Handle the callback of .join() and .leave()
 			socket.join(room);
@@ -274,7 +282,7 @@ class Server {
 
 			var room = this._room(socket);
 			if(!room){
-				callback('Not in a room!');
+				callback({text: 'Not in a room!'});
 				return;
 			}
 
@@ -313,14 +321,14 @@ class Server {
 		var other = this.io.sockets.connected[other_id]
 
 		if(other === undefined){
-			callback('Can not find the user you want to challenge');
+			callback({text: 'Can not find the user you want to challenge'});
 			return;
 		}
 
 
 
-		if(socket.state != State.Initial || other.state != State.Initial){
-			callback('You or the other player is currently unavailable.');
+		if(socket.state != State.Ready || other.state != State.Ready){
+			callback({text: 'You or the other player is currently unavailable.'});
 			return;
 		}
 
@@ -339,8 +347,8 @@ class Server {
 		// Timeout the challenge after 20 seconds
 		var time = setTimeout(function(){
 			// TODO: Attomically reset both  users to their initial states
-			socket.state = State.Initial;
-			other.state = State.Initial;
+			socket.state = State.Ready;
+			other.state = State.Ready;
 
 			callback({ reason: 'timeout' }, null);
 
@@ -408,6 +416,8 @@ class Server {
 		socket.state = State.InGame;
 		other.state = State.InGame;
 
+		this._stats();
+
 		return game;
 	}
 
@@ -423,6 +433,9 @@ class Server {
 
 		var other_id = socket.challenger;
 		var other = this.io.sockets.connected[other_id];
+
+		socket.state = State.Ready;
+		other.state = State.Ready;
 
 		other.callmeback(false);
 
@@ -551,7 +564,7 @@ class Server {
 		delete game.drawing;
 
 		other.callmeback(data);
-		if(data){
+		if(data.answer){
 			this._finishgame(socket, 'draw');
 		}
 	};
@@ -617,6 +630,8 @@ class Server {
 		// Send to both players
 		this.io.to(socket.id).emit('endgame', {result: result, reason: reason});
 		this.io.to(other.id).emit('endgame', {result: other_result, reason: reason});
+
+		this._stats();
 	};
 
 
@@ -680,6 +695,12 @@ class Server {
 				self._broadcast_userlist(r);
 			}
 		});
+	}
+
+	_stats(){
+		var ngames = _.keys(this.games).length / 2;
+		var nusers = this.nusers || 0;
+		this.io.emit('stats', {users: nusers, games: ngames});
 	}
 
 

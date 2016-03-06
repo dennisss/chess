@@ -265,7 +265,7 @@ describe('Server', function(){
 
 
 			client2.socket.on('drawing', function(){
-				client2.call('draw_respond', true);
+				client2.call('draw_respond', {answer: true});
 			})
 
 			// Do the drawing
