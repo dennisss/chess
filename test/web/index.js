@@ -56,8 +56,8 @@ describe('Web', function(){
 			});
 		});
 
-		//require('./home');
-		//require('./game');
+		require('./home');
+		require('./game');
 
 	});
 
