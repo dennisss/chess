@@ -14,8 +14,7 @@ function load(router){
 	});
 
 	var VERSION = '0.90'
-	$('#versionText').html('&#169;' + (new Date().getFullYear()) + ' Friendly Games Inc.  Version ' + VERSION);
-
+	$('#versionText').html('&#169;' + (new Date().getFullYear()) + ' Friendly Games Inc.  Version <a href="/codes" id="versionLink">' + VERSION + '</a>');
 
 
 	client.socket.on('stats', function(data){
