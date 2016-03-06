@@ -106,6 +106,7 @@ class Server {
 	 */
 	constructor(baseServer){
 
+		this.nusers = 0;
 		this.games = {};
 
 		this.clients = {};
@@ -122,6 +123,7 @@ class Server {
 		// Route new connections through the serve
 		io.on('connection', function(socket){
 
+			self.nusers++;
 			setTimeout(function(){
 				self._stats();
 			}, 500);
@@ -143,7 +145,7 @@ class Server {
 
 
 			socket.on('disconnect', function(){
-
+				self.nusers--;
 				self._stats();
 
 				if(socket.state == State.Ready){
@@ -697,8 +699,7 @@ class Server {
 
 	_stats(){
 		var ngames = _.keys(this.games).length / 2;
-		var nusers = _.keys(this.io.sockets.connected).length;
-
+		var nusers = this.nusers || 0;
 		this.io.emit('stats', {users: nusers, games: ngames});
 	}
 
