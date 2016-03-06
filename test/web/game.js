@@ -64,6 +64,9 @@ describe('/game', function(){
 
 		this.timeout(100000000);
 
+		yield pause(600);
+		second.click('#yourTurnBtn');
+
 		// TODO: Add more assertions
 		yield pause(600);
 		yield second.click('#e2').click('#e3');
