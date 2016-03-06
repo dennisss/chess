@@ -275,10 +275,12 @@ class Piece {
 
 
 			// Add normal single and double moves for pawns
-			// TODO: For a double jump, make sure there is no other piece in the way of the pawn moving
 			var moveSpots = [];
-			if(!this.moved) // Double
-				moveSpots.push(pos.add(0, 2*dir));
+			if(!this.moved){ // Double
+				if(board.at(pos.add(0, dir)) === null){ // Only allow double jump if no piece directly ahead
+					moveSpots.push(pos.add(0, 2*dir));
+				}
+			};
 			moveSpots.push(pos.add(0, dir)); // Single
 			for(var i = 0; i < moveSpots.length; i++){
 				var spot = moveSpots[i];
@@ -410,7 +412,7 @@ class Move {
 			// Simple pick and (re)place
 			// Handled by the code outside the if statements
 		}
-		else if(this.type % Type.Promotion !== 0){
+		else if((this.type & Type.Promotion) !== 0){
 			// Promote piece
 			var promoType = this.type % Type.Promotion;
 			p = new Piece(promoType, p.color, true);
