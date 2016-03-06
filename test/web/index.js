@@ -7,17 +7,17 @@ var options = { desiredCapabilities: { browserName: 'chrome' } };
 
 
 global.makeClient = function(done){
-	var client = webdriverio.remote(options)
+	var client = webdriverio.remote(options);
 	client.init().then(function(err){
 		done();
 	});
 
 	return client;
-}
+};
 
 global.endClient = function(client, done){
 	client.end().then(done);
-}
+};
 
 describe('Web', function(){
 
@@ -30,7 +30,7 @@ describe('Web', function(){
 		before(function(done){
 			// TODO: Compile the latest bundle
 
-			this.timeout(50000)
+			this.timeout(50000);
 
 			server = App();
 			server.listen(8000, function(){
@@ -47,7 +47,7 @@ describe('Web', function(){
 					global.client = makeClient(done);
 				});
 			});
-		})
+		});
 		after(function(done){
 			endClient(global.client, function(){
 				child.kill();
@@ -56,13 +56,9 @@ describe('Web', function(){
 			});
 		});
 
-
-
-
-		require('./home');
-		require('./game');
+		//require('./home');
+		//require('./game');
 
 	});
-
 
 });
