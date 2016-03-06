@@ -122,6 +122,10 @@ class Server {
 		// Route new connections through the serve
 		io.on('connection', function(socket){
 
+			setTimeout(function(){
+				io.emit('user_count', io.sockets.sockets.length);
+			}, 500);
+
 			// Because socket.io overwrites the room array before calling disconnect
 			socket.real_rooms = socket.rooms;
 
@@ -139,6 +143,8 @@ class Server {
 
 
 			socket.on('disconnect', function(){
+
+				io.emit('user_count', io.sockets.sockets.length);
 
 				if(socket.state == State.Ready){
 					self._leaveAll(socket);

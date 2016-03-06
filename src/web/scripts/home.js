@@ -13,6 +13,19 @@ function load(router){
 		router.go('room', {room: 'lobby'});
 	});
 
+	var VERSION = '0.90'
+	$('#versionText').html('&#169;' + (new Date().getFullYear()) + ' Friendly Games Inc.  Version ' + VERSION);
+
+
+
+	client.socket.on('user_count', function(nusers){
+		if(nusers > 1){
+			$('#userCount').html('<br /><b>' + nusers + ' users online</b>');
+		}
+		else{
+			$('#userCount').html('');
+		}
+	})
 }
 
 function enter(state){
