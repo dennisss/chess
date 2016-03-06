@@ -149,7 +149,7 @@ class Server {
 				}
 				else if(socket.state == State.Challenged){
 					// Auto-reject
-					self.refuse(socket);
+					self.refuse(socket, {}, function(){});
 				}
 
 			});
@@ -194,6 +194,22 @@ class Server {
 	 * @param callback called with (err, data) where data has the initial list of users
 	 */
 	join(socket, data, callback){
+
+		// Check the name hasn't been taken
+		var taken = false;
+		var users = this._userlist(data.room);
+		for(var i = 0; i < users.length; i++){
+			if(users[i].name === data.name){
+				taken = true;
+				break;
+			}
+		}
+
+		if(taken){
+			callback('user_taken');
+			return;
+		}
+
 
 		// Store profile
 		socket.profile = {

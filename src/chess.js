@@ -322,6 +322,15 @@ class Piece {
 					}
 				}
 
+				// Promotion still occurs when attacking
+				if(board.at(new Position(spot.x, spot.y)) !== null && (spot.y === 0 || spot.y === 7)){
+					addMove(spot, Type.Promotion | Type.Queen);
+					addMove(spot, Type.Promotion | Type.Rook);
+					addMove(spot, Type.Promotion | Type.Bishop);
+					addMove(spot, Type.Promotion | Type.Knight);
+					continue;
+				}
+
 				// Regular attack
 				if(board.at(spot) === null)
 					continue;
@@ -401,9 +410,9 @@ class Move {
 			// Simple pick and (re)place
 			// Handled by the code outside the if statements
 		}
-		else if(this.type & Type.Promotion !== 0){
+		else if(this.type % Type.Promotion !== 0){
 			// Promote piece
-			var promoType = this.type & 0x111;
+			var promoType = this.type % Type.Promotion;
 			p = new Piece(promoType, p.color, true);
 		}
 		else if(this.type === Type.EnPassant){

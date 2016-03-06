@@ -3,7 +3,7 @@ var App = require(__src + '/app');
 var ss = require('selenium-standalone');
 
 var webdriverio = require('webdriverio');
-var options = { desiredCapabilities: { browserName: 'firefox' } };
+var options = { desiredCapabilities: { browserName: 'chrome' } };
 
 
 global.makeClient = function(done){
