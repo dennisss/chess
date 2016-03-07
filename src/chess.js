@@ -427,7 +427,8 @@ class Move {
 	equals(other){
 		return this.type === other.type &&
 			this.from.equals(other.from) &&
-			this.to.equals(other.to);
+			this.to.equals(other.to) &&
+			this.color === other.color;
 	}
 
 
