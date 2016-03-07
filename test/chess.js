@@ -1,35 +1,26 @@
 /*
-* SRS: so many, but the ones that are PRIMARILY tested here are below:
-* 3.1.1.4.10, 3.1.1.4.11, 3.1.1.4.13
-*
-* */
+ * SRS: so many, but the ones that are PRIMARILY tested here are below:
+ * 3.1.1.4.10, 3.1.1.4.11, 3.1.1.4.13
+ *
+ * */
 
 var Chess = require('../src/chess'),
 	Position = require('../src/position');
 
 var Move = Chess.Move;
 
-// Position short hand
-// Stuff like 'Pos('a2')' should now work
-global.Pos = function(x,y){
-	if(arguments.length == 1)
-		return new Position(x);
-	return new Position(x, y);
-}
-
 describe('Chess', function(){
 
 	describe('Piece', function(){
 
-		describe('isPossibleMove()', function(){
+		describe('isLegalMove()', function(){
 
 			describe('All pieces', function() {
 
 				it('cannot move to the same position', function () {
-					var b = Chess.Board.Default();
-					var p = b.grid[0][0];
+					var board = Chess.Board.Default();
 
-					assert(!p.isPossibleMove(b, new Move(new Position(0, 0), new Position(0, 0))));
+					assert(!board.isLegalMove(new Move(new Position(0, 0), new Position(0, 0))));
 				});
 
 				it('no piece can invade another piece of the same color\'s spot', function(){
@@ -39,14 +30,12 @@ describe('Chess', function(){
 					// Place an attacking black pawn
 					board.at(new Position(0, 5), new Chess.Piece(Chess.Type.Queen, Chess.Color.Black));
 					board.at(new Position(0, 6), new Chess.Piece(Chess.Type.Queen, Chess.Color.Black));
-					var b = board.grid[5][0];
-					var w = board.grid[6][0];
 
 					// Make sure you can't move the white pawn forward
-					assert(!w.isLegalMove(board, new Move(new Position(0, 6), new Position(0, 5), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(0, 6), new Position(0, 5), Chess.Color.Black)));
 
 					// Make sure you can't move the black pawn forward
-					assert(!b.isLegalMove(board, new Move(new Position(0, 5), new Position(0, 6), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(0, 5), new Position(0, 6), Chess.Color.Black)));
 				});
 			});
 
@@ -67,7 +56,7 @@ describe('Chess', function(){
 
 						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
 
-						assert(king.isPossibleMove(board, castling));
+						assert(board.isLegalMove(castling));
 
 						assert.equal(board.apply(castling), null);
 
@@ -115,7 +104,7 @@ describe('Chess', function(){
 
 						// Construct the move
 						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
-						assert(board.at(enPassant.from).isPossibleMove(board, enPassant));
+						assert(board.isLegalMove(enPassant));
 
 						// Perform the move
 						assert.equal(board.apply(enPassant), null);
@@ -154,7 +143,7 @@ describe('Chess', function(){
 						board.turn = Chess.Color.White;
 
 
-						var moves = piece.getMoves(board, pos);
+						var moves = board.getMoves(pos);
 
 						assert.lengthOf(moves, 4);
 
@@ -186,16 +175,14 @@ describe('Chess', function(){
 
 				it('a pawn in default position can move two units forward', function () {
 
-					var b = Chess.Board.Default();
+					var board = Chess.Board.Default();
 
 					for (var i = 0; i < 8; i++) {
-						var p = b.grid[1][i];
-						assert(p.isPossibleMove(b, new Move(new Position(i, 1), new Position(i, 3))));
+						assert(board.isLegalMove(new Move(new Position(i, 1), new Position(i, 3))));
 					}
 
 					for (i = 0; i < 8; i++) {
-						var n = b.grid[6][i];
-						assert(n.isPossibleMove(b, new Move(new Position(i, 6), new Position(i, 4))));
+						assert(board.isLegalMove(new Move(new Position(i, 6), new Position(i, 4))));
 					}
 				});
 
@@ -208,10 +195,10 @@ describe('Chess', function(){
 					var w = board.grid[6][0];
 
 					// Make sure you can't move the white pawn forward
-					assert(!w.isPossibleMove(board, new Move(new Position(0, 6), new Position(0, 5), Chess.Color.White)));
+					assert(!board.isLegalMove(new Move(new Position(0, 6), new Position(0, 5), Chess.Color.White)));
 
 					// Make sure you can't move the black pawn forward
-					assert(!b.isPossibleMove(board, new Move(new Position(0, 5), new Position(0, 6), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(0, 5), new Position(0, 6), Chess.Color.Black)));
 				});
 
 				it('if attacking, a pawn can move 1 step diagonally', function(){
@@ -227,7 +214,7 @@ describe('Chess', function(){
 					board.turn = Chess.Color.White;
 
 					// Check that white can't attack diagonally two spaces
-					assert(!w.isPossibleMove(board, new Move(new Position(3,6), new Position(1,4), Chess.Color.White)));
+					assert(!board.isLegalMove(new Move(new Position(3,6), new Position(1,4), Chess.Color.White)));
 				});
 
 				it('a pawn can never move backwards', function(){
@@ -241,12 +228,12 @@ describe('Chess', function(){
 					var b = board.grid[3][1];
 
 					// Test that the white pawn can't move backwards, and that it can still move forward
-					assert(!w.isPossibleMove(board, new Move(new Position(0,4), new Position(0,5))));
-					assert(w.isPossibleMove(board, new Move(new Position(0,4), new Position(0,3))));
+					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,5))));
+					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3))));
 
 					// Test that the black pawn can't move backwards, and that it can still move forward
-					assert(!b.isPossibleMove(board, new Move(new Position(1,3), new Position(1,2))));
-					assert(b.isPossibleMove(board, new Move(new Position(1,3), new Position(1,4))));
+					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,2))));
+					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4))));
 
 				});
 
@@ -261,12 +248,12 @@ describe('Chess', function(){
 					var b = board.grid[3][1];
 
 					// Test that the white pawn only move forward one space normally
-					assert(!w.isPossibleMove(board, new Move(new Position(0,4), new Position(0,2))));
-					assert(w.isPossibleMove(board, new Move(new Position(0,4), new Position(0,3))));
+					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,2))));
+					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3))));
 
 					// Test that the black pawn can only move forward once space normally
-					assert(!b.isPossibleMove(board, new Move(new Position(1,3), new Position(1,5))));
-					assert(b.isPossibleMove(board, new Move(new Position(1,3), new Position(1,4))));
+					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,5))));
+					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4))));
 				});
 
 				it('a pawn cannot move OVER another piece', function(){
@@ -282,7 +269,7 @@ describe('Chess', function(){
 					board.turn = Chess.Color.White;
 
 					// Try to move the white pawn over the black pawn that's in the way
-					assert(!w.isPossibleMove(board, new Move(new Position(0,6), new Position(0,4), Chess.Color.White)));
+					assert(!board.isLegalMove(new Move(new Position(0,6), new Position(0,4), Chess.Color.White)));
 				});
 			});
 
@@ -294,20 +281,20 @@ describe('Chess', function(){
 
 					// Test all four starting positions
 					var knight = board.grid[0][1];
-					assert(knight.isLegalMove(board, new Move(new Position(1,0), new Position(2,2), Chess.Color.Black)));
-					assert(knight.isLegalMove(board, new Move(new Position(1,0), new Position(0,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,0), new Position(2,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,0), new Position(0,2), Chess.Color.Black)));
 
 					knight = board.grid[0][6];
-					assert(knight.isLegalMove(board, new Move(new Position(6,0), new Position(5,2), Chess.Color.Black)));
-					assert(knight.isLegalMove(board, new Move(new Position(6,0), new Position(7,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(6,0), new Position(5,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(6,0), new Position(7,2), Chess.Color.Black)));
 
 					knight = board.grid[7][1];
-					assert(knight.isLegalMove(board, new Move(new Position(1,7), new Position(2,5), Chess.Color.Black)));
-					assert(knight.isLegalMove(board, new Move(new Position(1,7), new Position(0,5), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,7), new Position(2,5), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,7), new Position(0,5), Chess.Color.Black)));
 
 					knight = board.grid[7][6];
-					assert(knight.isLegalMove(board, new Move(new Position(6,7), new Position(5,5), Chess.Color.Black)));
-					assert(knight.isLegalMove(board, new Move(new Position(6,7), new Position(7,5), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(6,7), new Position(5,5), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(6,7), new Position(7,5), Chess.Color.Black)));
 				});
 
 				it('a knight cannot move outside of the L shape', function(){
@@ -315,17 +302,16 @@ describe('Chess', function(){
 
 					// Place a knight in the middle of an empty board.
 					board.at(new Position(4, 3), new Chess.Piece(Chess.Type.Knight, Chess.Color.Black));
-					var knight = board.grid[3][4];
 
 					// Test all spaces adjacent to the knight
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(3, 2), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(5, 2), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(3, 3), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(5, 3), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(3, 4), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 4), Chess.Color.Black)));
-					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(5, 4), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(3, 2), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(5, 2), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(3, 3), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(5, 3), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(3, 4), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(4, 4), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(5, 4), Chess.Color.Black)));
 				});
 
 				// a knight CAN move over other pieces.
@@ -344,7 +330,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
 				});
 
 				it('a queen can not move in a random position', function(){
@@ -358,7 +344,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
 				});
 
 				it('a queen can move horizontally', function(){
@@ -372,7 +358,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
 				});
 
 				it('a queen can move vertically', function(){
@@ -386,7 +372,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
 				});
 
 				it('a queen cannot move OVER another piece', function(){
@@ -404,7 +390,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 3), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(2, 3), Chess.Color.Black)));
 				});
 			});
 
@@ -418,7 +404,7 @@ describe('Chess', function(){
 
 					assert(king.type === Chess.Type.King);
 
-					assert.lengthOf(king.getMoves(board, kingPos), 0);
+					assert.lengthOf(king.getMoves(kingPos), 0);
 				});
 
 				it('a king can move to any directly adjacent location', function(){
@@ -431,7 +417,7 @@ describe('Chess', function(){
 					var king = board.at(kingPos);
 
 					// There should be exactly 8 adjacent spaces available
-					assert.lengthOf(king.getMoves(board, kingPos), 8);
+					assert.lengthOf(board.getMoves(kingPos), 8);
 				});
 			});
 
@@ -448,7 +434,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
 				});
 
 				it('a rook can not move in a random position', function(){
@@ -462,7 +448,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
 				});
 
 				it('a rook can move horizontally', function(){
@@ -476,7 +462,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
 				});
 
 				it('a rook can move vertically', function(){
@@ -490,7 +476,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
 				});
 
 				it('a rook cannot move OVER another piece', function(){
@@ -508,7 +494,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 3), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(2, 3), Chess.Color.Black)));
 				});
 			});
 
@@ -525,7 +511,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
 				});
 
 				it('a bishop can not move in a random position', function(){
@@ -539,7 +525,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
 				});
 
 				it('a bishop can not move horizontally', function(){
@@ -553,7 +539,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
 				});
 
 				it('a bishop can not move vertically', function(){
@@ -567,7 +553,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
 				});
 
 				it('a bishop cannot move OVER another piece', function(){
@@ -585,7 +571,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
+					assert(!board.isLegalMove(new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
 				});
 			});
 		});
@@ -695,7 +681,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -727,7 +713,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -759,7 +745,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -791,7 +777,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -823,7 +809,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -855,7 +841,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -887,7 +873,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
@@ -919,7 +905,7 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
-				var moves = board.getMoves(board, kingpos);
+				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 4);
 
