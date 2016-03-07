@@ -328,12 +328,17 @@ describe('Chess', function(){
 					assert.lengthOf(king.getMoves(board, kingPos), 0);
 				});
 
-				it.skip('a king can move to any directly adjacent location', function(){
+				it('a king can move to any directly adjacent location', function(){
+					var board = new Chess.Board();
+					var kingPos = new Position(4,3);
 
-				});
+					// Insert a king in the middle of the board
+					board.at(kingPos, new Chess.Piece(Chess.Type.King, Chess.Color.Black));
 
-				it.skip('a king cannot move OVER another piece', function(){
+					var king = board.at(kingPos);
 
+					// There should be exactly 8 adjacent spaces available
+					assert.lengthOf(king.getMoves(board, kingPos), 8);
 				});
 			});
 
