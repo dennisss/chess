@@ -14,6 +14,7 @@ global.__src = path.resolve(__dirname + '/../src');
 describe('Friendly Chess', function() {
 	require('./rpc');
 	require('./chess');
+	require('./position');
 
 	require('./client');
 	require('./server');
