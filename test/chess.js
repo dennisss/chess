@@ -178,14 +178,15 @@ describe('Chess', function(){
 
 					var board = Chess.Board.Default();
 
-					board.turn = Chess.Color.Black;
+					// Test all the white pawns
 					for (var i = 0; i < 8; i++) {
-						assert(board.isLegalMove(new Move(new Position(i, 1), new Position(i, 3))));
+						assert(board.isLegalMove(new Move(new Position(i, 6), new Position(i, 4))));
 					}
 
-					board.turn = Chess.Color.White;
+					// Change the turn to black, then test all the black pawns
+					board.turn = Chess.Color.Black;
 					for (i = 0; i < 8; i++) {
-						assert(board.isLegalMove(new Move(new Position(i, 6), new Position(i, 4))));
+						assert(board.isLegalMove(new Move(new Position(i, 1), new Position(i, 3))));
 					}
 				});
 
@@ -227,13 +228,11 @@ describe('Chess', function(){
 					board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
 					board.apply(new Move(new Position(1, 1), new Position(1, 3), Chess.Color.Black));
 
-					var w = board.grid[4][0];
-					var b = board.grid[3][1];
-
 					// Test that the white pawn can't move backwards, and that it can still move forward
 					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,5))));
 					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3))));
 
+					board.turn = Chess.Color.Black;
 					// Test that the black pawn can't move backwards, and that it can still move forward
 					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,2))));
 					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4))));
@@ -247,13 +246,11 @@ describe('Chess', function(){
 					board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
 					board.apply(new Move(new Position(1, 1), new Position(1, 3), Chess.Color.Black));
 
-					var w = board.grid[4][0];
-					var b = board.grid[3][1];
-
 					// Test that the white pawn only move forward one space normally
 					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,2))));
 					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3))));
 
+					board.turn = Chess.Color.Black;
 					// Test that the black pawn can only move forward once space normally
 					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,5))));
 					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4))));
