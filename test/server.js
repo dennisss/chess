@@ -11,16 +11,6 @@ var Client = require(__src + '/client'),
 	express = require('express'),
 	Position = require(__src +'/position');
 
-var USER = require('../src/user');
-
-describe('User', function(){
-	it.only('Can make a user', function(done){
-		this.timeout(500);
-		var me = new USER();
-		done();
-	});
-});
-
 describe('Server', function(){
 
 	var server, client, client2;

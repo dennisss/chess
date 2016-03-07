@@ -20,4 +20,6 @@ describe('Friendly Chess', function() {
 
 	require('./app');
 	require('./web');
+
+	require('./user');
 });
