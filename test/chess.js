@@ -319,12 +319,78 @@ describe('Chess', function(){
 
 			describe('Queens', function() {
 
-				it.skip('a queen can only move in a vertical, horizontal, or diagonal line', function(){
+				it('a queen can move in a diagonal line', function(){
+					var board = new Chess.Board();
 
+					var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+					var queenpos = new Position(4, 3);
+
+					board.at(queenpos, queen);
+					board.turn = Chess.Color.Black;
+
+					var b = board.grid[3][4];
+
+					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
 				});
 
-				it.skip('a queen cannot move OVER another piece', function(){
+				it('a queen can not move in a random position', function(){
+					var board = new Chess.Board();
 
+					var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+					var queenpos = new Position(4, 3);
+
+					board.at(queenpos, queen);
+					board.turn = Chess.Color.Black;
+
+					var b = board.grid[3][4];
+
+					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(1, 1), Chess.Color.Black)));
+				});
+
+				it('a queen can move horizontally', function(){
+					var board = new Chess.Board();
+
+					var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+					var queenpos = new Position(4, 3);
+
+					board.at(queenpos, queen);
+					board.turn = Chess.Color.Black;
+
+					var b = board.grid[3][4];
+
+					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
+				});
+
+				it('a queen can move vertically', function(){
+					var board = new Chess.Board();
+
+					var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+					var queenpos = new Position(4, 3);
+
+					board.at(queenpos, queen);
+					board.turn = Chess.Color.Black;
+
+					var b = board.grid[3][4];
+
+					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
+				});
+
+				it.only('a queen cannot move OVER another piece', function(){
+					var board = new Chess.Board();
+
+					var piece = new Chess.Piece(Chess.Type.Rook, Chess.Color.White, true);
+					var piecepos = new Position(4, 3);
+
+					var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+					var queenpos = new Position(3,3);
+
+					board.at(piecepos, piece);
+					board.at(queenpos, queen);
+					board.turn = Chess.Color.Black;
+
+					var b = board.grid[3][4];
+
+					assert(!b.isLegalMove(board, new Move(new Position(4, 3), new Position(2, 3), Chess.Color.Black)));
 				});
 			});
 
