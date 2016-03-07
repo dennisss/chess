@@ -66,7 +66,7 @@ describe('Chess', function(){
 
 					});
 
-					it.skip('Cannot castle if king is in check', function () {
+					it('Cannot castle if king is in check', function () {
 						var board = Chess.Board.Default();
 
 						// Clear space for castling
@@ -141,7 +141,7 @@ describe('Chess', function(){
 				describe('En Passant', function() {
 					// If a pawn has moved up 2 spaces then did not move again
 
-					it('works', function(){
+					it('En Passant is a possible move - this test cases captures all pieces', function(){
 						var board = Chess.Board.Default();
 
 						// Place an attacking black pawn
@@ -165,7 +165,6 @@ describe('Chess', function(){
 
 						// The attacking pawn should have moved up/down
 						// TODO
-
 					});
 
 					it.skip('After capture, the attacking pawn moves normally (diagonally)', function(){
@@ -173,7 +172,19 @@ describe('Chess', function(){
 					});
 
 					it.skip('After capture,the defending pawn is replaced with an empty square', function(){
+						var board = Chess.Board.Default();
 
+						// Place an attacking black pawn
+						board.at(new Position(1, 4), new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black));
+
+						// Move the White pawn up two spaces
+						board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
+
+						// Construct the move
+						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
+
+						// The adjacent pawn should be gone
+						assert(board.at(new Position(0, 4)) === null);
 					});
 
 					it.skip('Cannot occur if defending pawn has made ANY other move', function(){
