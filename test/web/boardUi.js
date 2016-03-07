@@ -1,7 +1,9 @@
 var jsdom = require("jsdom");
 
 var BoardUi = require(__src + '/web/scripts/boardUi'),
-	Chess = require(__src + '/chess');
+	Chess = require(__src + '/chess'),
+	Position = require(__src + '/position'),
+	Move = Chess.Move;
 
 describe('BoardUi', function(){
 
@@ -84,7 +86,7 @@ describe('BoardUi', function(){
 		$('#b5').trigger('click');
 	});
 
-	it('Board UI doesn\t work for black player when white turn', function(){
+	it('Board UI doesn\'t work for black player when white turn', function(){
 
 		var $el = $('.chessboard');
 
@@ -105,99 +107,170 @@ describe('BoardUi', function(){
 		assert(!$('#b5').hasClass('placeable'));
 	});
 
-/*
- describe('submitMove()', function(){
+	describe('getCell()', function() {
 
- it.skip('state gets updated to waiting after move is submitted', function () {
+		it('Check getcell', function () {
 
- });
- });
+			var $el = $('.chessboard');
 
- describe('start()', function(){
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
 
- it.skip('player is updated', function () {
+			var board = Chess.Board.Default();
 
- });
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
 
- it.skip('player state is updated to waiting', function () {
+			var pos = new Position(4, 4);
 
- });
+			var cell = boardUi.getCell(pos);
+			assert(cell[0].position.equals(pos));
+		});
+	});
 
- it.skip('player state is updated to current turn', function () {
+	describe('animateMove()', function(){
 
- });
- });
+		it('ensure no timeout', function (){
 
- describe('updatePlayer()', function(){
+			this.timeout(1000);
 
- it.skip('current player is passed in color', function () {
+			var $el = $('.chessboard');
 
- });
- });
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
 
- describe('updateBoard()', function(){
+			var board = Chess.Board.Default();
 
- it.skip('features of new board are present', function () {
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
 
- });
+			var move = new Move(new Position('a2'), new Position('a3'), Chess.Color.White);
 
- it.skip('features of old board are not present', function () {
+			boardUi.animateMove(move, function(){});
+		});
+	});
 
- });
- });
+	describe('processMove()', function(){
 
- describe('updateState()', function(){
+		it('ensure no timeout', function (){
 
- it.skip('state is set to passed in state', function () {
+			this.timeout(1000);
 
- });
- });
+			var $el = $('.chessboard');
 
- describe('getCell()', function(){
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
 
- it.skip('get proper value of filled in cell', function () {
+			var board = Chess.Board.Default();
 
- });
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
 
- it.skip('get proper value of empty cell', function () {
+			var move = new Move(new Position('a2'), new Position('a3'), Chess.Color.White);
 
- });
+			boardUi.processMove(move, function(){});
+		});
 
- it.skip('get proper value of invalid cell', function () {
+		it.skip('move is applied', function () {
 
- });
- });
+		});
 
- describe('animateMove()', function(){
+		it.skip('board is updated', function () {
 
- it.skip('ensure no timeout', function () {
+		});
 
- });
- });
+		it.skip('state is updated', function () {
 
- describe('processMove()', function(){
+		});
+	});
 
- it.skip('move is applied', function () {
+	describe('reset()', function() {
 
- });
+		it('ensure no timeout', function (){
 
- it.skip('board is updated', function () {
+			this.timeout(1000);
 
- });
+			var $el = $('.chessboard');
 
- it.skip('state is updated', function () {
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
 
- });
- });
+			var board = Chess.Board.Default();
 
- describe('reset()', function(){
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
 
- it.skip('board that used to be random is now default', function () {
+			var move = new Move(new Position('a2'), new Position('a3'), Chess.Color.White);
 
- });
+			boardUi.reset();
+		});
 
- it.skip('board that used to be default is now still default', function () {
+		it.skip('board that used to be random is now default', function () {
 
- });
- });*/
+		});
+
+		it.skip('board that used to be default is now still default', function () {
+
+		});
+	});
+
+
+	/*
+	 describe('submitMove()', function(){
+
+	 it.skip('state gets updated to waiting after move is submitted', function () {
+
+	 });
+	 });
+
+	 describe('start()', function(){
+
+	 it.skip('player is updated', function () {
+
+	 });
+
+	 it.skip('player state is updated to waiting', function () {
+
+	 });
+
+	 it.skip('player state is updated to current turn', function () {
+
+	 });
+	 });
+
+	 describe('updatePlayer()', function(){
+
+	 it.skip('current player is passed in color', function () {
+
+	 });
+	 });
+
+	 describe('updateBoard()', function(){
+
+	 it.skip('features of new board are present', function () {
+
+	 });
+
+	 it.skip('features of old board are not present', function () {
+
+	 });
+	 });
+
+	 describe('updateState()', function(){
+
+	 it.skip('state is set to passed in state', function () {
+
+	 });
+	 });
+
+
+	 it.skip('get proper value of empty cell', function () {
+
+	 });
+
+	 it.skip('get proper value of invalid cell', function () {
+
+	 });
+
+	 });*/
 });
