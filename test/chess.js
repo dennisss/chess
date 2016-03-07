@@ -1,3 +1,9 @@
+/*
+* SRS: so many, but the ones that are PRIMARILY tested here are below:
+* 3.1.1.4.10, 3.1.1.4.11, 3.1.1.4.13
+*
+* */
+
 var Chess = require('../src/chess'),
 	Position = require('../src/position');
 

@@ -1,3 +1,6 @@
+/*
+* SRS: 3.1.1.1.1, 3.1.1.1.2, 3.1.1.1.3, 3.1.1.5.1, 3.1.1.5.2
+* */
 
 function pause(msecs){
 	return new Promise(function(res){
