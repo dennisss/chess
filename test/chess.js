@@ -44,7 +44,7 @@ describe('Chess', function(){
 
 				describe('Castling', function() {
 
-					it('works', function(){
+					it('Rook and King can partake in Castling', function(){
 						var board = Chess.Board.Default();
 
 						// Clear space for castling
@@ -66,20 +66,70 @@ describe('Chess', function(){
 
 					});
 
-					it.skip('Rook and King can partake in Castling', function () {
-
-					});
-
 					it.skip('Cannot castle if king is in check', function () {
+						var board = Chess.Board.Default();
 
+						// Clear space for castling
+						board.at(new Position(1, 7), null);
+						board.at(new Position(2, 7), null);
+						board.at(new Position(3, 7), null);
+
+						// Put king in check by black queen
+						var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+						var queenpos = new Position(4, 6);
+						board.at(new Position(4, 6), null);
+						board.at(queenpos, queen);
+
+						var leftCastle = board.at(new Position(0, 7));
+						var king = board.at(new Position(4,7));
+
+						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
+
+						assert(!board.isLegalMove(castling));
 					});
 
-					it.skip('Cannot castle if king will be in check at any point in the move', function () {
+					it('Cannot castle if king will be in check at any point in the move', function () {
+						var board = Chess.Board.Default();
 
+						// Clear space for castling
+						board.at(new Position(1, 7), null);
+						board.at(new Position(2, 7), null);
+						board.at(new Position(3, 7), null);
+
+						// Put king in check by black queen
+						var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+						var queenpos = new Position(1, 6);
+						board.at(new Position(1, 6), null);
+						board.at(queenpos, queen);
+
+						var leftCastle = board.at(new Position(0, 7));
+						var king = board.at(new Position(4,7));
+
+						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
+
+						assert(!board.isLegalMove(castling));
 					});
 
-					it.skip('Cannot castle if there are pieces between the king and castle', function () {
-						// Actually, this should be redundant if other tests have been implemented properly
+					it('Cannot castle if there are pieces between the king and castle', function () {
+						var board = Chess.Board.Default();
+
+						// Clear space for castling
+						board.at(new Position(1, 7), null);
+						board.at(new Position(2, 7), null);
+						board.at(new Position(3, 7), null);
+
+						// Put king in check by black queen
+						var queen = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black, true);
+						var queenpos = new Position(3, 7);
+						board.at(new Position(3, 7), null);
+						board.at(queenpos, queen);
+
+						var leftCastle = board.at(new Position(0, 7));
+						var king = board.at(new Position(4,7));
+
+						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
+
+						assert(!board.isLegalMove(castling));
 					});
 
 					it.skip('Cannot castle if either piece has been moved at any point', function () {
