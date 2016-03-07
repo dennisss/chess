@@ -645,6 +645,8 @@ describe('Chess', function(){
 
 		describe('inCheck()', function(){
 
+			// i want to make sure none of the moves the king is allowed to make put him in check.
+
 			it('initial board should not be in check', function(){
 				var board = Chess.Board.Default();
 				assert(!board.inCheck());
@@ -683,7 +685,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -694,7 +696,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
@@ -715,7 +716,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -747,7 +748,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -758,7 +759,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
@@ -779,7 +779,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -790,7 +790,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
@@ -811,7 +810,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -822,7 +821,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
@@ -843,7 +841,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -854,7 +852,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
@@ -875,7 +872,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -886,7 +883,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
@@ -907,7 +903,7 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
-				assert.lengthOf(moves, 4);
+				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
 
@@ -918,7 +914,6 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(p !== null);
 					assert(!board.inCheck());
 				}
 			});
