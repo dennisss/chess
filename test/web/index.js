@@ -3,7 +3,7 @@ var App = require(__src + '/app');
 var ss = require('selenium-standalone');
 
 var webdriverio = require('webdriverio');
-var options = { desiredCapabilities: { browserName: 'chrome' } };
+var options = { desiredCapabilities: { browserName: 'firefox' } };
 
 
 global.makeClient = function(done){
@@ -37,7 +37,7 @@ describe('Web', function(){
 
 				ss.start({
 					spawnOptions: {
-						stdio: 'ignore'
+						stdio: 'inherit'
 					}
 				}, function(err, c){
 					child = c;
@@ -56,8 +56,8 @@ describe('Web', function(){
 			});
 		});
 
-		//require('./home');
-		//require('./game');
+		require('./home');
+		require('./game');
 
 	});
 
