@@ -375,7 +375,7 @@ describe('Chess', function(){
 					assert(b.isLegalMove(board, new Move(new Position(4, 3), new Position(3,3), Chess.Color.Black)));
 				});
 
-				it.only('a queen cannot move OVER another piece', function(){
+				it('a queen cannot move OVER another piece', function(){
 					var board = new Chess.Board();
 
 					var piece = new Chess.Piece(Chess.Type.Rook, Chess.Color.White, true);
