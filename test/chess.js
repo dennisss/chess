@@ -149,14 +149,14 @@ describe('Chess', function(){
 							var child = board.clone();
 							var err = child.apply(moves[i]);
 
-							assert.equal(err, null)
+							assert.equal(err, null);
 
 							var p = child.at(new Position(2, 0));
 
 							assert(p !== null);
 							assert.equal(p.type, moves[i].type & (~Chess.Type.Promotion));
 						}
-					})
+					});
 
 					it.skip('When a pawn reaches the other side,it is requested to be promoted', function(){
 
@@ -578,7 +578,13 @@ describe('Chess', function(){
 	});
 
 	describe('Move', function(){
-
+		// Not sure if needed: it('should have an origin, destination, color, and (optional) type', function(){});
+		describe('perform()', function(){
+			it.skip('move pieces to empty space and clear the previously occupied space', function(){});
+			it.skip('correctly replace pawn during promotion with the user-selected piece', function(){});
+			it.skip('removes the pawn passed by en passant', function(){});
+			it.skip('correctly moves king and rook in castling', function(){});
+		});
 	});
 
 	describe('Board', function(){
@@ -951,6 +957,11 @@ describe('Chess', function(){
 	});
 
 	describe('Game', function(){
-
+		it.skip('should have one player assigned to white, and one to black', function(){});
+		it.skip('should contain a board with pieces in the starting positions', function(){});
+		describe('toJSON()', function(){
+			it.skip('should return a valid JSON string', function(){});
+			it.skip('should contain the serialized board, as well as which player is which color.', function(){});
+		});
 	});
 });
