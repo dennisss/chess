@@ -265,7 +265,7 @@ describe('Chess', function(){
 
 				describe('Promotion', function() {
 
-					it('works', function(){
+					it('When a pawn reaches the other side,it is requested to be promoted', function(){
 						var board = new Chess.Board();
 
 						var piece = new Chess.Piece(Chess.Type.Pawn, Chess.Color.White, true);
@@ -294,12 +294,25 @@ describe('Chess', function(){
 						}
 					});
 
-					it.skip('When a pawn reaches the other side,it is requested to be promoted', function(){
+					it('Once promoted, the pawn no longer exists and has been replaced', function(){
+						var board = new Chess.Board();
 
-					});
+						var piece = new Chess.Piece(Chess.Type.Pawn, Chess.Color.White, true);
+						var pos = new Position(2, 1);
 
-					it.skip('Once promoted, the pawn no longer exists and has been replaced', function(){
+						board.at(pos, piece);
+						board.turn = Chess.Color.White;
 
+						var moves = board.getMoves(pos);
+
+						for(var i = 0; i < moves.length; i++){
+
+							var child = board.clone();
+							var err = child.apply(moves[i]);
+
+							var oldlocation = child.at(pos);
+							assert(oldlocation === null);
+						}
 					});
 				});
 			});
