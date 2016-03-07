@@ -1,4 +1,9 @@
 // Tests for all the server-side functions
+/*
+* SRS: 3.1.1.4.2, 3.1.1.4.3, 3.1.1.4.4, 3.1.1.4.5, 3.1.1.4.6,
+* 3.1.1.4.7, 3.1.1.4.8, 3.1.1.4.9, 3.1.1.4.12
+*
+* */
 
 var Client = require(__src + '/client'),
 	App = require(__src + '/app'),
@@ -194,14 +199,13 @@ describe('Server', function(){
 			game = new Chess.Game(yield client.call('challenge', { player_id: client2.socket.id }));
 		});
 
-
 		it('white player should start first', function(){
 			assert.equal(game.board.turn, Chess.Color.White);
 		});
 
 		it('challengee should move first', function(){
 			assert.equal(game.white_player.id, client2.socket.id);
-		})
+		});
 
 		it('should be able to make a move', function(done){
 
@@ -240,7 +244,6 @@ describe('Server', function(){
 
 		});
 
-
 		it('can agree to a draw', function(done){
 
 			// Listen for endgame
@@ -271,7 +274,7 @@ describe('Server', function(){
 			// Do the drawing
 			client.call('draw');
 
-		})
+		});
 
 	});
 
