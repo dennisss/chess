@@ -683,6 +683,8 @@ class Board {
 	 */
 	children() {
 
+		var currentlyInCheck = this.inCheck();
+
 		// Reduce possible states to valid states
 		var possible = this.possibleChildren();
 		var valid = [];
@@ -690,6 +692,9 @@ class Board {
 		for(var i = 0; i < possible.length; i++){
 
 			var child = possible[i];
+
+			if(currentlyInCheck && child.move.type === Type.Castling)
+				continue;
 
 			// You can not put yourself into check
 			if(!child.inCheck(this.turn)){
