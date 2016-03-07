@@ -30,8 +30,8 @@ class Position {
 				x = data.charCodeAt(0) - 'a'.charCodeAt(0);
 				y = 8 - parseInt(data.charAt(1));
 
-				console.log(x);
-				console.log(y);
+				//console.log(x);
+				//console.log(y);
 			}
 		}
 
