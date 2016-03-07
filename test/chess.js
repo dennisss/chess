@@ -909,7 +909,7 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 		});
@@ -927,7 +927,7 @@ describe('Chess', function(){
 				assert(!board.isEndGame());
 			});
 
-			it('detects a simple checkmate', function(){
+			it('detects a simple checkmate to ensure its on the right player', function(){
 
 				var board = new Chess.Board();
 				board.at(new Position(5, 3), new Chess.Piece(Chess.Type.King, Chess.Color.White));
