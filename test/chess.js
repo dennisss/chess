@@ -132,9 +132,44 @@ describe('Chess', function(){
 						assert(!board.isLegalMove(castling));
 					});
 
-					it.skip('Cannot castle if either piece has been moved at any point', function () {
+					it('Cannot castle if king has been moved at any point', function () {
 						// 2 ways to check this - if we keep track of all moves, we can check that they've never moved
 						// or we can just check that they're each in default locations
+						var board = Chess.Board.Default();
+
+						// Clear space for castling
+						board.at(new Position(1, 7), null);
+						board.at(new Position(2, 7), null);
+						board.at(new Position(3, 7), null);
+
+						var leftCastle = board.at(new Position(0, 7));
+						var king = board.at(new Position(4,7));
+
+						king.moved = true;
+
+						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
+
+						assert(!board.isLegalMove(castling));
+					});
+
+					it('Cannot castle if rook has been moved at any point', function () {
+						// 2 ways to check this - if we keep track of all moves, we can check that they've never moved
+						// or we can just check that they're each in default locations
+						var board = Chess.Board.Default();
+
+						// Clear space for castling
+						board.at(new Position(1, 7), null);
+						board.at(new Position(2, 7), null);
+						board.at(new Position(3, 7), null);
+
+						var leftCastle = board.at(new Position(0, 7));
+						var king = board.at(new Position(4,7));
+
+						leftCastle.moved = true;
+
+						var castling = new Move(new Position(4,7), new Position(2,7), Chess.Color.White, Chess.Type.Castling);
+
+						assert(!board.isLegalMove(castling));
 					});
 				});
 
@@ -158,20 +193,18 @@ describe('Chess', function(){
 						assert(board.isLegalMove(enPassant));
 
 						// Perform the move
-						assert.equal(board.apply(enPassant), null);
+						var err = board.apply(enPassant);
+						assert.equal(err, null);
 
 						// The adjacent pawn should be gone
 						assert(board.at(new Position(0, 4)) === null);
-
-						// The attacking pawn should have moved up/down
-						// TODO
 					});
 
 					it.skip('After capture, the attacking pawn moves normally (diagonally)', function(){
 
 					});
 
-					it.skip('After capture,the defending pawn is replaced with an empty square', function(){
+					it('After capture,the defending pawn is replaced with an empty square', function(){
 						var board = Chess.Board.Default();
 
 						// Place an attacking black pawn
@@ -182,6 +215,9 @@ describe('Chess', function(){
 
 						// Construct the move
 						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
+
+						// Perform the move
+						var child = board.apply(enPassant);
 
 						// The adjacent pawn should be gone
 						assert(board.at(new Position(0, 4)) === null);
