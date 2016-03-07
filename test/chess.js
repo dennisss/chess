@@ -274,12 +274,44 @@ describe('Chess', function(){
 
 			describe('Knights', function() {
 
-				it.skip('a knight can move from its default position', function(){
+				it('a knight can move from its default position', function(){
 					// does this refer to the face that a knight can move even if no pawns have moved?
+					var board = Chess.Board.Default();
+
+					// Test all four starting positions
+					var knight = board.grid[0][1];
+					assert(knight.isLegalMove(board, new Move(new Position(1,0), new Position(2,2), Chess.Color.Black)));
+					assert(knight.isLegalMove(board, new Move(new Position(1,0), new Position(0,2), Chess.Color.Black)));
+
+					knight = board.grid[0][6];
+					assert(knight.isLegalMove(board, new Move(new Position(6,0), new Position(5,2), Chess.Color.Black)));
+					assert(knight.isLegalMove(board, new Move(new Position(6,0), new Position(7,2), Chess.Color.Black)));
+
+					knight = board.grid[7][1];
+					assert(knight.isLegalMove(board, new Move(new Position(1,7), new Position(2,5), Chess.Color.Black)));
+					assert(knight.isLegalMove(board, new Move(new Position(1,7), new Position(0,5), Chess.Color.Black)));
+
+					knight = board.grid[7][6];
+					assert(knight.isLegalMove(board, new Move(new Position(6,7), new Position(5,5), Chess.Color.Black)));
+					assert(knight.isLegalMove(board, new Move(new Position(6,7), new Position(7,5), Chess.Color.Black)));
 				});
 
-				it.skip('a knight cannot move outside of the L shape', function(){
+				it('a knight cannot move outside of the L shape', function(){
+					var board = new Chess.Board();
 
+					// Place a knight in the middle of an empty board.
+					board.at(new Position(4, 3), new Chess.Piece(Chess.Type.Knight, Chess.Color.Black));
+					var knight = board.grid[3][4];
+
+					// Test all spaces adjacent to the knight
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(3, 2), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 2), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(5, 2), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(3, 3), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(5, 3), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(3, 4), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(4, 4), Chess.Color.Black)));
+					assert(!knight.isLegalMove(board, new Move(new Position(4, 3), new Position(5, 4), Chess.Color.Black)));
 				});
 
 				// a knight CAN move over other pieces.
