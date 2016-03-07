@@ -401,10 +401,9 @@ describe('Chess', function(){
 
 					var kingPos = new Position(4,7);
 					var king = board.at(kingPos);
-
 					assert(king.type === Chess.Type.King);
 
-					assert.lengthOf(king.getMoves(kingPos), 0);
+					assert.lengthOf(board.getMoves(kingPos), 0);
 				});
 
 				it('a king can move to any directly adjacent location', function(){
@@ -412,10 +411,8 @@ describe('Chess', function(){
 					var kingPos = new Position(4,3);
 
 					// Insert a king in the middle of the board
-					board.at(kingPos, new Chess.Piece(Chess.Type.King, Chess.Color.Black));
-
-					var king = board.at(kingPos);
-
+					board.at(kingPos, new Chess.Piece(Chess.Type.King, Chess.Color.White));
+					board.turn = Chess.Color.White;
 					// There should be exactly 8 adjacent spaces available
 					assert.lengthOf(board.getMoves(kingPos), 8);
 				});
