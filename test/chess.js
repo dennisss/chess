@@ -429,21 +429,17 @@ describe('Chess', function(){
 					board.turn = Chess.Color.White;
 
 					// Test white
-					console.log(board.at(new Position(1,7)));
 					assert(board.isLegalMove(new Move(new Position(1,7), new Position(2,5), Chess.Color.White)));
 					assert(board.isLegalMove(new Move(new Position(1,7), new Position(0,5), Chess.Color.White)));
 
-					console.log(board.at(new Position(6,7)));
 					assert(board.isLegalMove(new Move(new Position(6,7), new Position(5,5), Chess.Color.White)));
 					assert(board.isLegalMove(new Move(new Position(6,7), new Position(7,5), Chess.Color.White)));
 
 					board.turn = Chess.Color.Black;
 					// Test black
-					console.log(board.at(new Position(1,0)));
 					assert(board.isLegalMove(new Move(new Position(1,0), new Position(2,2), Chess.Color.Black)));
 					assert(board.isLegalMove(new Move(new Position(1,0), new Position(0,2), Chess.Color.Black)));
 
-					console.log(board.at(new Position(6, 0)));
 					assert(board.isLegalMove(new Move(new Position(6,0), new Position(5,2), Chess.Color.Black)));
 					assert(board.isLegalMove(new Move(new Position(6,0), new Position(7,2), Chess.Color.Black)));
 				});
