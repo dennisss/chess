@@ -22,7 +22,7 @@ global.endClient = function(client, done){
 describe('Web', function(){
 
 	require('./router');
-
+	require('./boardUi');
 	describe('Pages', function(){
 
 		// Spin up full server for automated testing
