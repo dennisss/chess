@@ -820,6 +820,67 @@ class Board {
 
 	}
 
+
+
+	print(moves){
+
+		var charMap = {};
+		charMap[Type.Rook] = 'R';
+		charMap[Type.Pawn] = 'P';
+		charMap[Type.King] = 'K';
+		charMap[Type.Knight] = 'N';
+		charMap[Type.Bishop] = 'B';
+		charMap[Type.Queen] = 'Q';
+
+
+		for(var i = 0; i < 8; i++){
+
+			var str = (8 - i) + " "
+			for(var j = 0; j < 8; j++){
+
+				var pos = new Position(j, i);
+				var p = this.grid[i][j];
+
+				var type = '-';
+				if(p !== null){
+					type = charMap[p.type];
+
+					if(p.color === Color.White){
+						type = require('colors').inverse(type);
+					}
+				}
+
+
+				var lmod = " ", rmod = " ";
+
+				_.map(moves, function(m){
+					if(pos.equals(m.from)){
+						lmod = '(';
+						rmod = ')';
+					}
+					else if(pos.equals(m.to)){
+						lmod = '|';
+						rmod = '|';
+					}
+
+				})
+
+				str += " " + lmod + type + rmod + " ";
+			}
+
+			console.log(str);
+		}
+
+		// Print letters
+		var str = "  ";
+		for(var i = 0; i < 8; i++){
+			str += '  ' + String.fromCharCode('a'.charCodeAt(0) + i) + '  ';
+		}
+		console.log(str);
+
+
+	}
+
 }
 
 

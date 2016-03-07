@@ -9,6 +9,7 @@ var Chess = require('../src/chess'),
 
 var Move = Chess.Move;
 
+
 describe('Chess', function(){
 
 	describe('Piece', function(){
@@ -685,6 +686,8 @@ describe('Chess', function(){
 
 				var moves = board.getMoves(kingpos);
 
+				assert(board.inCheck());
+
 				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
@@ -696,7 +699,7 @@ describe('Chess', function(){
 
 					var p = child.at(kingpos);
 
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
@@ -724,11 +727,7 @@ describe('Chess', function(){
 					var err = child.apply(moves[i]);
 
 					assert.equal(err, null);
-
-					var p = child.at(kingpos);
-
-					assert(p !== null);
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
@@ -746,20 +745,18 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
+				assert(board.inCheck());
+
 				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 6);
 
 				for(var i = 0; i < moves.length; i++){
-
 					var child = board.clone();
 					var err = child.apply(moves[i]);
 
 					assert.equal(err, null);
-
-					var p = child.at(kingpos);
-
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
@@ -777,6 +774,8 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
+				assert(board.inCheck());
+
 				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 6);
@@ -787,10 +786,7 @@ describe('Chess', function(){
 					var err = child.apply(moves[i]);
 
 					assert.equal(err, null);
-
-					var p = child.at(kingpos);
-
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
@@ -808,6 +804,8 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
+				assert(board.inCheck());
+
 				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 6);
@@ -818,10 +816,7 @@ describe('Chess', function(){
 					var err = child.apply(moves[i]);
 
 					assert.equal(err, null);
-
-					var p = child.at(kingpos);
-
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
@@ -839,6 +834,8 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
+				assert(board.inCheck());
+
 				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 6);
@@ -849,17 +846,14 @@ describe('Chess', function(){
 					var err = child.apply(moves[i]);
 
 					assert.equal(err, null);
-
-					var p = child.at(kingpos);
-
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
-			it('king is in check if castle is in its row', function(){
+			it('king is in check if rook is in its row', function(){
 				var board = new Chess.Board();
 
-				var piece = new Chess.Piece(Chess.Type.Castle, Chess.Color.White, true);
+				var piece = new Chess.Piece(Chess.Type.Rook, Chess.Color.White, true);
 				var piecepos = new Position(2, 1);
 
 				var king = new Chess.Piece(Chess.Type.King, Chess.Color.Black, true);
@@ -870,6 +864,8 @@ describe('Chess', function(){
 				board.at(kingpos, king);
 				board.turn = Chess.Color.Black;
 
+				assert(board.inCheck());
+
 				var moves = board.getMoves(kingpos);
 
 				assert.lengthOf(moves, 6);
@@ -882,15 +878,14 @@ describe('Chess', function(){
 					assert.equal(err, null);
 
 					var p = child.at(kingpos);
-
-					assert(!board.inCheck());
+					assert(!child.inCheck());
 				}
 			});
 
-			it('king is in check if castle is in its column', function(){
+			it('king is in check if rook is in its column', function(){
 				var board = new Chess.Board();
 
-				var piece = new Chess.Piece(Chess.Type.Castle, Chess.Color.White, true);
+				var piece = new Chess.Piece(Chess.Type.Rook, Chess.Color.White, true);
 				var piecepos = new Position(1, 2);
 
 				var king = new Chess.Piece(Chess.Type.King, Chess.Color.Black, true);

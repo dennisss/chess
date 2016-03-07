@@ -56,6 +56,12 @@ describe('/game', function(){
 		yield pause(600);
 		yield second.click('#challengeAccepted');
 
+		yield pause(600);
+
+		// Click the start game buttons
+		yield client.click('#yourTurnBtn');
+		yield second.click('#yourTurnBtn');
+
 	});
 
 	after(function(done){
