@@ -207,16 +207,6 @@ class RPC {
 		return id;
 	}
 
-
-	/**
-	 * Cancels a call
-	 */
-	cancel(id){
-
-
-	}
-
-
 	/**
 	 * For a server, attach a method that can be called.
 	 *

@@ -200,8 +200,28 @@ describe('Chess', function(){
 						assert(board.at(new Position(0, 4)) === null);
 					});
 
-					it.skip('After capture, the attacking pawn moves normally (diagonally)', function(){
+					it('After capture, the attacking pawn moves normally (diagonally)', function(){
+						var board = Chess.Board.Default();
 
+						// Place an attacking black pawn
+						var blkpawn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black)
+						board.at(new Position(1, 4), blkpawn);
+
+						// Move the White pawn up two spaces
+						board.apply(new Move(new Position(0, 6), new Position(0, 4), Chess.Color.White));
+
+						// The adjacent pawn should be in place (precondition)
+						assert(board.at(new Position(0, 4)) !== null);
+
+						// Construct the move
+						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
+						assert(board.isLegalMove(enPassant));
+
+						// Perform the move
+						var err = board.apply(enPassant);
+
+						// The adjacent pawn should be gone
+						assert(board.at(new Position(0, 5)) != null);
 					});
 
 					it('After capture,the defending pawn is replaced with an empty square', function(){
@@ -223,8 +243,23 @@ describe('Chess', function(){
 						assert(board.at(new Position(0, 4)) === null);
 					});
 
-					it.skip('Cannot occur if defending pawn has made ANY other move', function(){
+					it('Cannot occur if defending pawn has made ANY other move', function(){
+						var board = Chess.Board.Default();
 
+						// Place an attacking black pawn
+						var blkpawn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black);
+						board.at(new Position(1, 4), blkpawn);
+
+						// Move the White pawn up two spaces but one at a time
+						var whtpwn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.White);
+						board.at(new Position(0, 6), whtpwn);
+						board.apply(new Move(new Position(0, 6), new Position(0, 5), Chess.Color.White));
+						board.apply(new Move(new Position(3, 1), new Position(3, 1), Chess.Color.Black)); // irrelevent move
+						board.apply(new Move(new Position(0, 5), new Position(0, 4), Chess.Color.White));
+
+						// Construct the move
+						var enPassant = new Move(new Position(1, 4), new Position(0, 5), Chess.Color.Black, Chess.Type.EnPassant);
+						assert(!board.isLegalMove(enPassant));
 					});
 				});
 
