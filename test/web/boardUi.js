@@ -1,4 +1,67 @@
+var jsdom = require("jsdom");
+
+var BoardUi = require(__src + '/web/scripts/boardUi'),
+	Chess = require(__src + '/chess');
+
 describe('BoardUi', function(){
+
+	beforeEach(function(done){
+
+		jsdom.env({
+			html: '<div class="chessboard"></div>',
+			url: 'http://127.0.0.1/',
+			scripts: [
+				'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js',
+				'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'
+			],
+			done: function(err, window){
+				global.window = window;
+				global.document = window.document;
+				global.$ = window.$;
+				global.location = window.location;
+
+				done(err);
+			}
+		});
+
+	});
+
+	afterEach(function(done){
+		setTimeout(function(){
+			delete global.window;
+			delete global.document;
+			delete global.$;
+			delete global.location;
+			done();
+		}, 0);
+	});
+
+
+	it('works', function(){
+
+		var $el = $('.chessboard');
+
+		// This will many a bunch of rows and empty cell divs
+		var boardUi = new BoardUi($el);
+
+		var board = Chess.Board.Default();
+
+		// Initially draw the board as the white player
+		boardUi.start(board, Chess.Color.White);
+
+		// Run through moving a pawn
+		assert($('#b2').hasClass('moveable'));
+		$('#b2').trigger('click');
+		assert($('#b2').hasClass('moving'));
+
+		assert($('#b3').hasClass('placeable'));
+		assert($('#b4').hasClass('placeable'));
+
+
+		$('#b4').trigger('click');
+	})
+
+
 
 	describe('submitMove()', function(){
 

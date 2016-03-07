@@ -1,3 +1,5 @@
+'use strict';
+
 var Chess = require('../../chess'),
 	Position = require('../../position'),
 	EventEmitter = require('events');
