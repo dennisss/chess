@@ -70,7 +70,7 @@ function load(router){
 		var move = new Chess.Move(data);
 		$("#waitingTurn").modal("hide");
 		boardUi.processMove(move);
-		if(game.board.inCheck()) {
+		if(game.board.inCheck() && !game.board.isEndGame()) {
 			$("#checkWarning").modal("show");
 		}
 	});
