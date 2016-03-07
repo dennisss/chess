@@ -130,7 +130,9 @@ body{
 .chessboard .cell {
 	cursor: default;
 }
-
+.chessboard .cell.recent {
+	background-color: #DDD;
+}
 .chessboard .cell.moveable {
 	cursor: pointer;
 }

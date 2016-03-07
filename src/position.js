@@ -20,8 +20,19 @@ class Position {
 		// TODO: Validate that it is validate array and valid numbers
 		if(arguments.length == 1){ // Deserialize
 			var data = arguments[0];
-			x = data[0];
-			y = data[1];
+
+			if(data instanceof Array){
+				x = data[0];
+				y = data[1];
+			}
+			else if(typeof(data) === 'string'){ // Parse alphanumeric
+				data = data.toLowerCase();
+				x = data.charCodeAt(0) - 'a'.charCodeAt(0);
+				y = 8 - parseInt(data.charAt(1));
+
+				console.log(x);
+				console.log(y);
+			}
 		}
 
 		this.x = x;

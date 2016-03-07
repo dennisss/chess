@@ -73,61 +73,14 @@ class Piece {
 
 
 	/**
-	 * Simple clearance checking function for parallel, perpendicular, and diagonal moves.
+	 * Get all available moves for this piece based only on the rules of movement
 	 *
-	 * @private
-	 */
-	_isClear(board, start, stop){
-
-		// Get a normalized increment between pieces in the line path
-		var step = stop.sub(start);
-		if(step.x != 0)
-			step.x /= Math.abs(step.x);
-		if(step.y != 0)
-			step.y /= Math.abs(step.y);
-
-
-		start = start.add(step);
-		var i = 0; // Just in case there is invalid data, terminate instead of infinite looping
-		while(!start.equals(stop) && i++ <= 8){
-
-			if(board.at(start) !== null)
-				return false;
-
-			start = start.add(step);
-		}
-
-		return true;
-	};
-
-
-	/**
-	 * Determine if the given move is valid. Assumes the positions are valid
-	 *
-	 * @param {Board} board
-	 * @param {Move} move
-	 */
-	isLegalMove(board, move){
-
-		var possible = this.getMoves(board, move.from);
-
-		for(var i = 0; i < possible.length; i++){
-			if(possible[i].equals(move))
-				return true;
-		}
-
-		return false;
-	};
-
-
-	/**
-	 * Get the available moves for this piece
-	 *
+	 * @protected
 	 * @param {Board} board the game state
 	 * @param {Position} pos the i,j position on the grid of the piece
 	 * @return {Move[]}
 	 */
-	getMoves(board, pos){
+	getPossibleMoves(board, pos){
 
 		//assert(pos instanceof Position)
 
@@ -215,7 +168,6 @@ class Piece {
 
 
 			// Add castling moves
-			// TODO: Ensure castling move does not result in the player going into check
 			if(!this.moved){
 
 				var leftCastle = board.at(new Position(0, pos.y));
@@ -277,7 +229,7 @@ class Piece {
 			// Add normal single and double moves for pawns
 			var moveSpots = [];
 			if(!this.moved){ // Double
-				if(board.at(pos.add(0, dir)) === null){ // Only allow double jump if no piece directly ahead
+				if(!board.isOccupied(pos.add(0, dir))){ // Only allow double jump if no piece directly ahead
 					moveSpots.push(pos.add(0, 2*dir));
 				}
 			};
@@ -286,7 +238,7 @@ class Piece {
 				var spot = moveSpots[i];
 
 				// Only allow if empty
-				if(board.at(spot) !== null)
+				if(board.isOccupied(spot))
 					continue;
 
 				// Queening
@@ -346,6 +298,22 @@ class Piece {
 
 
 	};
+
+
+	// TODO: This is only ever used by the tests. Refactor the tests and remove this
+	getMoves(board, pos){
+		return board.getMoves(pos);
+	}
+
+	// TODO: Same as above
+	isPossibleMove(board, move){
+		var possible = this.getPossibleMoves(board, move.from);
+		for(var i = 0; i < possible.length; i++){
+			if(move.equals(possible[i]))
+				return true;
+		}
+		return false;
+	}
 
 
 
@@ -611,8 +579,44 @@ class Board {
 		return new Board(JSON.parse(JSON.stringify(this.toJSON())));
 	}
 
+
 	/**
-	 * Applys the move to the current board
+	 * Determine if the given move is valid. Assumes the positions are valid
+	 *
+	 * @param {Move} move
+	 */
+	isLegalMove(move){
+
+		var possible = this.getMoves(move.from);
+
+		for(var i = 0; i < possible.length; i++){
+			if(possible[i].equals(move))
+				return true;
+		}
+
+		return false;
+	};
+
+
+	/**
+	 * Perform the move on the current state
+	 *
+	 * @private
+	 */
+	evaluate(move, parent){
+		move.perform(this);
+
+		// Switch players
+		this.turn = (this.turn == Color.Black) ? Color.White : Color.Black;
+
+		// Update the graph
+		this.parent = parent;
+		this.move = move;
+	}
+
+
+	/**
+	 * Applys the move to the current board. Use this when actually doing a move in a game.
 	 *
 	 * @param {Move} move
 	 * @return {string} an error message if the apply failed
@@ -633,7 +637,7 @@ class Board {
 			return 'Can\' move someone else\'s peice';
 		}
 
-		if(!p.isLegalMove(this, move)){
+		if(!this.isLegalMove(move)){ // This will check that the movement is good and that no 'check' violations occur
 			return 'Not a legal move';
 		}
 
@@ -642,46 +646,68 @@ class Board {
 		old.parent = this.parent;
 		old.move = this.move;
 
-		move.perform(this);
-
-		// Switch players
-		this.turn = (this.turn == Color.Black) ? Color.White : Color.Black;
-
-
-		this.parent = old;
-		this.move = move;
+		this.evaluate(move, old);
 
 		return null;
 	}
 
+
 	/**
-	 * Get all possible child states of the current board
+	 * Get all possible child states (movement based)
 	 *
+	 * @private
 	 * @return {Board[]}
 	 */
-	children() {
+	possibleChildren(){
 
-		var moves = this.getMoves(this.turn);
+		var moves = this.getPossibleMoves(this.turn);
 
 		var childs = [];
 		for(var i = 0; i < moves.length; i++){
 			var c = this.clone();
-
-			// TODO: Apply does a redundant clone of the parent state
-			c.apply(moves[i]);
-			c.parent = this;
-			c.move = moves[i];
+			c.evaluate(moves[i], this);
 
 			childs.push(c);
 		}
 
 		return childs;
+
+
+	}
+
+	// TODO: Have children() cache itself
+	/**
+	 * Get all valid child states of the current board
+	 *
+	 * @return {Board[]}
+	 */
+	children() {
+
+		// Reduce possible states to valid states
+		var possible = this.possibleChildren();
+		var valid = [];
+
+		for(var i = 0; i < possible.length; i++){
+
+			var child = possible[i];
+
+			// You can not put yourself into check
+			if(!child.inCheck(this.turn)){
+				valid.push(child);
+			}
+		}
+
+		return valid;
 	}
 
 
 
+
+
 	/**
-	 * Determine if the current player is being checked (at the least)
+	 * Determine if the given player is in check (if an opponent move can capture their king)
+	 *
+	 * @param {Color} color the player for which to check (if ommited, uses the player who's turn it is)
 	 */
 	inCheck(color) {
 		if(arguments.length === 0)
@@ -690,7 +716,7 @@ class Board {
 		var opponent_color = color === Color.Black? Color.White : Color.Black;
 
 		// Get all available moves for the opponent
-		var opponent_moves = this.getMoves(opponent_color);
+		var opponent_moves = this.getPossibleMoves(opponent_color); // possible moves
 
 		// Determine if a king of the current player can be taken
 		for(var i = 0; i < opponent_moves.length; i++){
@@ -707,12 +733,35 @@ class Board {
 
 
 	/**
-	 * Get all available moves for the given player
+	 * Get all legal moves
 	 *
+	 * @param {Position} pos an optional filter on the starting postition of the move
+	 */
+	getMoves(pos){
+
+		// TODO: If pos is set, this is not a very efficient way to do this
+
+		var children = this.children();
+		var moves = [];
+
+		for(var i = 0; i < children.length; i++){
+			var c = children[i];
+			if(arguments.length == 0 || pos.equals(c.move.from))
+				moves.push(c.move);
+		}
+
+		return moves;
+	}
+
+
+	/**
+	 * Get all possible moves for the given player
+	 *
+	 * @protected
 	 * @param {number} color the color of the player (or null if moves for the current player should be found)
 	 * @return {Move[]}
 	 */
-	getMoves(color) {
+	getPossibleMoves(color) {
 
 		if(arguments.length == 0)
 			color = this.turn;
@@ -726,7 +775,7 @@ class Board {
 				var pc = this.at(pos);
 
 				if(pc !== null && pc.color === color){
-					var ms = pc.getMoves(this, pos);
+					var ms = pc.getPossibleMoves(this, pos);
 					for(var k = 0; k < ms.length; k++)
 						moves.push(ms[k]);
 				}
@@ -745,18 +794,26 @@ class Board {
 	 */
 	isEndGame(){
 
-		if(!this.inCheck())
+		if(this.getMoves().length == 0){
+			if(this.inCheck())
+				return true;
+			else
+				return false; // Stalemate?
+		}
+		else
 			return false;
 
-		// Check if any move by the current player will remove the check
-		var childs = this.children();
-		for(var i = 0; i < childs.length; i++){
-			if(!childs[i].inCheck(this.turn)){
-				return false;
-			}
-		}
 
-		return true;
+
+		// Check if any move by the current player will remove the check
+//		var childs = this.children();
+//		for(var i = 0; i < childs.length; i++){
+//			if(!childs[i].inCheck(this.turn)){
+//				return false;
+//			}
+//		}
+
+//		return true;
 	}
 
 	isDraw(){

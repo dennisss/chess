@@ -128,8 +128,7 @@ class BoardUi extends EventEmitter {
 				}
 
 
-				var piece = self.board.at(self.activePosition);
-				var possible = piece.getMoves(self.board, self.activePosition);
+				var possible = self.board.getMoves(self.activePosition);
 
 				// Get all the moves that can happen at this target position
 				var options = [];
@@ -185,9 +184,9 @@ class BoardUi extends EventEmitter {
 			}
 
 
+			self.board.apply(move);
+			self.updateState(); // Show move trace
 			self.animateMove(move, function(){
-				self.board.apply(move);
-
 				self.updateBoard();
 				self.updateState(UiState.Waiting);
 
@@ -274,17 +273,8 @@ class BoardUi extends EventEmitter {
 
 	updateState(s){
 
-		this.state = s;
-
-		/*wuz here
-		*
-		* 				if(this.state == UiState.Picking) {
-		 $("#waitingTurn").modal("hide");
-		 } else if(this.state == UiState.Waiting){
-		 $("#waitingTurn").modal("show");
-		 }
-		*
-		* */
+		if(arguments.length === 1)
+			this.state = s;
 
 		for(var i = 0; i < 8; i++){
 			for(var j = 0; j < 8; j++){
@@ -295,7 +285,7 @@ class BoardUi extends EventEmitter {
 				var peice = this.board.at(position);
 
 
-				var moveable = false, moving = false, placeable = false;
+				var moveable = false, moving = false, placeable = false, recent = false;;
 				if(this.state == UiState.Picking){
 					// Enable all moveable peices
 					moveable = peice !== null && peice.color === this.me;
@@ -307,9 +297,7 @@ class BoardUi extends EventEmitter {
 						moving = true;
 					else{
 
-						var activePeice = this.board.at(this.activePosition);
-
-						var options = activePeice.getMoves(this.board, this.activePosition);
+						var options = this.board.getMoves(this.activePosition);
 
 						var hasmove = false;
 						for(var k = 0; k < options.length; k++){
@@ -330,7 +318,11 @@ class BoardUi extends EventEmitter {
 				}
 
 
-				cell.toggleClass('moveable', moveable).toggleClass('moving', moving).toggleClass('placeable', placeable);
+				// See if this position was just used in a move
+				if(this.board.move && (position.equals(this.board.move.to) || position.equals(this.board.move.from)))
+				   recent = true;
+
+				cell.toggleClass('recent', recent).toggleClass('moveable', moveable).toggleClass('moving', moving).toggleClass('placeable', placeable);
 
 			}
 		}
@@ -379,10 +371,10 @@ class BoardUi extends EventEmitter {
 	 */
 	processMove(move){
 		var self = this;
+
+		this.board.apply(move);
+		this.updateState(); // Show move trace
 		this.animateMove(move, function(){
-
-			self.board.apply(move);
-
 			self.updateBoard();
 			self.updateState(UiState.Picking);
 		});
