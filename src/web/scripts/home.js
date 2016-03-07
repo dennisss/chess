@@ -28,6 +28,8 @@ function load(router){
 			$('#userCount').html('');
 		}
 	});
+
+	client.socket.emit('ready');
 }
 
 function enter(state){

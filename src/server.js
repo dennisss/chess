@@ -125,9 +125,7 @@ class Server {
 		io.on('connection', function(socket){
 
 			self.nusers++;
-			setTimeout(function(){
-				self._stats();
-			}, 500);
+			self._stats();
 
 			// Because socket.io overwrites the room array before calling disconnect
 			socket.real_rooms = socket.rooms;
@@ -144,6 +142,9 @@ class Server {
 				});
 			});
 
+			socket.on('ready', function(){
+				self._stats(socket);
+			})
 
 			socket.on('disconnect', function(){
 				self.nusers--;
@@ -669,10 +670,14 @@ class Server {
 		});
 	}
 
-	_stats(){
+	_stats(socket){
 		var ngames = _.keys(this.games).length / 2;
 		var nusers = this.nusers || 0;
-		this.io.emit('stats', {users: nusers, games: ngames});
+		var data = {users: nusers, games: ngames};
+		if(socket)
+			socket.emit('stats', data);
+		else
+			this.io.emit('stats', data);
 	}
 
 
