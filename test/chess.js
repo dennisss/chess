@@ -325,13 +325,13 @@ describe('Chess', function(){
 
 					// Test all the white pawns
 					for (var i = 0; i < 8; i++) {
-						assert(board.isLegalMove(new Move(new Position(i, 6), new Position(i, 4))));
+						assert(board.isLegalMove(new Move(new Position(i, 6), new Position(i, 4), Chess.Color.White)));
 					}
 
 					// Change the turn to black, then test all the black pawns
 					board.turn = Chess.Color.Black;
 					for (i = 0; i < 8; i++) {
-						assert(board.isLegalMove(new Move(new Position(i, 1), new Position(i, 3))));
+						assert(board.isLegalMove(new Move(new Position(i, 1), new Position(i, 3), Chess.Color.Black)));
 					}
 				});
 
@@ -374,13 +374,13 @@ describe('Chess', function(){
 					board.apply(new Move(new Position(1, 1), new Position(1, 3), Chess.Color.Black));
 
 					// Test that the white pawn can't move backwards, and that it can still move forward
-					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,5))));
-					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3))));
+					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,5), Chess.Color.White)));
+					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3), Chess.Color.White)));
 
 					board.turn = Chess.Color.Black;
 					// Test that the black pawn can't move backwards, and that it can still move forward
-					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,2))));
-					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4))));
+					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4), Chess.Color.Black)));
 
 				});
 
@@ -392,13 +392,13 @@ describe('Chess', function(){
 					board.apply(new Move(new Position(1, 1), new Position(1, 3), Chess.Color.Black));
 
 					// Test that the white pawn only move forward one space normally
-					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,2))));
-					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3))));
+					assert(!board.isLegalMove(new Move(new Position(0,4), new Position(0,2), Chess.Color.White)));
+					assert(board.isLegalMove(new Move(new Position(0,4), new Position(0,3), Chess.Color.White)));
 
 					board.turn = Chess.Color.Black;
 					// Test that the black pawn can only move forward once space normally
-					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,5))));
-					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4))));
+					assert(!board.isLegalMove(new Move(new Position(1,3), new Position(1,5), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,3), new Position(1,4), Chess.Color.Black)));
 				});
 
 				it('a pawn cannot move OVER another piece', function(){
@@ -426,20 +426,26 @@ describe('Chess', function(){
 
 					// Test all four starting positions
 
-					// Test white
-					assert(board.isLegalMove(new Move(new Position(1,7), new Position(2,5))));
-					assert(board.isLegalMove(new Move(new Position(1,7), new Position(0,5))));
+					board.turn = Chess.Color.White;
 
-					assert(board.isLegalMove(new Move(new Position(6,7), new Position(5,5))));
-					assert(board.isLegalMove(new Move(new Position(6,7), new Position(7,5))));
+					// Test white
+					console.log(board.at(new Position(1,7)));
+					assert(board.isLegalMove(new Move(new Position(1,7), new Position(2,5), Chess.Color.White)));
+					assert(board.isLegalMove(new Move(new Position(1,7), new Position(0,5), Chess.Color.White)));
+
+					console.log(board.at(new Position(6,7)));
+					assert(board.isLegalMove(new Move(new Position(6,7), new Position(5,5), Chess.Color.White)));
+					assert(board.isLegalMove(new Move(new Position(6,7), new Position(7,5), Chess.Color.White)));
 
 					board.turn = Chess.Color.Black;
 					// Test black
-					assert(board.isLegalMove(new Move(new Position(1,0), new Position(2,2))));
-					assert(board.isLegalMove(new Move(new Position(1,0), new Position(0,2))));
+					console.log(board.at(new Position(1,0)));
+					assert(board.isLegalMove(new Move(new Position(1,0), new Position(2,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(1,0), new Position(0,2), Chess.Color.Black)));
 
-					assert(board.isLegalMove(new Move(new Position(6,0), new Position(5,2))));
-					assert(board.isLegalMove(new Move(new Position(6,0), new Position(7,2))));
+					console.log(board.at(new Position(6, 0)));
+					assert(board.isLegalMove(new Move(new Position(6,0), new Position(5,2), Chess.Color.Black)));
+					assert(board.isLegalMove(new Move(new Position(6,0), new Position(7,2), Chess.Color.Black)));
 				});
 
 				it('a knight cannot move outside of the L shape', function(){
@@ -722,10 +728,114 @@ describe('Chess', function(){
 	describe('Move', function(){
 		// Not sure if needed: it('should have an origin, destination, color, and (optional) type', function(){});
 		describe('perform()', function(){
-			it.skip('move pieces to empty space and clear the previously occupied space', function(){});
-			it.skip('correctly replace pawn during promotion with the user-selected piece', function(){});
-			it.skip('removes the pawn passed by en passant', function(){});
-			it.skip('correctly moves king and rook in castling', function(){});
+
+			it('move pieces to empty space clears the previously occupied space', function(){
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+
+				board.at(bishoppos, bishop);
+				board.turn = Chess.Color.Black;
+
+				var newpos = new Position(3,3);
+				var move = new Move(bishoppos, newpos, Chess.Color.Black);
+
+				var child = board.clone();
+				var err = move.perform(child);
+
+				assert(child.at(bishoppos) === null);
+			});
+
+			it('move pieces to empty space places piece in new space', function(){
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+
+				board.at(bishoppos, bishop);
+				board.turn = Chess.Color.Black;
+
+				var b = board.grid[3][4];
+
+				var newpos = new Position(3,3);
+				var move = new Move(bishoppos, newpos, Chess.Color.Black);
+
+				var child = board.clone();
+				var err = move.perform(child);
+
+				assert(child.at(newpos) !== null);
+			});
+		});
+
+		describe('equals()', function() {
+
+			it('works when are equal', function(){
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+
+				board.at(bishoppos, bishop);
+				board.turn = Chess.Color.Black;
+
+				var newpos = new Position(3,3);
+				var move = new Move(bishoppos, newpos, Chess.Color.Black);
+				var move2 = new Move(bishoppos, newpos, Chess.Color.Black);
+
+				assert(move.equals(move2));
+			});
+
+			it('doesn\'t work when are different color', function(){
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+
+				board.at(bishoppos, bishop);
+				board.turn = Chess.Color.Black;
+
+				var newpos = new Position(3,3);
+				var move = new Move(bishoppos, newpos, Chess.Color.Black);
+				var move2 = new Move(bishoppos, newpos, Chess.Color.White);
+
+				assert(!move.equals(move2));
+			});
+
+			it('doesn\'t work when are different destination', function(){
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+
+				board.at(bishoppos, bishop);
+				board.turn = Chess.Color.Black;
+
+				var newpos = new Position(3,3);
+				var newpos2 = new Position(4,4);
+				var move = new Move(bishoppos, newpos, Chess.Color.Black);
+				var move2 = new Move(bishoppos, newpos2, Chess.Color.Black);
+
+				assert(!move.equals(move2));
+			});
+
+			it('doesn\'t work when are different source', function(){
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+				var bishop2 = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos2 = new Position(5, 4);
+
+				board.at(bishoppos, bishop);
+				board.turn = Chess.Color.Black;
+
+				var newpos = new Position(6, 5);
+				var move = new Move(bishoppos, newpos, Chess.Color.Black);
+				var move2 = new Move(bishoppos2, newpos, Chess.Color.Black);
+
+				assert(!move.equals(move2));
+			});
 		});
 	});
 
