@@ -106,7 +106,10 @@ function enter(state){
 
 	if (!(me == game.board.turn)) {
 		$("#waitingTurn").modal("show");
+		$(".playerOrder").html("second");
+		$("#startGame").modal("show");
 	} else {
+		$(".playerOrder").html("first");
 		$("#startGame").modal("show");
 	}
 
