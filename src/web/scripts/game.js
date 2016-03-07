@@ -73,7 +73,7 @@ function load(router){
 		if(game.board.inCheck()) {
 			$("#checkWarning").modal("show");
 		}
-	})
+	});
 
 }
 
@@ -104,7 +104,7 @@ function enter(state){
 		opName = game.white_player.name;
 	}
 
-	if (!(me == game.board.turn)) {
+	if (me !== game.board.turn) {
 		$("#waitingTurn").modal("show");
 		$(".playerOrder").html("second");
 		$("#startGame").modal("show");

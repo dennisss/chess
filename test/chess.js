@@ -178,10 +178,12 @@ describe('Chess', function(){
 
 					var board = Chess.Board.Default();
 
+					board.turn = Chess.Color.Black;
 					for (var i = 0; i < 8; i++) {
 						assert(board.isLegalMove(new Move(new Position(i, 1), new Position(i, 3))));
 					}
 
+					board.turn = Chess.Color.White;
 					for (i = 0; i < 8; i++) {
 						assert(board.isLegalMove(new Move(new Position(i, 6), new Position(i, 4))));
 					}

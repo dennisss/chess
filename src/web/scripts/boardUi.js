@@ -66,7 +66,8 @@ class BoardUi extends EventEmitter {
 
 		var rowEls = [];
 
-		for(var i = 0; i < 8; i++){
+		var i;
+		for(i = 0; i < 8; i++){
 
 			var row = [];
 			var rowEl = $('<div class="row"></div>');
@@ -85,7 +86,7 @@ class BoardUi extends EventEmitter {
 			rowEls.push(rowEl);
 		}
 
-		for(var i = 0; i < rowEls.length; i++){
+		for(i = 0; i < rowEls.length; i++){
 			$el.append(rowEls[i]);
 		}
 
@@ -137,8 +138,8 @@ class BoardUi extends EventEmitter {
 						options.push(possible[i]);
 				}
 
-				if(options.length == 0){
-					alert('Failed to move here, please try again')
+				if(options.length === 0){
+					alert('Failed to move here, please try again');
 					self.updateState(UiState.Picking);
 					return;
 				}
@@ -178,7 +179,7 @@ class BoardUi extends EventEmitter {
 		this.emit('move', move, function(err){
 
 			if(err){
-				alert(err)
+				alert(err);
 				self.updateState(UiState.Picking);
 				return;
 			}
@@ -213,7 +214,7 @@ class BoardUi extends EventEmitter {
 			this.updateState(UiState.Waiting);
 			$("#waitingTurn").modal("show");
 		}
-	};
+	}
 
 	/**
 	 * Sets which color player is using this board
@@ -238,7 +239,7 @@ class BoardUi extends EventEmitter {
 
 				// a,b,c,d, goes along x to the right
 				// 8,7,6,5
-				var col = String.fromCharCode('a'.charCodeAt(0) + pos.x)
+				var col = String.fromCharCode('a'.charCodeAt(0) + pos.x);
 				var row = '' + (8 - pos.y);
 				this.cells[i][j][0].id = col + row;
 			}
@@ -285,7 +286,7 @@ class BoardUi extends EventEmitter {
 				var peice = this.board.at(position);
 
 
-				var moveable = false, moving = false, placeable = false, recent = false;;
+				var moveable = false, moving = false, placeable = false, recent = false;
 				if(this.state == UiState.Picking){
 					// Enable all moveable peices
 					moveable = peice !== null && peice.color === this.me;
@@ -378,7 +379,7 @@ class BoardUi extends EventEmitter {
 			self.updateBoard();
 			self.updateState(UiState.Picking);
 		});
-	};
+	}
 
 
 
@@ -396,7 +397,7 @@ class BoardUi extends EventEmitter {
 
 
 
-};
+}
 
 
 module.exports = BoardUi;

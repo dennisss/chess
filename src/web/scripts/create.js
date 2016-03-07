@@ -1,3 +1,9 @@
+/**
+ * Create Room Page
+ * @module Pages/Create
+ */
+
+
 var page;
 
 var emailMessageLink = "mailto:?subject=Come Play Friendly Chess with Me!&body=Come play chess with me on Friendly Chess! Just go to ";
@@ -35,7 +41,7 @@ function load(router){
 
 
 	$("#goRoom").click(function() {
-		router.go('room', {room: roomName})
+		router.go('room', {room: roomName});
 	});
 
 	document.getElementById("copyRoomUrl").addEventListener("click", function() {
@@ -82,7 +88,7 @@ module.exports = {
 
 function copyToClipboard(elem) {
 	// create hidden text element, if it doesn't already exist
-	var targetId = "_hiddenCopyText_";
+	var target, targetId = "_hiddenCopyText_";
 	var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
 	var origSelectionStart, origSelectionEnd;
 	if (isInput) {
@@ -94,7 +100,7 @@ function copyToClipboard(elem) {
 		// must use a temporary form element for the selection and copy
 		target = document.getElementById(targetId);
 		if (!target) {
-			var target = document.createElement("textarea");
+			target = document.createElement("textarea");
 			target.style.position = "absolute";
 			target.style.left = "-9999px";
 			target.style.top = "0";

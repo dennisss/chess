@@ -28,13 +28,13 @@ class Client extends RPC {
 
 		socket.on('connect_error', function(err){
 			console.log(err);
-		})
+		});
 
 		super(socket);
 	}
 
 
 
-};
+}
 
 module.exports = Client;

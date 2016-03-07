@@ -60,7 +60,7 @@ class Piece {
 		this.type = type;
 		this.color = color;
 		this.moved = moved;
-	};
+	}
 
 	/**
 	 * A single byte representation of the piece (0b0MCC TTTT)
@@ -69,7 +69,7 @@ class Piece {
 	 */
 	code(){
 		return this.type | (this.color << 4) | ((this.moved ? 1 : 0) << 6);
-	};
+	}
 
 
 	/**
@@ -145,12 +145,12 @@ class Piece {
 		function addNormalSpots(spots){
 			_.map(spots, function(to){
 				addMove(to);
-			})
+			});
 		}
 
 		// Add position changes
 		function addNormalDeltas(deltas){
-			addNormalSpots(_.map(deltas, function(d){ return pos.add(d) }));
+			addNormalSpots(_.map(deltas, function(d){ return pos.add(d); }));
 		}
 
 
@@ -232,7 +232,7 @@ class Piece {
 				if(!board.isOccupied(pos.add(0, dir))){ // Only allow double jump if no piece directly ahead
 					moveSpots.push(pos.add(0, 2*dir));
 				}
-			};
+			}
 			moveSpots.push(pos.add(0, dir)); // Single
 			for(var i = 0; i < moveSpots.length; i++){
 				var spot = moveSpots[i];
@@ -264,7 +264,7 @@ class Piece {
 				if(board.parent){
 
 					var adj = new Position(spot.x, pos.y);
-					var adjP = board.at(adj)
+					var adjP = board.at(adj);
 
 					if(adjP !== null && adjP.type === Type.Pawn && adjP.color !== this.color){
 
@@ -297,7 +297,7 @@ class Piece {
 		return moves;
 
 
-	};
+	}
 
 
 	// TODO: This is only ever used by the tests. Refactor the tests and remove this
@@ -324,10 +324,10 @@ class Piece {
 	 */
 	toJSON(){
 		return this.code();
-	};
+	}
 
 
-};
+}
 
 
 /**
@@ -425,14 +425,14 @@ class Move {
 
 
 	equals(other){
-		return this.type === other.type
-			&& this.from.equals(other.from)
-			&& this.to.equals(other.to);
+		return this.type === other.type &&
+			this.from.equals(other.from) &&
+			this.to.equals(other.to);
 	}
 
 
 
-};
+}
 
 
 
@@ -486,7 +486,7 @@ class Board {
 		}
 
 		this.turn = -1;
-	};
+	}
 
 	/**
 	 * Create the default start of game board
@@ -511,7 +511,7 @@ class Board {
 		b.turn = Color.White;
 
 		return b;
-	};
+	}
 
 
 	/**
@@ -534,7 +534,7 @@ class Board {
 			grid: this.grid,
 			turn: this.turn
 		};
-	};
+	}
 
 
 	/**
@@ -569,7 +569,7 @@ class Board {
 		}
 
 		return this.grid[pos.y][pos.x];
-	};
+	}
 
 
 	/**
@@ -595,7 +595,7 @@ class Board {
 		}
 
 		return false;
-	};
+	}
 
 
 	/**
@@ -729,7 +729,7 @@ class Board {
 		}
 
 		return false;
-	};
+	}
 
 
 	/**
@@ -746,7 +746,7 @@ class Board {
 
 		for(var i = 0; i < children.length; i++){
 			var c = children[i];
-			if(arguments.length == 0 || pos.equals(c.move.from))
+			if(arguments.length === 0 || pos.equals(c.move.from))
 				moves.push(c.move);
 		}
 
@@ -763,7 +763,7 @@ class Board {
 	 */
 	getPossibleMoves(color) {
 
-		if(arguments.length == 0)
+		if(arguments.length === 0)
 			color = this.turn;
 
 
@@ -783,7 +783,7 @@ class Board {
 		}
 
 		return moves;
-	};
+	}
 
 
 
@@ -794,7 +794,7 @@ class Board {
 	 */
 	isEndGame(){
 
-		if(this.getMoves().length == 0){
+		if(this.getMoves().length === 0){
 			if(this.inCheck())
 				return true;
 			else
@@ -835,7 +835,7 @@ class Board {
 
 		for(var i = 0; i < 8; i++){
 
-			var str = (8 - i) + " "
+			var str = (8 - i) + " ";
 			for(var j = 0; j < 8; j++){
 
 				var pos = new Position(j, i);
@@ -863,7 +863,7 @@ class Board {
 						rmod = '|';
 					}
 
-				})
+				});
 
 				str += " " + lmod + type + rmod + " ";
 			}
@@ -917,7 +917,7 @@ class Game {
 		this.board = Board.Default();
 		this.white_player = white_player;
 		this.black_player = black_player;
-	};
+	}
 
 
 
@@ -927,10 +927,10 @@ class Game {
 			white_player: this.white_player,
 			black_player: this.black_player
 		};
-	};
+	}
 
 
-};
+}
 
 
 

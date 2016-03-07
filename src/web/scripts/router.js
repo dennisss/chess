@@ -11,7 +11,7 @@ function Router(options){
 
 		var arr = path.split('/');
 		for(var i = 0; i < arr.length; i++){
-			if(arr[i].trim().length == 0){
+			if(arr[i].trim().length === 0){
 				arr.splice(i, 1);
 				i--;
 			}
@@ -23,7 +23,7 @@ function Router(options){
 	// i.e  parsepath('/r/hello' '/r/:room') should return { room: 'hello' }
 	function parsepath(path, pattern){
 
-		var path = splitpath(path), pattern = splitpath(pattern);
+		path = splitpath(path), pattern = splitpath(pattern);
 
 		if(path.length != pattern.length)
 			return null;
@@ -126,7 +126,7 @@ function Router(options){
 	// TODO: Most browsers will call this onload
 
 	function popstate(){
-		var path = location.pathname
+		var path = location.pathname;
 		gotoPath(path);
 	}
 
@@ -153,11 +153,11 @@ function Router(options){
 		setTimeout(function() {
 			$(window).on('popstate', popstate);
 		}, 0);
-	};
+	}
 
 
 	if(document.readyState == 'complete')
-		load()
+		load();
 	else
 		$(window).on('load', load);
 
