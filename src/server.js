@@ -3,6 +3,7 @@
 'use strict';
 
 var SocketIO = require('socket.io'),
+	_ = require('underscore'),
 	User = require('./user'),
 	RPC = require('./rpc'),
 	Chess = require('./chess'),
@@ -33,7 +34,7 @@ var State = {
 	Searching: 3,
 	/** Playing a game */
 	InGame: 4
-}
+};
 
 
 
@@ -165,35 +166,9 @@ class Server {
 		});
 
 
-	};
+	}
 
 
-	/**
-	 * Get ready to do a state transition by leaving the current state
-	 */
-	/*
-	transition(){
-
-		var current = socket.state;
-
-		if(current == State.Ready){
-			// Leave room
-		}
-		else if(current == State.InGame){
-			// Complete game
-		}
-		else if(current == State.Challenging){
-
-
-		}
-
-
-
-
-
-
-	};
-	*/
 
 	/**
 	 * Join a room
@@ -249,7 +224,7 @@ class Server {
 		callback(null, list);
 
 
-	};
+	}
 
 	/**
 	 * Leave the room you are in.
@@ -259,7 +234,7 @@ class Server {
 	leave(socket, data, callback){
 		this._leaveAll(socket);
 		callback(null);
-	};
+	}
 
 
 	/**
@@ -270,6 +245,8 @@ class Server {
 	 * @param {Server~gameCallback} callback
 	 */
 	challenge(socket, data, callback){
+
+		var self = this;
 
 		// Get the socket associated with the person being requested
 		var other_id = data.player_id;
@@ -289,7 +266,7 @@ class Server {
 
 			// Get a list of sockets in the room
 			var clients = this.io.sockets.adapter.rooms[room];
-			var self = this;
+
 			var list = _.map(_.keys(clients), function(id){ return self.io.sockets.connected[id]; });
 
 
@@ -311,14 +288,14 @@ class Server {
 			else{ // Wait to be matched
 				socket.callmeback = function(){
 					callback(null, self.games[socket.id]);
-				}
+				};
 			}
 
 			return;
 		}
 
 
-		var other = this.io.sockets.connected[other_id]
+		var other = this.io.sockets.connected[other_id];
 
 		if(other === undefined){
 			callback({text: 'Can not find the user you want to challenge'});
@@ -354,8 +331,6 @@ class Server {
 
 		}, 20 * 1000);
 
-
-		var self = this;
 		socket.callmeback = function(answer){
 			clearTimeout(time);
 
@@ -365,9 +340,9 @@ class Server {
 			else{ // Refused
 				callback({ reason: 'refused' }, null);
 			}
-		}
+		};
 
-	};
+	}
 
 	/**
 	 * Accepting a challenge after receiving a 'challenged' event
@@ -397,7 +372,7 @@ class Server {
 
 		// Let the challengee know
 		callback(null, game);
-	};
+	}
 
 	/**
 	 * Start a game between two sockets
@@ -440,7 +415,7 @@ class Server {
 		other.callmeback(false);
 
 		callback(null);
-	};
+	}
 
 
 	/**
@@ -489,7 +464,7 @@ class Server {
 		if(game.board.isEndGame()){
 			this._finishgame(socket, 'win', 'checkmate');
 		}
-	};
+	}
 
 
 	/**
@@ -505,7 +480,7 @@ class Server {
 		this._finishgame(socket, 'lose', 'forfeit');
 
 		callback(null);
-	};
+	}
 
 	/**
 	 * Request to draw the game
@@ -534,9 +509,9 @@ class Server {
 
 		socket.callmeback = function(accepted){
 			callback(null, accepted);
-		}
+		};
 
-	};
+	}
 
 	/**
 	 * Respond to a drawing notification
@@ -564,7 +539,7 @@ class Server {
 		if(data.answer){
 			this._finishgame(socket, 'draw');
 		}
-	};
+	}
 
 	/**
 	 * Request to undo a move
@@ -574,7 +549,7 @@ class Server {
 		// TODO: Only allow if the current user just went
 
 		// TODO: Ask the other user for permission
-	};
+	}
 
 	/**
 	 * Respond to a request to undo a move
@@ -585,7 +560,7 @@ class Server {
 	undo_respond(socket, data, callback){
 
 
-	};
+	}
 
 
 
@@ -629,7 +604,7 @@ class Server {
 		this.io.to(other.id).emit('endgame', {result: other_result, reason: reason});
 
 		this._stats();
-	};
+	}
 
 
 
@@ -646,7 +621,7 @@ class Server {
 		}
 
 		return null;
-	};
+	}
 
 	/**
 	 * Get users in a room
@@ -658,10 +633,10 @@ class Server {
 
 		var self = this;
 		return _.map(_.keys(clients), function(id){
-			var c = self.io.sockets.connected[id]
+			var c = self.io.sockets.connected[id];
 			return c.profile;
 		});
-	};
+	}
 
 	/**
 	 * Send a list of users to everyone in the room
@@ -672,7 +647,7 @@ class Server {
 		var list = this._userlist(room);
 		this.io.to(room).emit('userlist', list);
 		return list;
-	};
+	}
 
 	/**
 	 * Take the socket out of all rooms that it is in

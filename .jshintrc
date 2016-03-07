@@ -1,4 +1,6 @@
 {
 	"esnext": true,
-	"node": true
+	"node": true,
+	"maxcomplexity": 3,
+	"maxdepth": 3
 }

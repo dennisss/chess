@@ -33,11 +33,11 @@ class RPC {
 			// All the sent or received calls
 			this.jobs = {};
 
-			this.id = 0
+			this.id = 0;
 
 			socket.on('call_result', function(data){ self._oncall_result(data); });
 		}
-	};
+	}
 
 
 	// When the server gets a call from a client
@@ -83,7 +83,7 @@ class RPC {
 			self.socket.emit('call_result', {
 				id: id,
 				progress: data
-			})
+			});
 
 		}
 
@@ -113,7 +113,7 @@ class RPC {
 		//this.methods.hasOwnProperty()
 
 
-	};
+	}
 
 
 	// When a client gets a result from a server
@@ -156,7 +156,7 @@ class RPC {
 		else{
 			console.warn('RPC: Could not parse result: ' + JSON.stringify(data));
 		}
-	};
+	}
 
 
 
@@ -205,7 +205,7 @@ class RPC {
 			return p;
 
 		return id;
-	};
+	}
 
 
 	/**
@@ -214,7 +214,7 @@ class RPC {
 	cancel(id){
 
 
-	};
+	}
 
 
 	/**
@@ -223,9 +223,9 @@ class RPC {
 	 */
 	register(method, func){
 		this.methods[method] = func;
-	};
+	}
 
-};
+}
 
 
 module.exports = RPC;

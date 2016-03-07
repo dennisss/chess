@@ -158,7 +158,7 @@ function load(router){
 			if(err) {
 				console.log(err);
 				if (err.reason == "refused") {
-					$("#playerDeniedReason").html("Your request to play Friendly Chess with " + opName + " was denied.")
+					$("#playerDeniedReason").html("Your request to play Friendly Chess with " + opName + " was denied.");
 					$("#playerRequestDenied").modal("show");
 				} else if (err.reason == "timeout") {
 					$("#playerRequestTO").modal("show");

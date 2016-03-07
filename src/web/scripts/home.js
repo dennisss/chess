@@ -7,13 +7,13 @@ function load(router){
 
 	$('#btnCreateGame').on('click', function(){
 		router.go('create');
-	})
+	});
 
 	$('#btnJoinGame').on('click', function(){
 		router.go('room', {room: 'lobby'});
 	});
 
-	var VERSION = '0.90'
+	var VERSION = '0.90';
 	$('#versionText').html('&#169;' + (new Date().getFullYear()) + ' Friendly Games Inc.  Version <a href="/codes" id="versionLink">' + VERSION + '</a>');
 
 
@@ -27,7 +27,7 @@ function load(router){
 		else{
 			$('#userCount').html('');
 		}
-	})
+	});
 }
 
 function enter(state){

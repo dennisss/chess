@@ -37,7 +37,7 @@ class Position {
 
 		this.x = x;
 		this.y = y;
-	};
+	}
 
 
 	/**
@@ -51,7 +51,7 @@ class Position {
 		}
 
 		return new Position(this.x + p.x, this.y + p.y);
-	};
+	}
 
 	/**
 	 * Subtract another position from the current
@@ -60,7 +60,7 @@ class Position {
 	 */
 	sub(p){
 		return this.add(new Position(-p.x, -p.y));
-	};
+	}
 
 	/**
 	 * Get the Euclidean distance from the origin
@@ -69,7 +69,7 @@ class Position {
 	 */
 	norm(){
 		return Math.sqrt(this.x*this.x, this.y*this.y);
-	};
+	}
 
 
 	/**
@@ -80,7 +80,7 @@ class Position {
 	 */
 	equals(other){
 		return this.x == other.x && this.y == other.y;
-	};
+	}
 
 
 
@@ -99,7 +99,7 @@ class Position {
 
 	toJSON(){
 		return [this.x, this.y];
-	};
+	}
 
 
 }

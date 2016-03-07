@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('underscore');
+
 /**
  * Data associated with a person connected to the server
  *
@@ -12,9 +14,9 @@ class User {
 
 	constructor(data){
 		_.extend(this, data);
-	};
+	}
 
 
-};
+}
 
 module.exports = User;
