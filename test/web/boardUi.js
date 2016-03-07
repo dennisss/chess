@@ -36,8 +36,7 @@ describe('BoardUi', function(){
 		}, 0);
 	});
 
-
-	it('works', function(){
+	it('Board UI works for white player', function(){
 
 		var $el = $('.chessboard');
 
@@ -59,102 +58,146 @@ describe('BoardUi', function(){
 
 
 		$('#b4').trigger('click');
-	})
-
-
-
-	describe('submitMove()', function(){
-
-		it.skip('state gets updated to waiting after move is submitted', function () {
-
-		});
 	});
 
-	describe('start()', function(){
+	it('Board UI works for black player', function(){
 
-		it.skip('player is updated', function () {
+		var $el = $('.chessboard');
 
-		});
+		// This will many a bunch of rows and empty cell divs
+		var boardUi = new BoardUi($el);
 
-		it.skip('player state is updated to waiting', function () {
+		var board = Chess.Board.Default();
 
-		});
+		// Initially draw the board as the white player
+		board.turn = Chess.Color.Black;
+		boardUi.start(board, Chess.Color.Black);
 
-		it.skip('player state is updated to current turn', function () {
+		// Run through moving a pawn
+		assert($('#b7').hasClass('moveable'));
+		$('#b7').trigger('click');
+		assert($('#b7').hasClass('moving'));
 
-		});
+		assert($('#b6').hasClass('placeable'));
+		assert($('#b5').hasClass('placeable'));
+
+		$('#b5').trigger('click');
 	});
 
-	describe('updatePlayer()', function(){
+	it('Board UI doesn\t work for black player when white turn', function(){
 
-		it.skip('current player is passed in color', function () {
+		var $el = $('.chessboard');
 
-		});
+		// This will many a bunch of rows and empty cell divs
+		var boardUi = new BoardUi($el);
+
+		var board = Chess.Board.Default();
+
+		// Initially draw the board as the white player
+		boardUi.start(board, Chess.Color.Black);
+
+		// Run through moving a pawn
+		assert(!$('#b7').hasClass('moveable'));
+		$('#b7').trigger('click');
+		assert(!$('#b7').hasClass('moving'));
+
+		assert(!$('#b6').hasClass('placeable'));
+		assert(!$('#b5').hasClass('placeable'));
 	});
 
-	describe('updateBoard()', function(){
+/*
+ describe('submitMove()', function(){
 
-		it.skip('features of new board are present', function () {
+ it.skip('state gets updated to waiting after move is submitted', function () {
 
-		});
+ });
+ });
 
-		it.skip('features of old board are not present', function () {
+ describe('start()', function(){
 
-		});
-	});
+ it.skip('player is updated', function () {
 
-	describe('updateState()', function(){
+ });
 
-		it.skip('state is set to passed in state', function () {
+ it.skip('player state is updated to waiting', function () {
 
-		});
-	});
+ });
 
-	describe('getCell()', function(){
+ it.skip('player state is updated to current turn', function () {
 
-		it.skip('get proper value of filled in cell', function () {
+ });
+ });
 
-		});
+ describe('updatePlayer()', function(){
 
-		it.skip('get proper value of empty cell', function () {
+ it.skip('current player is passed in color', function () {
 
-		});
+ });
+ });
 
-		it.skip('get proper value of invalid cell', function () {
+ describe('updateBoard()', function(){
 
-		});
-	});
+ it.skip('features of new board are present', function () {
 
-	describe('animateMove()', function(){
+ });
 
-		it.skip('ensure no timeout', function () {
+ it.skip('features of old board are not present', function () {
 
-		});
-	});
+ });
+ });
 
-	describe('processMove()', function(){
+ describe('updateState()', function(){
 
-		it.skip('move is applied', function () {
+ it.skip('state is set to passed in state', function () {
 
-		});
+ });
+ });
 
-		it.skip('board is updated', function () {
+ describe('getCell()', function(){
 
-		});
+ it.skip('get proper value of filled in cell', function () {
 
-		it.skip('state is updated', function () {
+ });
 
-		});
-	});
+ it.skip('get proper value of empty cell', function () {
 
-	describe('reset()', function(){
+ });
 
-		it.skip('board that used to be random is now default', function () {
+ it.skip('get proper value of invalid cell', function () {
 
-		});
+ });
+ });
 
-		it.skip('board that used to be default is now still default', function () {
+ describe('animateMove()', function(){
 
-		});
-	});
+ it.skip('ensure no timeout', function () {
+
+ });
+ });
+
+ describe('processMove()', function(){
+
+ it.skip('move is applied', function () {
+
+ });
+
+ it.skip('board is updated', function () {
+
+ });
+
+ it.skip('state is updated', function () {
+
+ });
+ });
+
+ describe('reset()', function(){
+
+ it.skip('board that used to be random is now default', function () {
+
+ });
+
+ it.skip('board that used to be default is now still default', function () {
+
+ });
+ });*/
 });

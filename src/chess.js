@@ -327,6 +327,11 @@ class Piece {
 	}
 
 
+	equals(other){
+		return other !== null && this.code() === other.code();
+	}
+
+
 }
 
 
@@ -885,6 +890,26 @@ class Board {
 		console.log(str);
 
 
+	}
+
+
+	equals(other){
+		for(var i = 0; i < 8; i++){
+			for(var j = 0; j < 8; j++){
+				var a = this.grid[i][j], b = this.grid[i][j];
+
+				if(a === null){
+					if(b !== null)
+						return false;
+				}
+				else{
+					if(!a.equals(b))
+						return false;
+				}
+			}
+		}
+
+		return false;
 	}
 
 }
