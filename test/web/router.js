@@ -25,16 +25,30 @@ describe('Router', function(){
 
 	});
 
-	/*
 	it('can split an empty path', function(done){
 
-		var parts = [];
+		var loaded = false;
 
-		parts=Router.splitpath('');
+		Router({
+			states: {
+				home: {
+					path: '',
+					controller: {
+						load: function(){
 
-		assert.isNull(parts);
+							loaded = true;
+						},
+						enter: function(){
+							assert(loaded);
+							done();
+						}
+					}
+				}
+			},
+
+			default: 'home'
+		});
 	});
-	*/
 
 	it('should redirect to the default state if none is specified', function(done){
 
@@ -54,7 +68,7 @@ describe('Router', function(){
 							done();
 						}
 					}
-				},
+				}
 			},
 
 			default: 'home'
