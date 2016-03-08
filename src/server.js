@@ -83,7 +83,6 @@ var State = {
  */
 
 
-
 /**
  * Manages communications for a single client looking to play chess
  *
@@ -194,12 +193,11 @@ class Server {
 			return;
 		}
 
-
 		// Store profile
 		socket.profile = {
 			id: socket.id,
-			name: data.name,
-			level: data.level
+			name: sanitize(data.name),
+			level: sanitize(data.level)
 		};
 
 
@@ -251,6 +249,12 @@ class Server {
 
 		// Get the socket associated with the person being requested
 		var other_id = data.player_id;
+
+		if(other_id === socket.id){
+			callback({text: 'Can\'t challenge yourself.'});
+			return;
+		}
+
 
 		// TODO: Make sure that if one person is randomly waiting and the only person specifically challenges them, then the request goes through
 
@@ -678,7 +682,7 @@ class Server {
 	}
 
 	_stats(socket){
-		var ngames = _.keys(this.games).length / 2;
+		var ngames = Math.floor(_.keys(this.games).length / 2);
 		var nusers = this.nusers || 0;
 		var data = {users: nusers, games: ngames};
 		if(socket)
@@ -690,5 +694,21 @@ class Server {
 
 
 }
+
+
+// Generic text input filtering
+function sanitize(txt){
+	if(!txt || typeof(txt) !== 'string')
+		txt = '';
+
+	txt = txt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+	if(txt.length > 32)
+		txt = txt.slice(32);
+
+	return txt;
+}
+
+
 
 module.exports = Server;

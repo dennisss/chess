@@ -18,7 +18,7 @@ function load(router){
 
 	function printToTable(element, index, array) {
 		var extraInfo = "";
-		if (element.name != $('#playerName').val()) {
+		if (element.id != client.socket.id) {
 			$("#playerTableBody").append("<tr class='player'><td class='opName' data-opID='" + element.id + "'>" + element.name + "</td><td class='opLevel'>" + element.level + "</td></tr>");
 		} else if(array.length == 1) {
 			if (roomName != "lobby") {

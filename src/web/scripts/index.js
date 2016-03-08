@@ -1,5 +1,6 @@
 var Client = require('../../client'),
-	Chess = require('../../chess');
+	Chess = require('../../chess'),
+	FastClick = require('fastclick');
 
 var client = new Client();
 window.client = client;
@@ -39,8 +40,13 @@ Router({
 
 
 
+window.alert = function(){ console.warn('Please by more friendly!');  };
+
 
 $(function(){
+
+	// No touch delay on mobile
+	FastClick.attach(document.body);
 
 	$.material.init();
 

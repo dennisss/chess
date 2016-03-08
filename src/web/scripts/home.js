@@ -13,7 +13,7 @@ function load(router){
 		router.go('room', {room: 'lobby'});
 	});
 
-	var VERSION = '0.90';
+	var VERSION = '1.0';
 	$('#versionText').html('&#169;' + (new Date().getFullYear()) + ' Friendly Games Inc.  Version <a href="/codes" id="versionLink">' + VERSION + '</a>');
 
 
