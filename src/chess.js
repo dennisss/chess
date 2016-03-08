@@ -827,12 +827,6 @@ class Board {
 //		return true;
 	}
 
-	isDraw(){
-
-	}
-
-
-
 	print(moves){
 
 		var charMap = {};

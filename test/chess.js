@@ -14,6 +14,42 @@ describe('Chess', function(){
 
 	describe('Piece', function(){
 
+		describe('print',function(){
+
+			it('ensure printing', function() {
+				this.timeout(500);
+
+				var board = new Chess.Board();
+
+				var bishop = new Chess.Piece(Chess.Type.Bishop, Chess.Color.Black, true);
+				var bishoppos = new Position(4, 3);
+
+				board.at(bishoppos, bishop);
+				board.print(board.getMoves((bishoppos)));
+			});
+		});
+
+		describe('ispossiblemove()',function(){
+
+			it('ensure it works the same as the board one', function(){
+				this.timeout(500);
+
+				it('a queen can move in a diagonal line', function(){
+					var board = new Chess.Board();
+
+					var queen = new Chess.Piece(Chess.Type.Queen, Chess.Color.Black, true);
+					var queenpos = new Position(4, 3);
+
+					board.at(queenpos, queen);
+					board.turn = Chess.Color.Black;
+
+					var b = board.grid[3][4];
+
+					assert(board.isPossibleMove(new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
+				});
+			});
+		});
+
 		describe('isLegalMove()', function(){
 
 			describe('All pieces', function() {
