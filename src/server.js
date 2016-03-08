@@ -292,6 +292,13 @@ class Server {
 				};
 			}
 
+
+			// Timeout the challenge after 20 seconds
+			var time = setTimeout(function(){
+				socket.state = State.Ready;
+				callback({ reason: 'timeout' }, null);
+			}, 20 * 1000);
+
 			return;
 		}
 
