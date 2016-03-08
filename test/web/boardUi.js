@@ -171,16 +171,48 @@ describe('BoardUi', function(){
 			boardUi.processMove(move, function(){});
 		});
 
-		it.skip('move is applied', function () {
+		it('move is applied - new position is occupied', function () {
 
+			var $el = $('.chessboard');
+
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
+
+			var board = Chess.Board.Default();
+
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
+
+			var oldpos = new Position('a2');
+			var newpos = new Position('a3');
+
+			var move = new Move(oldpos, newpos, Chess.Color.White);
+
+			boardUi.processMove(move, function(){});
+
+			assert(board.isOccupied(newpos));
 		});
 
-		it.skip('board is updated', function () {
+		it('board is updated - old position is not occupied', function () {
 
-		});
+			var $el = $('.chessboard');
 
-		it.skip('state is updated', function () {
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
 
+			var board = Chess.Board.Default();
+
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
+
+			var oldpos = new Position('a2');
+			var newpos = new Position('a3');
+
+			var move = new Move(oldpos, newpos, Chess.Color.White);
+
+			boardUi.processMove(move, function(){});
+
+			assert(!board.isOccupied(oldpos));
 		});
 	});
 
