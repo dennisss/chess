@@ -429,21 +429,17 @@ describe('Chess', function(){
 					board.turn = Chess.Color.White;
 
 					// Test white
-					console.log(board.at(new Position(1,7)));
 					assert(board.isLegalMove(new Move(new Position(1,7), new Position(2,5), Chess.Color.White)));
 					assert(board.isLegalMove(new Move(new Position(1,7), new Position(0,5), Chess.Color.White)));
 
-					console.log(board.at(new Position(6,7)));
 					assert(board.isLegalMove(new Move(new Position(6,7), new Position(5,5), Chess.Color.White)));
 					assert(board.isLegalMove(new Move(new Position(6,7), new Position(7,5), Chess.Color.White)));
 
 					board.turn = Chess.Color.Black;
 					// Test black
-					console.log(board.at(new Position(1,0)));
 					assert(board.isLegalMove(new Move(new Position(1,0), new Position(2,2), Chess.Color.Black)));
 					assert(board.isLegalMove(new Move(new Position(1,0), new Position(0,2), Chess.Color.Black)));
 
-					console.log(board.at(new Position(6, 0)));
 					assert(board.isLegalMove(new Move(new Position(6,0), new Position(5,2), Chess.Color.Black)));
 					assert(board.isLegalMove(new Move(new Position(6,0), new Position(7,2), Chess.Color.Black)));
 				});
@@ -1198,11 +1194,42 @@ describe('Chess', function(){
 	});
 
 	describe('Game', function(){
-		it.skip('should have one player assigned to white, and one to black', function(){});
-		it.skip('should contain a board with pieces in the starting positions', function(){});
+		it('should have one player assigned to white, and one to black', function(){
+			var game = new Chess.Game({ id: '1', name: 'Bob' }, { id: '2', name: 'John' });
+			assert(game.white_player.id !== null && game.white_player.name !== null);
+			assert(game.black_player.id !== null && game.black_player.name !== null);
+		});
+		it('should contain a board with pieces in the starting positions', function(){
+			var game = new Chess.Game();
+			var board = Chess.Board.Default();
+
+			// Make sure every space on the game board is identical to the initial board
+			for (var i = 0; i < 8; i ++) {
+				for (var j = 0; j < 8; j++){
+					var pos = new Position(i,j);
+					if (game.board.at(pos) !== null) {
+						assert(game.board.at(pos).equals(board.at(pos)));
+					}
+					else {
+						assert(game.board.at(pos) === null && board.at(pos) === null);
+					}
+				}
+			}
+		});
 		describe('toJSON()', function(){
-			it.skip('should return a valid JSON string', function(){});
-			it.skip('should contain the serialized board, as well as which player is which color.', function(){});
+			it('should return a valid JSON string', function(){
+				var game = new Chess.Game({ id: '1', name: 'Bob' }, { id: '2', name: 'John' });
+				var jstring = JSON.stringify(game.toJSON());
+				assert(JSON.parse(jstring));
+			});
+			it('should contain the serialized board, as well as the two players with their respective id and names', function(){
+				var game = new Chess.Game({ id: '1', name: 'Bob' }, { id: '2', name: 'John' });
+				var jgame = game.toJSON();
+
+				assert(jgame.board.equals(Chess.Board.Default()));
+				assert(jgame.white_player.id === '1' && jgame.white_player.name === 'Bob');
+				assert(jgame.black_player.id === '2' && jgame.black_player.name === 'John');
+			});
 		});
 	});
 });
