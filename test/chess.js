@@ -25,7 +25,7 @@ describe('Chess', function(){
 				var bishoppos = new Position(4, 3);
 
 				board.at(bishoppos, bishop);
-				board.print(board.getMoves((bishoppos)));
+				board.print(bishop.getMoves(board, bishoppos));
 			});
 		});
 
@@ -45,7 +45,7 @@ describe('Chess', function(){
 
 					var b = board.grid[3][4];
 
-					assert(board.isPossibleMove(new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
+					assert(queen.isPossibleMove(board, new Move(new Position(4, 3), new Position(2, 1), Chess.Color.Black)));
 				});
 			});
 		});
