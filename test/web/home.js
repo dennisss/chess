@@ -10,6 +10,8 @@ describe('/home', function(){
 
 	it('should be the default page', function *(){
 
+		this.timeout(5000);
+
 		yield client.url('http://127.0.0.1:8000/');
 		assert.equal(yield client.getTitle(), 'Friendly Chess');
 
@@ -20,7 +22,11 @@ describe('/home', function(){
 
 	it('can go to the create room page', function *(){
 
-		yield client.url('http://127.0.0.1:8000/home').click('#btnCreateGame');
+		this.timeout(100000);
+
+		yield client.url('http://127.0.0.1:8000/home')
+		yield pause(200);
+		yield client.click('#btnCreateGame');
 
 		var url = yield client.getUrl();
 		assert.match(url, /\/create$/);

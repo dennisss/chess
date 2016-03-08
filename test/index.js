@@ -11,6 +11,16 @@ global.assert = chai.assert;
 
 global.__src = path.resolve(__dirname + '/../src');
 
+global.pause = function(msecs){
+	return new Promise(function(res){
+		setTimeout(function(){
+			res();
+		}, msecs);
+	});
+}
+
+
+
 describe('Friendly Chess', function() {
 	require('./rpc');
 	require('./chess');
