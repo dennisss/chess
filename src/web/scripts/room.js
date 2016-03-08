@@ -93,7 +93,8 @@ function load(router){
 						// TODO: Handle error
 						$("#loadingPlayer").modal("hide");
 						if (err) {
-							//console.log(err);
+							$("#playerDeniedReason").html("There were no available players at this time.");
+							$("#playerRequestDenied").modal("show");
 						} else {
 							$("#player-creation").modal("hide");
 							router.go('game', {opName: null, opLevel: null, thisPlayer: thisPlayer, data: game});
