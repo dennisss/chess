@@ -896,7 +896,7 @@ class Board {
 	equals(other){
 		for(var i = 0; i < 8; i++){
 			for(var j = 0; j < 8; j++){
-				var a = this.grid[i][j], b = this.grid[i][j];
+				var a = this.grid[i][j], b = other.grid[i][j];
 
 				if(a === null){
 					if(b !== null)

@@ -237,12 +237,43 @@ describe('BoardUi', function(){
 			boardUi.reset();
 		});
 
-		it.skip('board that used to be random is now default', function () {
+		it('board that used to be random is now empty', function () {
+			this.timeout(1000);
 
+			var $el = $('.chessboard');
+
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
+
+			var board = Chess.Board.Default();
+
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
+
+			var move = new Move(new Position('a2'), new Position('a3'), Chess.Color.White);
+			boardUi.processMove(move, function(){});
+
+			assert(!boardUi.board.equals(new Chess.Board()));
+			boardUi.reset();
+			assert(boardUi.board.equals(new Chess.Board()));
 		});
 
-		it.skip('board that used to be default is now still default', function () {
+		it('board that used to be empty is now still empty', function () {
+			this.timeout(1000);
 
+			var $el = $('.chessboard');
+
+			// This will many a bunch of rows and empty cell divs
+			var boardUi = new BoardUi($el);
+
+			var board = new Chess.Board();
+
+			// Initially draw the board as the white player
+			boardUi.start(board, Chess.Color.White);
+
+			assert(boardUi.board.equals(new Chess.Board()));
+			boardUi.reset();
+			assert(boardUi.board.equals(new Chess.Board()));
 		});
 	});
 

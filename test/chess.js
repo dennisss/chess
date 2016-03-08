@@ -204,7 +204,7 @@ describe('Chess', function(){
 						var board = Chess.Board.Default();
 
 						// Place an attacking black pawn
-						var blkpawn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black)
+						var blkpawn = new Chess.Piece(Chess.Type.Pawn, Chess.Color.Black);
 						board.at(new Position(1, 4), blkpawn);
 
 						// Move the White pawn up two spaces
@@ -221,7 +221,7 @@ describe('Chess', function(){
 						var err = board.apply(enPassant);
 
 						// The adjacent pawn should be gone
-						assert(board.at(new Position(0, 5)) != null);
+						assert(board.at(new Position(0, 5)) !== null);
 					});
 
 					it('After capture,the defending pawn is replaced with an empty square', function(){
