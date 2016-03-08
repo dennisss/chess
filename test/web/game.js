@@ -52,7 +52,7 @@ describe('/game', function(){
 		yield pause(600);
 
 		// Click the start game buttons
-		yield client().click('#yourTurnBtn');
+		//yield client().click('#yourTurnBtn');
 		yield second().click('#yourTurnBtn');
 
 	});
