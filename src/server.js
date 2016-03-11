@@ -182,7 +182,7 @@ class Server {
 		var taken = false;
 		var users = this._userlist(data.room);
 		for(var i = 0; i < users.length; i++){
-			if(users[i].name === data.name){
+			if(users[i].id !== socket.id && users[i].name === data.name){
 				taken = true;
 				break;
 			}
